@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mooc.Core\Mooc.Core.csproj" />
+    <ProjectReference Include="..\Mooc.Model\Mooc.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Mooc\Dto\" />
+  </ItemGroup>
+
+</Project>

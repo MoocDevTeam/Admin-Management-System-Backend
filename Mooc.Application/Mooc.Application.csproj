@@ -1,19 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
-  <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.8" />
-  </ItemGroup>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Mooc.Application.Contracts\Mooc.Application.Contracts.csproj" />
-    <ProjectReference Include="..\Mooc.Core\Mooc.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Include="..\AssemblyInfo.cs" Link="AssemblyInfo.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="13.0.1" />
+		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.8" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Mooc.Application.Contracts\Mooc.Application.Contracts.csproj" />
+		<ProjectReference Include="..\Mooc.Core\Mooc.Core.csproj" />
+	</ItemGroup>
 
 </Project>

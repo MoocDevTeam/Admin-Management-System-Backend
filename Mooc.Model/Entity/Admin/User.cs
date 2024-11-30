@@ -20,5 +20,4 @@ public class User : BaseEntity
 
     public Gender Gender { get; set; }
 
-    public ICollection<UserRole> UserRoles { get; set; }=new List<UserRole>();
 }

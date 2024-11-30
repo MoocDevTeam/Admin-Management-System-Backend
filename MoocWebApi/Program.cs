@@ -85,15 +85,6 @@ namespace MoocWebApi
 
                 builder.Services.AddSwaggerMooc();
 
-                //Configure JwtSettingOption
-                builder.Services.Configure<JwtSettingOption>(builder.Configuration.GetSection(JwtSettingOption.Section));
-                var jwtSettingOption = builder.Configuration.GetSection(JwtSettingOption.Section).Get<JwtSettingOption>();
-                builder.Services.AddJwtMooc(jwtSettingOption);
-
-                //Configure UploadFolderOption
-                builder.Services.Configure<UploadFolderOption>(builder.Configuration.GetSection(UploadFolderOption.Section));
-                var uploadFolderOption = builder.Configuration.GetSection(UploadFolderOption.Section).Get<UploadFolderOption>();
-
 
                 //CORS
                 builder.Services.AddCors(options =>
@@ -124,10 +115,7 @@ namespace MoocWebApi
 
                 app.MapControllers();
 
-                var uploadFolder = Path.Combine(builder.Environment.ContentRootPath, uploadFolderOption.RootFolder);
-                var staticFile = new StaticFileOptions();
-                staticFile.FileProvider = new PhysicalFileProvider(uploadFolder);
-                app.UseStaticFiles(staticFile);
+             
 
                 using (var socpe = app.Services.CreateScope())
                 {

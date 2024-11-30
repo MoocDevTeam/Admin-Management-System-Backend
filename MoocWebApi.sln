@@ -15,7 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mooc.Core", "Mooc.Core\Mooc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mooc.Application.Contracts", "Mooc.Application.Contracts\Mooc.Application.Contracts.csproj", "{24BF85E1-1107-42B7-A2F6-C8A6774E857A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mooc.UnitTest", "Mooc.UnitTest\Mooc.UnitTest.csproj", "{A2B20E57-02CF-49C4-ABC9-3E2A2239B986}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mooc.UnitTest", "Mooc.UnitTest\Mooc.UnitTest.csproj", "{A2B20E57-02CF-49C4-ABC9-3E2A2239B986}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{786D971D-AAB4-43EB-BCB4-4735A8EA91F7}"
+	ProjectSection(SolutionItems) = preProject
+		AssemblyInfo.cs = AssemblyInfo.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

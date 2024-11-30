@@ -12,11 +12,11 @@ namespace MoocWebApi.Controllers.Admin
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IUserPermissionService _userPermissionService;
-        public UserController(IUserService userService, IUserPermissionService userPermissionService)
+       
+        public UserController(IUserService userService)
         {
             _userService = userService;
-            _userPermissionService = userPermissionService;
+ 
         }
 
         /// <summary>
@@ -79,15 +79,6 @@ namespace MoocWebApi.Controllers.Admin
             return true;
         }
 
-        /// <summary>
-        /// get user permiss list 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("{id}")]
-        public async Task<List<string>> GetUserPermissListAsync(long id)
-        {
-            return await _userPermissionService.GetUserPermissListAsync(id);
-        }
+     
     }
 }

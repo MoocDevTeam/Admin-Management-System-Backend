@@ -41,7 +41,7 @@ namespace MoocWebApi
                     containerBuilder.RegisterModule<AutofacModule>();
                 });
 
-                // 配置响应头以使用 UTF-8 编码  
+                // Configure response headers to use UTF-8 encoding(non-English)  
                 builder.Services.Configure<WebEncoderOptions>(options =>
                 {
                     options.TextEncoderSettings = new System.Text.Encodings.Web.TextEncoderSettings(System.Text.Unicode.UnicodeRanges.All);
@@ -114,8 +114,6 @@ namespace MoocWebApi
 
 
                 app.MapControllers();
-
-             
 
                 using (var socpe = app.Services.CreateScope())
                 {

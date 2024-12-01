@@ -39,45 +39,6 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
         }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="imageBytes"></param>
-    /// <returns></returns>
-    public string GetImageFormat(byte[] imageBytes)
-    {
-        // Attempt to match common image formats
-        using (MemoryStream ms = new MemoryStream(imageBytes))
-        {
-            BinaryReader reader = new BinaryReader(ms);
-            byte[] buffer = reader.ReadBytes(8);
-
-            if (buffer.Length < 2)
-                return "";
-
-            // JPEG (JFIF)
-            if (buffer[0] == 0xFF && buffer[1] == 0xD8)
-                return "Jpeg";
-
-            // PNG
-            if (buffer[0] == 0x89 && buffer[1] == 0x50 && buffer[2] == 0x4E && buffer[3] == 0x47)
-                return "Png";
-
-            // GIF
-            if (buffer[0] == 0x47 && buffer[1] == 0x49 && buffer[2] == 0x46 && buffer[3] == 0x38)
-                return "Gif";
-
-            // BMP
-            if (buffer[0] == 0x42 && buffer[1] == 0x4D)
-                return "Bmp";
-
-            // TIFF
-            if (buffer[0] == 0x49 && buffer[1] == 0x49 && (buffer[2] == 0x2A || buffer[2] == 0x4A))
-                return "Tiff";
-
-            return "jpeg";
-        }
-    }
     public async Task<UserDto> GetByUserNameAsync(string userName)
     {
         var user = await this.McDBContext.Users.FirstOrDefaultAsync(x => x.UserName == userName);

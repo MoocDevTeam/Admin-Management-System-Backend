@@ -29,7 +29,8 @@ public static class MoocDbContextModelCreatingExtensions
             ).HasMaxLength(UserEntityConsts.MaxGenderLength);
         });
 
-        ConfigureAdminManag(modelBuilder);
+        //or separating a method 
+       // ConfigureAdminManag(modelBuilder);
     }
 
     private static void ConfigureAdminManag(ModelBuilder modelBuilder)

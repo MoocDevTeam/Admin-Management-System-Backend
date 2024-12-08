@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Mooc.Core.Utils;
 
 namespace Mooc.Application.Admin;
@@ -13,6 +14,14 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
         this._webHostEnvironment = webHostEnvironment;
     }
 
+    protected override IQueryable<User> CreateFilteredQuery(FilterPagedResultRequestDto input)
+    {
+        if (!string.IsNullOrEmpty(input.Filter))
+        {
+            return GetQueryable().Where(x => x.UserName.Contains(input.Filter));
+        }
+        return base.CreateFilteredQuery(input);
+    }
 
     public override async Task<UserDto> CreateAsync(CreateUserDto input)
     {

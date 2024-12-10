@@ -10,9 +10,9 @@ public class MoocUser : BaseEntity
 
     public int? Age { get; set; }
 
-    public Enum Access { get; set; }
+    public Access Access { get; set; }
 
-    public Enum Gender { get; set; }
+    public Gender Gender { get; set; }
 
     public string Avatar { get; set; }
 

@@ -8,6 +8,7 @@ public class MoocDBContext : DbContext
     }
 
     public DbSet<User> Users { get; set; }
+    //public DbSet<MoocCourseInstance> MoocCourseInstances { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -16,6 +17,6 @@ public class MoocDBContext : DbContext
         //extension method
         modelBuilder.ConfigureAdminManagement();
 
-        //modelBuilder.ConfigureMoocManagement();
+        modelBuilder.ConfigureCourseManagement();
     }
 }

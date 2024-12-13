@@ -1,12 +1,52 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mooc.Model.Entity.Course
 {
-    internal class MoocMeida
+    public class Media : BaseEntity
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; } 
+
+        [ForeignKey("User")] 
+        public int UploaderId { get; set; }
+
+        [ForeignKey("Session")] 
+        public int SessionID { get; set; }
+
+        [Required]
+        public FileTypeEnum FileType { get; set; } = FileTypeEnum.Video;
+
+        [Required]
+        [MaxLength(255)]
+        public string FileName { get; set; } 
+
+        [Required]
+        [Column(TypeName = "text")]
+        public string FilePath { get; set; } 
+
+        [Column(TypeName = "text")]
+        public string ThumbnailPath { get; set; } 
+
+        [Required]
+        public DateTime UploadedAt { get; set; } 
+
+        [Required]
+        public ApprovalStatusEnum ApprovalStatus { get; set; } = ApprovalStatusEnum.Pending;
+    }
+
+    public enum FileTypeEnum
+    {
+        Video,
+        Audio
+    }
+
+    public enum ApprovalStatusEnum
+    {
+        Pending,
+        Approved,
+        Rejected
     }
 }

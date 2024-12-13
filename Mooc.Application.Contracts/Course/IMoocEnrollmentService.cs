@@ -1,12 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mooc.Application.Course
+namespace Mooc.Application.Contracts.Course
 {
-    public class MoocMeidaService
+    internal interface IMoocEnrollmentService
     {
     }
 }

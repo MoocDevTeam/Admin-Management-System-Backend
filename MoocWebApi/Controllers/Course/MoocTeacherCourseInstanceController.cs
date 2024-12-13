@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace MoocWebApi.Controllers.Course
 {
-    public class MoocMediaController : Controller
+    public class MoocTeacherCourseInstanceController : Controller
     {
         public IActionResult Index()
         {

@@ -8,7 +8,7 @@ public enum SwaggerGroup
     BaseService = 1,
 
     /// <summary>
-    /// Mooc Service
+    /// Course Service
     /// </summary>
-    MoocService = 2
+    CourseService = 2
 }

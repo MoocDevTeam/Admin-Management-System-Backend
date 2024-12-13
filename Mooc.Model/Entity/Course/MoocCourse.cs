@@ -1,12 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
-namespace Mooc.Model.Entity.Course
+namespace Mooc.Model.Entity;
+
+public class MoocCourse : BaseEntity
 {
-    internal class MoocCourse
-    {
-    }
+
+    [MaxLength(50)]
+    public string Title { get; set; } = string.Empty;
+    [MaxLength(50)]
+    public string CourseCode { get; set; } = string.Empty;
+    public string? CoverImage { get; set; }
+    [MaxLength(255)]
+    public string Description { get; set; } = string.Empty;
+    public long? CreatedByUserId { get; set; }
+    public long? UpdatedByUserId { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+
 }

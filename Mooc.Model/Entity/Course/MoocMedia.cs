@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Mooc.Model.Entity.Course
+namespace Mooc.Model.Entity
 {
-    internal class MoocMeida
+    public class MoocMeida
     {
     }
 }

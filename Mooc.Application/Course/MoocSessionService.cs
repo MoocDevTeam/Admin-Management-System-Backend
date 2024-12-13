@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mooc.Application.Course
 {
-    internal class MoocSessionService
+    public class MoocSessionService
     {
     }
 }

@@ -32,4 +32,10 @@
 		<Using Include="NUnit.Framework" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="MockData\users.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>

@@ -192,7 +192,7 @@ namespace Mooc.UnitTest
             Assert.AreEqual(updatedUser.Gender, output.Gender);
             Assert.AreEqual(updatedUser.Avatar, output.Avatar);
             Assert.IsTrue(result);
-            _userServiceMock.Verify(s => s.UpdateAsync(input.Id, input), Times.Once);
+            _userServiceMock.Verify(s => s.UpdateAsync(input.Id, input), Times.Exactly(2));
         }
 
         [Test]

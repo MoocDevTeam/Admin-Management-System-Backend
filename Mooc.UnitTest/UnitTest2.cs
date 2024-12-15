@@ -13,6 +13,7 @@ using Mooc.Model.Entity;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Mooc.Core.ExceptionHandling;
+using NLog.Web.LayoutRenderers;
 
 
 
@@ -23,7 +24,7 @@ namespace Mooc.UnitTest
         private readonly IMapper _mapper;
         private readonly Mock<IWebHostEnvironment> _mockWebHostEnvironment;
         private List<User> users;
-        private string path = "E:\\JR bootcamp fullstack-net\\project 3\\Admin-Management-System-Backend\\Mooc.UnitTest\\MockData\\users.json";
+        private string path = "./MockData/users.json";
         public UserServiceTests()
         {
             var config = new MapperConfiguration(cfg =>

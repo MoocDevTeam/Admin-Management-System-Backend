@@ -4,9 +4,9 @@
     {
         public CourseProfile()
         {
-            //CreateMap<User, UserDto>();
-            //CreateMap<CreateUserDto, User>();
-            //CreateMap<UpdateUserDto, User>();
+            CreateMap<User, UserDto>();
+            CreateMap<CreateUserDto, User>();
+            CreateMap<UpdateUserDto, User>();
         }
     }
 }

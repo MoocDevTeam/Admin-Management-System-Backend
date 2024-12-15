@@ -38,8 +38,6 @@ namespace MoocWebApi.Controllers.Admin
             return pagedResult;
         }
 
-
-
         /// <summary>
         /// add user
         /// </summary>

@@ -10,5 +10,10 @@ public enum SwaggerGroup
     /// <summary>
     /// Mooc Service
     /// </summary>
-    MoocService = 2
+    MoocService = 2,
+
+    ///<summary>
+    /// AdminService
+    /// </summary>
+     AdminService = 3
 }

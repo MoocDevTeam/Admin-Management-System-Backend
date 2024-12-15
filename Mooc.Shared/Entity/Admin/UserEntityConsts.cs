@@ -18,4 +18,6 @@ public class UserEntityConsts
 
     public const int MaxAvatarLength = 300;
 
+    public const int MaxAgeLength = 60;
+
 }

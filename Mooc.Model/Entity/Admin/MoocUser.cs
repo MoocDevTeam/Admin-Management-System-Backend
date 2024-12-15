@@ -16,9 +16,9 @@ public class MoocUser : BaseEntity
 
     public string Avatar { get; set; }
 
-    public DateTime? createdDate { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
-    public bool isActive { get; set; }
+    public bool IsActive { get; set; }
 
     public ICollection<MoocUserRole> MoocUserRole { get; set; } = new List<MoocUserRole>();
 }

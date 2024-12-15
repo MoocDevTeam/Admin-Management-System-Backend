@@ -18,10 +18,10 @@ public static class MoocDbContextModelCreatingExtensions
     {
         modelBuilder.Entity<MoocUser>(b =>
         {
-            b.ToTable(TablePrefix + "User");
+            b.ToTable(TablePrefix + "MoocUser");
             b.HasKey(x => x.Id);
             b.Property(x => x.Id).ValueGeneratedNever();
-            b.Property(x => x.UsereName).IsRequired().HasMaxLength(UserEntityConsts.MaxUserNameLength);
+            b.Property(x => x.UserName).IsRequired().HasMaxLength(UserEntityConsts.MaxUserNameLength);
             b.Property(x => x.Password).HasMaxLength(UserEntityConsts.MaxPasswordLength);
             b.Property(x => x.Email).HasMaxLength(UserEntityConsts.MaxEmailLength);
             b.Property(x => x.Age).HasMaxLength(UserEntityConsts.MaxAgeLength);
@@ -34,10 +34,7 @@ public static class MoocDbContextModelCreatingExtensions
                 v => v.ToString(),
                 v => (Access)Enum.Parse(typeof(Access), v));
             b.Property(x => x.IsActive).IsRequired().HasDefaultValue(true);
-            b.Property(x => x.CreatedDate).IsRequired().HasDefaultValue("CURRENT_TIMESTAMP");//for SQLite
-
-
+            b.Property(x => x.CreatedDate).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");//for SQLite
         });
     }
-    
 }

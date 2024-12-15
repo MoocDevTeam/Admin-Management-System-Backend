@@ -23,11 +23,7 @@ namespace Mooc.UnitTest
             _controller = new UserController(_userServiceMock.Object);
 
         }
-        [SetUp]
-        public void SetUp()
-        {
-        }
-        [Test]
+      
         public async Task GetByPageAsync_WhenPageUserexit_ShouldReturnPageUsers()
         {
             // Arrange
@@ -56,8 +52,8 @@ namespace Mooc.UnitTest
             var result = await _controller.GetByPageAsync(input);
 
             // Assert
-            Assert.AreEqual(result, pagedResult);
-            Assert.AreEqual(result.Total, pagedResult.Total);
+            Assert.That(result == pagedResult, "Getby results are correct");
+            Assert.That(result.Total == pagedResult.Total, "Total is correct");
             _userServiceMock.Verify(s => s.GetListAsync(input), Times.Once);
         }
 
@@ -91,28 +87,27 @@ namespace Mooc.UnitTest
             };
             _userServiceMock.Setup(s => s.CreateAsync(input)).Returns(Task.FromResult(useDto));
 
-            // Act
+            // Action
             var userDtoadded = await _userServiceMock.Object.CreateAsync(input);
             var result = await _controller.Add(input);
 
 
             // Assert
-            Assert.AreEqual(userDtoadded.Age, useDto.Age);
-            Assert.AreEqual(userDtoadded.UserName, useDto.UserName);
-            Assert.AreEqual(userDtoadded.Avatar, useDto.Avatar);
-            Assert.AreEqual(userDtoadded.Email, useDto.Email);
-            Assert.AreEqual(userDtoadded.Phone, useDto.Phone);
-            Assert.AreEqual(userDtoadded.Address, useDto.Address);
-            Assert.AreEqual(userDtoadded.Gender, useDto.Gender);
-            Assert.AreEqual(userDtoadded.Avatar, useDto.Avatar);
+            Assert.That(useDto.Age == userDtoadded.Age, "Age is correct");
+            Assert.That(useDto.UserName == userDtoadded.UserName, "UserName is correct");
+            Assert.That(useDto.Email == userDtoadded.Email, "Email is correct");
+            Assert.That(useDto.Phone == userDtoadded.Phone, "Phone is correct");
+            Assert.That(useDto.Address == userDtoadded.Address, "Address is correct");
+            Assert.That(useDto.Gender == userDtoadded.Gender, "Gender is correct");
+            Assert.That(useDto.Avatar == userDtoadded.Avatar, "Avatar is correct");
             Assert.IsTrue(result);
-            _userServiceMock.Verify(s => s.CreateAsync(input), Times.AtLeastOnce);
+            _userServiceMock.Verify(s => s.CreateAsync(input), Times.Exactly(2));
 
         }
         [Test]
         public async Task Add_WhenUserIsAdded_ShouldReturnFalse()
         {
-            //bad case
+            //add failure
             //Arrange
             var input = new CreateUserDto()
             {
@@ -137,7 +132,7 @@ namespace Mooc.UnitTest
                 Avatar = "123",
             };
             _userServiceMock.Setup(s => s.CreateAsync(input)).Returns(Task.FromResult(inputIncomplete));
-            //Act
+            //Action
             _controller.ModelState.AddModelError("Gender", "Gender is a requried field");
             var badResponse = await _userServiceMock.Object.CreateAsync(input);
             var result = await _controller.Add(input);
@@ -150,6 +145,7 @@ namespace Mooc.UnitTest
         [Test]
         public async Task Update_WhenUserIsUpdated_ShouldReturnTrue()
         {
+           //add success
             //arrange
             var input = new UpdateUserDto()
             {
@@ -177,20 +173,19 @@ namespace Mooc.UnitTest
                 Avatar = "123",
             };
 
-            //act
+            //action
             _userServiceMock.Setup(s => s.UpdateAsync(input.Id, input)).Returns(Task.FromResult(output));
             var updatedUser = await _userServiceMock.Object.UpdateAsync(input.Id, input);
             var result = await _controller.Update(input);
 
             //Assert
-            Assert.AreEqual(updatedUser.Age, output.Age);
-            Assert.AreEqual(updatedUser.UserName, output.UserName);
-            Assert.AreEqual(updatedUser.Avatar, output.Avatar);
-            Assert.AreEqual(updatedUser.Email, output.Email);
-            Assert.AreEqual(updatedUser.Phone, output.Phone);
-            Assert.AreEqual(updatedUser.Address, output.Address);
-            Assert.AreEqual(updatedUser.Gender, output.Gender);
-            Assert.AreEqual(updatedUser.Avatar, output.Avatar);
+            Assert.That(updatedUser.Age == output.Age, "Age is correct");
+            Assert.That(updatedUser.UserName ==  output.UserName, "Username is correct");
+            Assert.That(updatedUser.Email == output.Email, "Email is correct");
+            Assert.That(updatedUser.Phone == output.Phone, "Phone is correct");
+            Assert.That(updatedUser.Address == output.Address, "Address is correct");
+            Assert.That(updatedUser.Gender == output.Gender, "Gender is correct");
+            Assert.That(updatedUser.Avatar == output.Avatar, "Avatar is correct");
             Assert.IsTrue(result);
             _userServiceMock.Verify(s => s.UpdateAsync(input.Id, input), Times.Exactly(2));
         }
@@ -227,7 +222,7 @@ namespace Mooc.UnitTest
             _userServiceMock.Setup(s => s.UpdateAsync(input.Id, input)).Returns(Task.FromResult(output));
             _controller.ModelState.AddModelError("Password", "Password is null ");
 
-            //act
+            //action
             var updatedUser = await _userServiceMock.Object.UpdateAsync(input.Id, input);
 
             //Assert
@@ -240,6 +235,7 @@ namespace Mooc.UnitTest
         public async Task Delete_WhenUserIsDeleted_ShouldReturnTrue(int id, int id2)
         {
             //valid Id case
+           
             //Arrange
             var validId = id;
             var input = new FilterPagedResultRequestDto();
@@ -264,13 +260,14 @@ namespace Mooc.UnitTest
                 Total = 4,
             };
             _userServiceMock.Setup(service => service.DeleteAsync(validId)).Returns(Task.FromResult(pagedResult));
-            _userServiceMock.Setup(service => service.GetListAsync(input)).ReturnsAsync(pagedResult);//Act
-
+            _userServiceMock.Setup(service => service.GetListAsync(input)).ReturnsAsync(pagedResult);
+            
+            //action
             var ValidResult = _controller.Delete(validId);
             var listCountResult = await _controller.GetByPageAsync(input);
+          
             //Assert
-
-            Assert.AreEqual(4, listCountResult.Total);
+            Assert.That(listCountResult.Total == 4, "valid id Result is correct");
             Assert.IsTrue(ValidResult.Result);
             _userServiceMock.Verify(s => s.DeleteAsync(validId), Times.Once);
 
@@ -287,12 +284,14 @@ namespace Mooc.UnitTest
             };
             _userServiceMock.Setup(service => service.DeleteAsync(invalidId)).Returns(Task.FromResult(pagedResultInvalid));
             _userServiceMock.Setup(service => service.GetListAsync(input2)).ReturnsAsync(pagedResultInvalid);
+            
             //Act
             var InvalidResult = _controller.Delete(validId);
             var listCountResult2 = await _controller.GetByPageAsync(input2);
+            
             //Assert
-            Assert.AreEqual(5, listCountResult2.Total);
-            _userServiceMock.Verify(s => s.DeleteAsync(validId), Times.AtLeastOnce);
+            Assert.That(listCountResult2.Total == 5, "invalid id result is correct");
+            _userServiceMock.Verify(s => s.DeleteAsync(validId), Times.Exactly(2));
         }
      
     }

@@ -23,8 +23,8 @@ namespace Mooc.UnitTest
     {
         private readonly IMapper _mapper;
         private readonly Mock<IWebHostEnvironment> _mockWebHostEnvironment;
-        private List<User> users;
-        private string path = "./MockData/users.json";
+        private readonly List<User> users;
+        private readonly string path = "./MockData/users.json";
         public UserServiceTests()
         {
             var config = new MapperConfiguration(cfg =>
@@ -37,7 +37,7 @@ namespace Mooc.UnitTest
             _mockWebHostEnvironment = new Mock<IWebHostEnvironment>();
         }
 
-        private List<User> LoadUsersFromJson(string filePath)
+        private static List<User> LoadUsersFromJson(string filePath)
         {
             using (var reader = new StreamReader(filePath))
             {
@@ -70,23 +70,23 @@ namespace Mooc.UnitTest
                 RoleIds = new List<long>() { 1, 2, 3 }
             };
 
-            using (var context = new MoocDBContext(options))
-            {
-                context.Users.AddRange(users);
-                context.SaveChanges();
+            using var context = new MoocDBContext(options); 
+            context.Users.AddRange(users);
+            await context.SaveChangesAsync();
+            var service = new UserService(context, _mapper, _mockWebHostEnvironment.Object);
+           
+            //action
+            var result = await service.CreateAsync(newUser);
 
-                var service = new UserService(context, _mapper, _mockWebHostEnvironment.Object);
-                //act
-                var result = await service.CreateAsync(newUser);
-
-                // Assert
-                Assert.NotNull(result);
-                Assert.AreEqual(newUser.UserName, result.UserName);
-                Assert.AreEqual(newUser.Phone, result.Phone);
-                Assert.AreEqual(newUser.Age, result.Age);
-                Assert.AreEqual(newUser.Email, result.Email);
-            }
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result.UserName == newUser.UserName, "Username is correct");
+            Assert.That(result.Phone == newUser.Phone, "Phone is correct");
+            Assert.That(result.Email == newUser.Email, "Email is corrct");
+            Assert.That(result.Age == newUser.Age, "Age is correct");
         }
+
+
         [Test]
         public async Task GetByUserName_WhenUserNameExists_ShouldReturnAUsername()
         {
@@ -95,21 +95,20 @@ namespace Mooc.UnitTest
             var options = new DbContextOptionsBuilder<MoocDBContext>()
            .UseInMemoryDatabase("InMemoryDB_2")
            .Options;
+            var context = new MoocDBContext(options);
+            
+            context.Users.AddRange(users);
+            context.SaveChanges();
+            var service = new UserService(context, _mapper, _mockWebHostEnvironment.Object);
+            //action
+            var result = await service.GetByUserNameAsync("A1");
+            var inValidResult = await service.GetByUserNameAsync("nonExistingUser");
 
-            using (var context = new MoocDBContext(options))
-            {
-                context.Users.AddRange(users);
-                context.SaveChanges();
-                var service = new UserService(context, _mapper, _mockWebHostEnvironment.Object);
-                //act
-                var result = await service.GetByUserNameAsync("A1");
-                var inValidResult = await service.GetByUserNameAsync("nonExistingUser");
-
-                //Assert
-                Assert.NotNull(result);
-                Assert.Null(inValidResult);
-                Assert.AreEqual("A1", result.UserName);
-            }
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.IsNull(inValidResult);
+            Assert.That(result.UserName == "A1", "UserName is Corrct");
+            
 
         }
         [Test]
@@ -133,19 +132,18 @@ namespace Mooc.UnitTest
                 Avatar = "123",
             };
 
-            using (var context = new MoocDBContext(options))
-            {
+            var context = new MoocDBContext(options);
+            
                 context.Users.AddRange(users);
                 context.SaveChanges();
                 var service = new UserService(context, _mapper, _mockWebHostEnvironment.Object);
-                //act
+                //action
 
                 var updatedResult = await service.UpdateAsync(5, updatedUser);
                 //Assert
-                Assert.NotNull(updatedResult);
-                Assert.AreEqual(updatedUser.UserName, updatedResult.UserName);
-            }
-
+                Assert.IsNotNull(updatedResult);
+                Assert.That(updatedResult.UserName == updatedUser.UserName, "UserName is correct");
+           
         }
 
     }

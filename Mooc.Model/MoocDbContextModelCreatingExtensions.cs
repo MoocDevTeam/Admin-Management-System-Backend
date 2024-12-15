@@ -25,7 +25,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(x => x.Password).HasMaxLength(UserEntityConsts.MaxPasswordLength);
             b.Property(x => x.Email).HasMaxLength(UserEntityConsts.MaxEmailLength);
             b.Property(x => x.Age).HasMaxLength(UserEntityConsts.MaxAgeLength);
-            b.HasMany(x => x.MoocUserRole)
+            b.HasMany(x => x.MoocUserRole);
             b.Property(x => x.Avatar).HasMaxLength(UserEntityConsts.MaxAvatarLength);
             b.Property(x => x.Gender).HasConversion(
                 v => v.ToString(),
@@ -35,9 +35,9 @@ public static class MoocDbContextModelCreatingExtensions
                 v => (Access)Enum.Parse(typeof(Access), v));
             b.Property(x => x.IsActive).IsRequired().HasDefaultValue(true);
             b.Property(x => x.CreatedDate).IsRequired().HasDefaultValue("CURRENT_TIMESTAMP");//for SQLite
-               
 
-        })
+
+        });
     }
     
 }

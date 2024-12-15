@@ -7,16 +7,13 @@ public class MoocDBContext : DbContext
 
     }
 
-    public DbSet<MoocUser> MoocUsers { get; set; }
-    public DbSet<MoocUserRole> MoocUserRoles { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        //extension method
         modelBuilder.ConfigureAdminManagement();
 
-        //modelBuilder.ConfigureMoocManagement();
     }
 }

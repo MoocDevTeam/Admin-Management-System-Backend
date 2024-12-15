@@ -1,6 +1,6 @@
 ﻿namespace Mooc.Model.Entity.Course
 {
-    public class MoocTeacher : BaseEntity
+    public class Teacher : BaseEntity
     {
         public string Title { get; set; }
         public string Department { get; set; }

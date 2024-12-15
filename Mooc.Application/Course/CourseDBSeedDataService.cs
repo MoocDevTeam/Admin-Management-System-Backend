@@ -9,6 +9,11 @@ namespace Mooc.Application.Course
         {
             this._dbContext = dbContext;
         }
+        //private List<MoocCourseInstance> moocCourseInstances= new List<MoocCourseInstance>()
+        //{
+        //    new MoocCourseInstance(){Id=1, SesstionId=1, CourseId=1, TeacherId=1, StartDate="1", EndDate="1", TotalSession=1, OpenStatus=MoocCourseInstanceOpenStatus.Open, Permisstion = MoocCourseInstancePermission.Private, CreatedByUserId=1, UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+        //};
+
         private List<MoocCourse> courses = new List<MoocCourse>()
         {
             new MoocCourse(){Id=1, Title="React",CourseCode="100",CoverImage="xxx.png",Description="React",CreatedByUserId= 1,UpdatedByUserId=1, CreatedAt=DateTime.Now ,UpdatedAt=DateTime.Now.AddMinutes(1)},

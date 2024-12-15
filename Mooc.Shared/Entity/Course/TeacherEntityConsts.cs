@@ -1,6 +1,6 @@
 ﻿namespace Mooc.Shared.Entity.Course
 {
-    public class MoocTeacherEntityConsts
+    public class TeacherEntityConsts
     {
         public const int MaxTitleLength = 50;
 

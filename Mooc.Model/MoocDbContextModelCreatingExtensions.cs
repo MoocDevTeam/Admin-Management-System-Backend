@@ -60,16 +60,16 @@ public static class MoocDbContextModelCreatingExtensions
     /// <summary>
     private static void ConfigureMoocTeacher(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<MoocTeacher>(b =>
+        modelBuilder.Entity<Teacher>(b =>
         {
-            b.ToTable("MoocTeacher");
+            b.ToTable("Teacher");
             b.HasKey(x => x.Id);
             b.Property(e => e.Id).ValueGeneratedNever();
-            b.Property(cs => cs.Title).IsRequired().HasMaxLength(MoocTeacherEntityConsts.MaxTitleLength);
-            b.Property(cs => cs.Department).IsRequired().HasMaxLength(MoocTeacherEntityConsts.MaxDepartmentLength);
-            b.Property(cs => cs.Office).IsRequired().HasMaxLength(MoocTeacherEntityConsts.MaxOfficeLength);
-            b.Property(cs => cs.Introduction).HasMaxLength(MoocTeacherEntityConsts.MaxIntroductionLength);
-            b.Property(cs => cs.Expertise).IsRequired().HasMaxLength(MoocTeacherEntityConsts.MaxExpertiseLength);
+            b.Property(cs => cs.Title).IsRequired().HasMaxLength(TeacherEntityConsts.MaxTitleLength);
+            b.Property(cs => cs.Department).IsRequired().HasMaxLength(TeacherEntityConsts.MaxDepartmentLength);
+            b.Property(cs => cs.Office).IsRequired().HasMaxLength(TeacherEntityConsts.MaxOfficeLength);
+            b.Property(cs => cs.Introduction).HasMaxLength(TeacherEntityConsts.MaxIntroductionLength);
+            b.Property(cs => cs.Expertise).IsRequired().HasMaxLength(TeacherEntityConsts.MaxExpertiseLength);
             
             //Foreign configuration temperarily use <User> until <MoocUser is created>
             b.HasOne<User>(x => x.CreatedByUser)

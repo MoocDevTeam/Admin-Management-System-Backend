@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mooc.Model.Entity.Course
+namespace Mooc.Application.Contracts.Course
 {
-    public class MoocTeacherCourseInstance
+    public interface ICategoryService
     {
     }
 }

@@ -17,7 +17,7 @@ namespace Mooc.Model.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
-            modelBuilder.Entity("Mooc.Model.Entity.Course.MoocTeacher", b =>
+            modelBuilder.Entity("Mooc.Model.Entity.Course.Teacher", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("INTEGER");
@@ -71,7 +71,7 @@ namespace Mooc.Model.Migrations
 
                     b.HasIndex("UpdatedByUserId");
 
-                    b.ToTable("MoocTeacher", (string)null);
+                    b.ToTable("Teacher", (string)null);
                 });
 
             modelBuilder.Entity("Mooc.Model.Entity.MoocCourse", b =>
@@ -173,7 +173,7 @@ namespace Mooc.Model.Migrations
                     b.ToTable("User", (string)null);
                 });
 
-            modelBuilder.Entity("Mooc.Model.Entity.Course.MoocTeacher", b =>
+            modelBuilder.Entity("Mooc.Model.Entity.Course.Teacher", b =>
                 {
                     b.HasOne("Mooc.Model.Entity.User", "CreatedByUser")
                         .WithMany()

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mooc.Application.Course
+namespace Mooc.Model.Entity.Course
 {
-    internal class MoocTeacherService
+    public class TeacherCourseInstance
     {
     }
 }

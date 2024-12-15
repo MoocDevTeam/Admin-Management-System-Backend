@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Mooc.Model.Migrations
 {
     /// <inheritdoc />
-    public partial class AddMoocTeacherTable : Migration
+    public partial class TeacherTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -64,7 +64,7 @@ namespace Mooc.Model.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MoocTeacher",
+                name: "Teacher",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false),
@@ -82,15 +82,15 @@ namespace Mooc.Model.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MoocTeacher", x => x.Id);
+                    table.PrimaryKey("PK_Teacher", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MoocTeacher_User_CreatedByUserId",
+                        name: "FK_Teacher_User_CreatedByUserId",
                         column: x => x.CreatedByUserId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MoocTeacher_User_UpdatedByUserId",
+                        name: "FK_Teacher_User_UpdatedByUserId",
                         column: x => x.UpdatedByUserId,
                         principalTable: "User",
                         principalColumn: "Id",
@@ -98,13 +98,13 @@ namespace Mooc.Model.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_MoocTeacher_CreatedByUserId",
-                table: "MoocTeacher",
+                name: "IX_Teacher_CreatedByUserId",
+                table: "Teacher",
                 column: "CreatedByUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MoocTeacher_UpdatedByUserId",
-                table: "MoocTeacher",
+                name: "IX_Teacher_UpdatedByUserId",
+                table: "Teacher",
                 column: "UpdatedByUserId");
         }
 
@@ -118,7 +118,7 @@ namespace Mooc.Model.Migrations
                 name: "MoocCourses");
 
             migrationBuilder.DropTable(
-                name: "MoocTeacher");
+                name: "Teacher");
 
             migrationBuilder.DropTable(
                 name: "User");

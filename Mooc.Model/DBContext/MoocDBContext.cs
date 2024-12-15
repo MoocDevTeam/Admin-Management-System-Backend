@@ -1,4 +1,6 @@
-﻿namespace Mooc.Model.DBContext;
+﻿using Mooc.Model.Entity.Course;
+
+namespace Mooc.Model.DBContext;
 
 public class MoocDBContext : DbContext
 {
@@ -12,6 +14,7 @@ public class MoocDBContext : DbContext
     public DbSet<MoocCourse> MoocCourses { get; set; }
 
     public DbSet<MoocCourseInstance> MoocCourseInstances { get; set; }
+    public DbSet<Teacher> MoocTeachers { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,6 +24,6 @@ public class MoocDBContext : DbContext
         //extension method
         modelBuilder.ConfigureAdminManagement();
 
-        // modelBuilder.ConfigureCourseManagement();
+        modelBuilder.ConfigureCourseManagement();
     }
 }

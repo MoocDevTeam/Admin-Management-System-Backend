@@ -9,7 +9,6 @@ using MoocWebApi.Controllers.Admin;
 
 
 
-
 namespace Mooc.UnitTest
 {
     public class Tests
@@ -27,7 +26,6 @@ namespace Mooc.UnitTest
         [SetUp]
         public void SetUp()
         {
-
         }
         [Test]
         public async Task GetByPageAsync_WhenPageUserexit_ShouldReturnPageUsers()
@@ -68,7 +66,7 @@ namespace Mooc.UnitTest
         {
             // Arrange
             var input = new CreateUserDto()
-            { Id = 1,
+            {   Id = 1,
                 UserName = "A5",
                 Password = "123",
                 Age = 1,
@@ -194,7 +192,7 @@ namespace Mooc.UnitTest
             Assert.AreEqual(updatedUser.Gender, output.Gender);
             Assert.AreEqual(updatedUser.Avatar, output.Avatar);
             Assert.IsTrue(result);
-            _userServiceMock.Verify(s => s.UpdateAsync(input.Id, input), Times.AtLeastOnce);
+            _userServiceMock.Verify(s => s.UpdateAsync(input.Id, input), Times.Once);
         }
 
         [Test]
@@ -234,16 +232,16 @@ namespace Mooc.UnitTest
 
             //Assert
             Assert.IsTrue(updatedUser.Password == "");
-            _userServiceMock.Verify(s => s.UpdateAsync(input.Id, input), Times.AtLeastOnce);
+            _userServiceMock.Verify(s => s.UpdateAsync(input.Id, input), Times.Once);
         }
 
         [Test]
         [TestCase(3,7)]
         public async Task Delete_WhenUserIsDeleted_ShouldReturnTrue(int id, int id2)
         {
+            //valid Id case
             //Arrange
             var validId = id;
-            var invalidId = id2;
             var input = new FilterPagedResultRequestDto();
             var usersBeforeDelete = new List<UserDto>
             {
@@ -258,24 +256,44 @@ namespace Mooc.UnitTest
                 new UserDto { Id = 5, UserName = "A5", Password="123", Age= 1, Email="abc@uow.edu.au", Phone="0401499796",
                 Address = "Jane Street", Gender=Gender.Male, Avatar="123" },
             };
-            var usersAfterDelete = from listItem in usersBeforeDelete where id != validId select listItem;
+            var usersAfterDeleteValid = from listItem in usersBeforeDelete where id != validId select listItem;
 
             var pagedResult = new PagedResultDto<UserDto>
             {
-                Items = usersAfterDelete as List<UserDto>,
+                Items = usersAfterDeleteValid as List<UserDto>,
                 Total = 4,
             };
             _userServiceMock.Setup(service => service.DeleteAsync(validId)).Returns(Task.FromResult(pagedResult));
-            //Act
+            _userServiceMock.Setup(service => service.GetListAsync(input)).ReturnsAsync(pagedResult);//Act
 
-            var Result = _controller.Delete(validId);
+            var ValidResult = _controller.Delete(validId);
+            var listCountResult = await _controller.GetByPageAsync(input);
             //Assert
-            Assert.IsTrue(Result.Result);
+
+            Assert.AreEqual(4, listCountResult.Total);
+            Assert.IsTrue(ValidResult.Result);
             _userServiceMock.Verify(s => s.DeleteAsync(validId), Times.Once);
 
-                  
-        }
 
+            //invalid Id case
+            //arrange
+            var invalidId = id2;
+            var input2 = new FilterPagedResultRequestDto();
+            var usersAfterDeleteInvalid  = from listItem in usersBeforeDelete where id != invalidId select listItem;
+            var pagedResultInvalid = new PagedResultDto<UserDto>
+            {
+                Items = usersAfterDeleteValid as List<UserDto>,
+                Total = 5,
+            };
+            _userServiceMock.Setup(service => service.DeleteAsync(invalidId)).Returns(Task.FromResult(pagedResultInvalid));
+            _userServiceMock.Setup(service => service.GetListAsync(input2)).ReturnsAsync(pagedResultInvalid);
+            //Act
+            var InvalidResult = _controller.Delete(validId);
+            var listCountResult2 = await _controller.GetByPageAsync(input2);
+            //Assert
+            Assert.AreEqual(5, listCountResult2.Total);
+            _userServiceMock.Verify(s => s.DeleteAsync(validId), Times.AtLeastOnce);
+        }
      
     }
 }

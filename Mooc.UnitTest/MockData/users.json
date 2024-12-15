@@ -1,0 +1,78 @@
+[
+  {
+    "Id": 1,
+    "UserName": "A1",
+    "Password": "123",
+    "Age": 18,
+    "Email": "abc@uow.edu.au",
+    "Phone": "0401499796",
+    "Address": "Jane Street",
+    "Gender": 1,
+    "Avatar": "123",
+ 
+  },
+  {
+    "Id": 2,
+    "UserName": "A2",
+    "Password": "123",
+    "Age": 19,
+    "Email": "abc@uow.edu.au",
+    "Phone": "0401499796",
+    "Address": "Jane Street",
+    "Gender": 1,
+    "Avatar": "123"
+  },
+  {
+    "Id": 3,
+    "UserName": "A3",
+    "Password": "123",
+    "Age": 120,
+    "Email": "abc@uow.edu.au",
+    "Phone": "0401499796",
+    "Address": "Jane Street",
+    "Gender": 1,
+    "Avatar": "123"
+  },
+  {
+    "Id": 4,
+    "UserName": "A4",
+    "Password": "123",
+    "Age": 20,
+    "Email": "abc@uow.edu.au",
+    "Phone": "0401499796",
+    "Address": "Jane Street",
+    "Gender": 1,
+    "Avatar": "123"
+  },
+  {
+    "Id": 5,
+    "UserName": "A5",
+    "Password": "123",
+    "Age": 21,
+    "Email": "abc@uow.edu.au",
+    "Phone": "0401499796",
+    "Address": "Jane Street",
+    "Gender": 1,
+    "Avatar": "123"
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]

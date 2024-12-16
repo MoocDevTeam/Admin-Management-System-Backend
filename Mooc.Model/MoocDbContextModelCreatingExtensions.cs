@@ -1,5 +1,4 @@
 ﻿using Mooc.Shared.Entity.Admin;
-using Mooc.Model.Entity.Course;
 using Mooc.Shared.Entity.Course;
 
 public static class MoocDbContextModelCreatingExtensions
@@ -43,7 +42,6 @@ public static class MoocDbContextModelCreatingExtensions
     public static void ConfigureCourseManagement(this ModelBuilder modelBuilder)
     {
         ConfigureCourseManag(modelBuilder);
-        ConfigureMoocTeacher(modelBuilder);
     }
 
     private static void ConfigureCourseManag(ModelBuilder modelBuilder)
@@ -53,34 +51,31 @@ public static class MoocDbContextModelCreatingExtensions
         //{
         //    e.ToTable(TablePrefix + "MoocCourseInstance");
         //});
-    }
 
-    /// <summary>
-    /// Teacher
-    /// <summary>
-    private static void ConfigureMoocTeacher(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Teacher>(b =>
+        //MoocEnrollment
+        modelBuilder.Entity<MoocEnrollment>(b =>
         {
-            b.ToTable("Teacher");
+            b.ToTable(TablePrefix + "Enrollment");
             b.HasKey(x => x.Id);
             b.Property(e => e.Id).ValueGeneratedNever();
-            b.Property(cs => cs.Title).IsRequired().HasMaxLength(TeacherEntityConsts.MaxTitleLength);
-            b.Property(cs => cs.Department).IsRequired().HasMaxLength(TeacherEntityConsts.MaxDepartmentLength);
-            b.Property(cs => cs.Office).IsRequired().HasMaxLength(TeacherEntityConsts.MaxOfficeLength);
-            b.Property(cs => cs.Introduction).HasMaxLength(TeacherEntityConsts.MaxIntroductionLength);
-            b.Property(cs => cs.Expertise).IsRequired().HasMaxLength(TeacherEntityConsts.MaxExpertiseLength);
-            
-            //Foreign configuration temperarily use <User> until <MoocUser is created>
-            b.HasOne<User>(x => x.CreatedByUser)
-            .WithMany()
-            .HasForeignKey(x => x.CreatedByUserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-            b.HasOne<User>(x => x.UpdatedByUser)
-            .WithMany()
-            .HasForeignKey(x => x.UpdatedByUserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            b.Property(e => e.CourseInstanceId).IsRequired();
+            b.Property(cs => cs.EnrollmentStatus).HasConversion(
+                 v => v.ToString(),
+                 v => (EnrollmentStatus)Enum.Parse(typeof(EnrollmentStatus), v)
+             ).HasMaxLength(20);
+            b.Property(e => e.EnrollStartDate).IsRequired();
+            b.Property(e => e.EnrollEndDate).IsRequired();
+            b.Property(e => e.MaxStudents)
+                .IsRequired()
+                .HasAnnotation("Range", new { Min = EnrollementEntityConsts.MinStudents, Max = EnrollementEntityConsts.MaxStudents });
+            b.Property(e => e.CreatedByUserId).IsRequired();
+            b.Property(e => e.UpdatedByUserId).IsRequired();
+            b.Property(e => e.CreatedAt)
+                .IsRequired()
+                .HasDefaultValueSql("GETDATE()");
+            b.Property(e => e.UpdatedAt)
+               .IsRequired()
+               .HasDefaultValueSql("GETDATE()");
         });
     }
 }

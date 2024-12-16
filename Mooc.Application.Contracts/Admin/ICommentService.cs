@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace Mooc.Application.Contracts.Admin
 {
-    public interface IMoocCommentService
+    public interface ICommentService
     {
-        Task<MoocCommentDto> GetCommentAsync(long id);
-        Task<List<MoocCommentDto>> GetAllCommentsAsync();
+        Task<CommentDto> GetCommentAsync(long id);
+        Task<List<CommentDto>> GetAllCommentsAsync();
     }
 }

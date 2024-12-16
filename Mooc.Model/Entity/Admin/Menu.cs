@@ -4,7 +4,7 @@ using System;
 
 namespace Mooc.Model.Entity;
 
-public class MoocMenu : BaseEntity
+public class Menu : BaseEntity
 {
 
 }

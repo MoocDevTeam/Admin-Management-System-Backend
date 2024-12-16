@@ -1,6 +1,6 @@
 namespace Mooc.Application.Admin
 {
-    public class MoocMenuService
+    public class MenuService
     {
         public void PlaceholderMethod()
         {

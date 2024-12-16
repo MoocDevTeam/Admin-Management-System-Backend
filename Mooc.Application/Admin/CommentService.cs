@@ -1,6 +1,6 @@
 namespace Mooc.Application.Admin
 {
-    public class MoocCommentService
+    public class CommentService
     {
         public void PlaceholderMethod()
         {

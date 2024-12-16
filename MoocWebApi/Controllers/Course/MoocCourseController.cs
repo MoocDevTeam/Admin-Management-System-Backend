@@ -19,22 +19,22 @@ namespace MoocWebApi.Controllers.Course
             _courseService = courseService;
         }
 
-        [HttpGet]
-        public async Task<PagedResultDto<CourseDto>> GetByPageAsync([FromQuery] FilterPagedResultRequestDto input)
-        {
-            var pagedResult = await _courseService.GetListAsync(input);
+        // [HttpGet]
+        // public async Task<PagedResultDto<CourseDto>> GetByPageAsync([FromQuery] FilterPagedResultRequestDto input)
+        // {
+        //     var pagedResult = await _courseService.GetListAsync(input);
 
-            return pagedResult;
-        }
+        //     return pagedResult;
+        // }
 
-        [HttpGet("{courseName}")]
-        public async Task<IActionResult> GetByCourseNameAsync(string courseName)
-        {
-            var course = await _courseService.GetByCourseNameAsync(courseName);
-            if (course == null)
-                return NotFound(new { Message = $"Course with name '{courseName}' not found." });
-            return Ok(course);
-        }
+        // [HttpGet("{courseName}")]
+        // public async Task<IActionResult> GetByCourseNameAsync(string courseName)
+        // {
+        //     var course = await _courseService.GetByCourseNameAsync(courseName);
+        //     if (course == null)
+        //         return NotFound(new { Message = $"Course with name '{courseName}' not found." });
+        //     return Ok(course);
+        // }
 
         // [HttpGet]
         // public async Task<IActionResult> GetAll()

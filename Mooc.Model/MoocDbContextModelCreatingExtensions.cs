@@ -53,7 +53,7 @@ public static class MoocDbContextModelCreatingExtensions
         //});
 
         //MoocEnrollment
-        modelBuilder.Entity<MoocEnrollment>(b =>
+        modelBuilder.Entity<Enrollment>(b =>
         {
             b.ToTable(TablePrefix + "Enrollment");
             b.HasKey(x => x.Id);

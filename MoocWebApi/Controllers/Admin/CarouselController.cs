@@ -4,7 +4,7 @@ namespace MoocWebApi.Controllers.Admin
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class MoocCommentController : ControllerBase
+    public class CarouselController : ControllerBase
     {
     }
 }

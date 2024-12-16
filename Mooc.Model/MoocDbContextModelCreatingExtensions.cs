@@ -45,6 +45,7 @@ public static class MoocDbContextModelCreatingExtensions
         ConfigureCourseManag(modelBuilder);
         ConfigureTeacher(modelBuilder);
         ConfigureCategory(modelBuilder);
+        ConfigureEnrollment(modelBuilder);
     }
 
     private static void ConfigureCourseManag(ModelBuilder modelBuilder)
@@ -54,11 +55,12 @@ public static class MoocDbContextModelCreatingExtensions
         //{
         //    e.ToTable(TablePrefix + "MoocCourseInstance");
         //});
-    }
 
-    /// <summary>
-    /// Teacher
-    /// <summary>
+        /// <summary>
+        /// Teacher
+        /// <summary>
+        /// 
+    }
     private static void ConfigureTeacher(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Teacher>(b =>
@@ -142,5 +144,34 @@ public static class MoocDbContextModelCreatingExtensions
             .HasForeignKey(x => x.UpdatedByUserId)
             .OnDelete(DeleteBehavior.Restrict);
         });
+    }
+
+    private static void ConfigureEnrollment(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Enrollment>(b =>
+        {
+            b.ToTable(TablePrefix + "Enrollment");
+            b.HasKey(x => x.Id);
+            b.Property(e => e.Id).ValueGeneratedNever();
+            b.Property(e => e.CourseInstanceId).IsRequired();
+            b.Property(cs => cs.EnrollmentStatus).HasConversion(
+                 v => v.ToString(),
+                 v => (EnrollmentStatus)Enum.Parse(typeof(EnrollmentStatus), v)
+             ).HasMaxLength(20);
+            b.Property(e => e.EnrollStartDate).IsRequired();
+            b.Property(e => e.EnrollEndDate).IsRequired();
+            b.Property(e => e.MaxStudents)
+                .IsRequired()
+                .HasAnnotation("Range", new { Min = EnrollementEntityConsts.MinStudents, Max = EnrollementEntityConsts.MaxStudents });
+            b.Property(e => e.CreatedByUserId).IsRequired();
+            b.Property(e => e.UpdatedByUserId).IsRequired();
+            b.Property(e => e.CreatedAt)
+                .IsRequired()
+                .HasDefaultValueSql("GETDATE()");
+            b.Property(e => e.UpdatedAt)
+               .IsRequired()
+               .HasDefaultValueSql("GETDATE()");
+        });
+
     }
 }

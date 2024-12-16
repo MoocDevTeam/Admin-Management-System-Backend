@@ -8,7 +8,6 @@ using Moq;
 using MoocWebApi.Controllers.Admin;
 
 
-
 namespace Mooc.UnitTest
 {
     public class Tests
@@ -56,8 +55,8 @@ namespace Mooc.UnitTest
             var result = await _controller.GetByPageAsync(input);
 
             // Assert
-            Assert.AreEqual(result, pagedResult);
-            Assert.AreEqual(result.Total, pagedResult.Total);
+            Assert.That(result, Is.EqualTo(pagedResult));
+            Assert.That(result.Total, Is.EqualTo(pagedResult.Total));
             _userServiceMock.Verify(s => s.GetListAsync(input), Times.Once);
         }
 
@@ -97,16 +96,16 @@ namespace Mooc.UnitTest
 
 
             // Assert
-            Assert.AreEqual(userDtoadded.Age, useDto.Age);
-            Assert.AreEqual(userDtoadded.UserName, useDto.UserName);
-            Assert.AreEqual(userDtoadded.Avatar, useDto.Avatar);
-            Assert.AreEqual(userDtoadded.Email, useDto.Email);
-            Assert.AreEqual(userDtoadded.Phone, useDto.Phone);
-            Assert.AreEqual(userDtoadded.Address, useDto.Address);
-            Assert.AreEqual(userDtoadded.Gender, useDto.Gender);
-            Assert.AreEqual(userDtoadded.Avatar, useDto.Avatar);
+           
+            Assert.That(useDto.Age, Is.EqualTo(userDtoadded.Age));
+            Assert.That(useDto.UserName, Is.EqualTo(userDtoadded.UserName));
+            Assert.That(useDto.Avatar, Is.EqualTo(userDtoadded.Avatar));
+            Assert.That(useDto.Email, Is.EqualTo(userDtoadded.Email));
+            Assert.That(useDto.Phone, Is.EqualTo(userDtoadded.Phone));
+            Assert.That(useDto.Address, Is.EqualTo(userDtoadded.Address));
+            Assert.That(useDto.Gender, Is.EqualTo(userDtoadded.Gender));
             Assert.IsTrue(result);
-            _userServiceMock.Verify(s => s.CreateAsync(input), Times.AtLeastOnce);
+            _userServiceMock.Verify(s => s.CreateAsync(input), Times.Exactly(2));
 
         }
         [Test]
@@ -183,14 +182,13 @@ namespace Mooc.UnitTest
             var result = await _controller.Update(input);
 
             //Assert
-            Assert.AreEqual(updatedUser.Age, output.Age);
-            Assert.AreEqual(updatedUser.UserName, output.UserName);
-            Assert.AreEqual(updatedUser.Avatar, output.Avatar);
-            Assert.AreEqual(updatedUser.Email, output.Email);
-            Assert.AreEqual(updatedUser.Phone, output.Phone);
-            Assert.AreEqual(updatedUser.Address, output.Address);
-            Assert.AreEqual(updatedUser.Gender, output.Gender);
-            Assert.AreEqual(updatedUser.Avatar, output.Avatar);
+            Assert.That(output.Age, Is.EqualTo(updatedUser.Age));
+            Assert.That(output.UserName, Is.EqualTo(updatedUser.UserName));
+            Assert.That(output.Avatar, Is.EqualTo(updatedUser.Avatar)); 
+            Assert.That(output.Email, Is.EqualTo(updatedUser.Email));
+            Assert.That(output.Phone, Is.EqualTo(updatedUser.Phone));
+            Assert.That(output.Gender, Is.EqualTo(updatedUser.Gender));
+            Assert.That(output.Address, Is.EqualTo(updatedUser.Address));
             Assert.IsTrue(result);
             _userServiceMock.Verify(s => s.UpdateAsync(input.Id, input), Times.Once);
         }
@@ -256,11 +254,11 @@ namespace Mooc.UnitTest
                 new UserDto { Id = 5, UserName = "A5", Password="123", Age= 1, Email="abc@uow.edu.au", Phone="0401499796",
                 Address = "Jane Street", Gender=Gender.Male, Avatar="123" },
             };
-            var usersAfterDeleteValid = from listItem in usersBeforeDelete where id != validId select listItem;
+            var usersAfterDelete = from listItem in usersBeforeDelete where id != validId select listItem;
 
             var pagedResult = new PagedResultDto<UserDto>
             {
-                Items = usersAfterDeleteValid as List<UserDto>,
+                Items = usersAfterDelete as List<UserDto>,
                 Total = 4,
             };
             _userServiceMock.Setup(service => service.DeleteAsync(validId)).Returns(Task.FromResult(pagedResult));
@@ -270,7 +268,7 @@ namespace Mooc.UnitTest
             var listCountResult = await _controller.GetByPageAsync(input);
             //Assert
 
-            Assert.AreEqual(4, listCountResult.Total);
+            Assert.That(listCountResult.Total, Is.EqualTo(4));
             Assert.IsTrue(ValidResult.Result);
             _userServiceMock.Verify(s => s.DeleteAsync(validId), Times.Once);
 
@@ -282,7 +280,7 @@ namespace Mooc.UnitTest
             var usersAfterDeleteInvalid  = from listItem in usersBeforeDelete where id != invalidId select listItem;
             var pagedResultInvalid = new PagedResultDto<UserDto>
             {
-                Items = usersAfterDeleteValid as List<UserDto>,
+                Items = usersAfterDelete as List<UserDto>,
                 Total = 5,
             };
             _userServiceMock.Setup(service => service.DeleteAsync(invalidId)).Returns(Task.FromResult(pagedResultInvalid));
@@ -291,7 +289,7 @@ namespace Mooc.UnitTest
             var InvalidResult = _controller.Delete(validId);
             var listCountResult2 = await _controller.GetByPageAsync(input2);
             //Assert
-            Assert.AreEqual(5, listCountResult2.Total);
+            Assert.That(listCountResult.Total, Is.EqualTo(5));
             _userServiceMock.Verify(s => s.DeleteAsync(validId), Times.AtLeastOnce);
         }
      

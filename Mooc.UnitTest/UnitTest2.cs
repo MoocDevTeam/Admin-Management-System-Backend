@@ -1,20 +1,14 @@
-using Autofac.Core;
+
 using Mooc.Application.Admin;
 using Mooc.Application.Contracts.Admin;
-using Mooc.Application.Contracts.Dto;
 using Mooc.Shared;
-using MoocWebApi.Controllers.Admin;
 using Moq;
 using Newtonsoft.Json;
-using StackExchange.Redis;
 using Microsoft.EntityFrameworkCore;
-using  Mooc.Model.DBContext;
+using Mooc.Model.DBContext;
 using Mooc.Model.Entity;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
-using Mooc.Core.ExceptionHandling;
-
-
 
 namespace Mooc.UnitTest
 {
@@ -22,8 +16,7 @@ namespace Mooc.UnitTest
     {
         private readonly IMapper _mapper;
         private readonly Mock<IWebHostEnvironment> _mockWebHostEnvironment;
-        private List<User> users;
-        private string path = "E:\\JR bootcamp fullstack-net\\project 3\\Admin-Management-System-Backend\\Mooc.UnitTest\\MockData\\users.json";
+        private readonly string path = "./MockData/users.json";
         public UserServiceTests()
         {
             var config = new MapperConfiguration(cfg =>
@@ -69,8 +62,8 @@ namespace Mooc.UnitTest
                 RoleIds = new List<long>() { 1, 2, 3 }
             };
 
-            using (var context = new MoocDBContext(options))
-            {
+               var context = new MoocDBContext(options);
+            
                 context.Users.AddRange(users);
                 context.SaveChanges();
 
@@ -80,11 +73,10 @@ namespace Mooc.UnitTest
 
                 // Assert
                 Assert.NotNull(result);
-                Assert.AreEqual(newUser.UserName, result.UserName);
-                Assert.AreEqual(newUser.Phone, result.Phone);
-                Assert.AreEqual(newUser.Age, result.Age);
-                Assert.AreEqual(newUser.Email, result.Email);
-            }
+                Assert.That(result.UserName, Is.EqualTo(newUser.UserName));
+                Assert.That(result.Phone, Is.EqualTo(newUser.Phone));
+                Assert.That(result.Age, Is.EqualTo(newUser.Age));
+                Assert.That(result.Email, Is.EqualTo(newUser.Email));
         }
         [Test]
         public async Task GetByUserName_WhenUserNameExists_ShouldReturnAUsername()
@@ -107,7 +99,7 @@ namespace Mooc.UnitTest
                 //Assert
                 Assert.NotNull(result);
                 Assert.Null(inValidResult);
-                Assert.AreEqual("A1", result.UserName);
+                Assert.That(result.UserName, Is.EqualTo("A1"));
             }
 
         }
@@ -142,7 +134,7 @@ namespace Mooc.UnitTest
                 var updatedResult = await service.UpdateAsync(5, updatedUser);
                 //Assert
                 Assert.NotNull(updatedResult);
-                Assert.AreEqual(updatedUser.UserName, updatedResult.UserName);
+                Assert.That(updatedResult.UserName, Is.EqualTo(updatedUser.UserName));
             }
 
         }

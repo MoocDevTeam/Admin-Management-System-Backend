@@ -11,45 +11,33 @@ public static class MoocDbContextModelCreatingExtensions
     /// <param name="modelBuilder"></param>
     public static void ConfigureAdminManagement(this ModelBuilder modelBuilder)
     {
-        //User
-        modelBuilder.Entity<User>(b =>
-        {
-            b.ToTable(TablePrefix + "User");
-            b.HasKey(x => x.Id);
-            b.Property(e => e.Id).ValueGeneratedNever();
-            b.Property(cs => cs.UserName).IsRequired().HasMaxLength(UserEntityConsts.MaxUserNameLength);
-            b.Property(cs => cs.Password).HasMaxLength(UserEntityConsts.MaxPasswordLength);
-            b.Property(cs => cs.Email).HasMaxLength(UserEntityConsts.MaxEmailLength);
-            b.Property(cs => cs.Address).HasMaxLength(UserEntityConsts.MaxAddressLength);
-            b.Property(cs => cs.Phone).HasMaxLength(UserEntityConsts.MaxPhoneLength);
-            b.Property(cs => cs.Avatar).HasMaxLength(UserEntityConsts.MaxAvatarLength);
-            b.Property(cs => cs.Gender).HasConversion(
-                v => v.ToString(),
-                v => (Gender)Enum.Parse(typeof(Gender), v)
-            ).HasMaxLength(UserEntityConsts.MaxGenderLength);
-        });
-
-        //or separating a method 
-       // ConfigureAdminManag(modelBuilder);
+        ConfigureUser(modelBuilder);
     }
 
-    private static void ConfigureAdminManag(ModelBuilder modelBuilder)
+    private static void ConfigureUser(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>(b =>
+        modelBuilder.Entity<MoocUser>(b =>
         {
-            b.ToTable(TablePrefix + "User");
+            b.ToTable(TablePrefix + "MoocUser");
             b.HasKey(x => x.Id);
-            b.Property(e => e.Id).ValueGeneratedNever();
-            b.Property(cs => cs.UserName).IsRequired().HasMaxLength(UserEntityConsts.MaxUserNameLength);
-            b.Property(cs => cs.Password).HasMaxLength(UserEntityConsts.MaxPasswordLength);
-            b.Property(cs => cs.Email).HasMaxLength(UserEntityConsts.MaxEmailLength);
-            b.Property(cs => cs.Address).HasMaxLength(UserEntityConsts.MaxAddressLength);
-            b.Property(cs => cs.Phone).HasMaxLength(UserEntityConsts.MaxPhoneLength);
-            b.Property(cs => cs.Avatar).HasMaxLength(UserEntityConsts.MaxAvatarLength);
-            b.Property(cs => cs.Gender).HasConversion(
+            b.Property(x => x.Id).ValueGeneratedNever();
+            b.Property(x => x.UserName).IsRequired().HasMaxLength(UserEntityConsts.MaxUserNameLength);
+            b.Property(x => x.Password).HasMaxLength(UserEntityConsts.MaxPasswordLength);
+            b.Property(x => x.Email).HasMaxLength(UserEntityConsts.MaxEmailLength);
+            b.Property(x => x.Age).HasMaxLength(UserEntityConsts.MaxAgeLength);
+            b.HasMany(x => x.MoocUserRole);
+            b.Property(x => x.Avatar).HasMaxLength(UserEntityConsts.MaxAvatarLength);
+            b.Property(x => x.Gender).HasConversion(
                 v => v.ToString(),
-                v => (Gender)Enum.Parse(typeof(Gender), v)
-            ).HasMaxLength(UserEntityConsts.MaxGenderLength);
+                v => (Gender)Enum.Parse(typeof(Gender), v));
+            b.Property(x => x.Access).HasConversion(
+                v => v.ToString(),
+                v => (Access)Enum.Parse(typeof(Access), v));
+            b.Property(x => x.IsActive).IsRequired().HasDefaultValue(true);
+            b.Property(x => x.CreatedDate).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");//for SQLite
+
+
         });
     }
+    
 }

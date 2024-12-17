@@ -1,6 +1,6 @@
-namespace Mooc.Model.Entity;
+namespace Mooc.Application.Contracts.Admin;
 
-public class MoocUser : BaseEntity
+public class MoocUserDto : BaseEntityDto
 {
     public string UserName { get; set; }
 
@@ -20,5 +20,4 @@ public class MoocUser : BaseEntity
 
     public bool IsActive { get; set; }
 
-    public ICollection<MoocUserRole> MoocUserRole { get; set; } = new List<MoocUserRole>();
 }

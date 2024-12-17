@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Ignore contents of Migrations folder but keep the folder itself
+Mooc.Model/Migrations/

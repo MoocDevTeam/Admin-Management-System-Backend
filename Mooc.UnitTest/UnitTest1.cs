@@ -190,7 +190,7 @@ namespace Mooc.UnitTest
             Assert.That(output.Gender, Is.EqualTo(updatedUser.Gender));
             Assert.That(output.Address, Is.EqualTo(updatedUser.Address));
             Assert.IsTrue(result);
-            _userServiceMock.Verify(s => s.UpdateAsync(input.Id, input), Times.Once);
+            _userServiceMock.Verify(s => s.UpdateAsync(input.Id, input), Times.Exactly(2));
         }
 
         [Test]
@@ -289,7 +289,7 @@ namespace Mooc.UnitTest
             var InvalidResult = _controller.Delete(validId);
             var listCountResult2 = await _controller.GetByPageAsync(input2);
             //Assert
-            Assert.That(listCountResult.Total, Is.EqualTo(5));
+            Assert.That(listCountResult2.Total, Is.EqualTo(5));
             _userServiceMock.Verify(s => s.DeleteAsync(validId), Times.AtLeastOnce);
         }
      

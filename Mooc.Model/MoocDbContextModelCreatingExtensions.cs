@@ -71,7 +71,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(cs => cs.Office).IsRequired().HasMaxLength(TeacherEntityConsts.MaxOfficeLength);
             b.Property(cs => cs.Introduction).HasMaxLength(TeacherEntityConsts.MaxIntroductionLength);
             b.Property(cs => cs.Expertise).IsRequired().HasMaxLength(TeacherEntityConsts.MaxExpertiseLength);
-            
+
             //Foreign configuration temperarily use <User> until <MoocUser is created>
             b.HasOne<User>(x => x.CreatedByUser)
             .WithMany()
@@ -82,6 +82,31 @@ public static class MoocDbContextModelCreatingExtensions
             .WithMany()
             .HasForeignKey(x => x.UpdatedByUserId)
             .OnDelete(DeleteBehavior.Cascade);
+        });
+    }
+
+    private static void ConfigureCourse(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<MoocCourse>(b =>
+        {
+            b.ToTable("MoocCourses");
+            b.HasKey(x => x.Id);
+            b.Property(e => e.Id).ValueGeneratedNever();
+            b.Property(cs => cs.Title).IsRequired().HasMaxLength(CourseEntityConsts.MaxTitleLength);
+            b.Property(cs => cs.CourseCode).IsRequired().HasMaxLength(CourseEntityConsts.MaxCourseCodeLength);
+            b.Property(cs => cs.CoverImage).IsRequired();
+            b.Property(cs => cs.Description).HasMaxLength(CourseEntityConsts.MaxDescriptionLength);
+
+            // //Foreign configuration temperarily use <User> until <MoocUser is created>
+            // b.HasOne<User>(x => x.CreatedByUser)
+            // .WithMany()
+            // .HasForeignKey(x => x.CreatedByUserId)
+            // .OnDelete(DeleteBehavior.Cascade);
+
+            // b.HasOne<User>(x => x.UpdatedByUser)
+            // .WithMany()
+            // .HasForeignKey(x => x.UpdatedByUserId)
+            // .OnDelete(DeleteBehavior.Cascade);
         });
     }
     ///<summary>

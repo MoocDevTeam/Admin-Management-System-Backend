@@ -6,7 +6,6 @@ public class MoocDBContext : DbContext
     {
 
     }
-
     public DbSet<User> Users { get; set; }
     public DbSet<MoocUser> MoocUsers { get; set; }
     public DbSet<MoocUserRole> MoocUserRoles { get; set; }
@@ -15,6 +14,9 @@ public class MoocDBContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        //extension method
         modelBuilder.ConfigureAdminManagement();
+
+        //modelBuilder.ConfigureMoocManagement();
     }
 }

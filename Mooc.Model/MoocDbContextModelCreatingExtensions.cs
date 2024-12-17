@@ -43,7 +43,8 @@ public static class MoocDbContextModelCreatingExtensions
     public static void ConfigureCourseManagement(this ModelBuilder modelBuilder)
     {
         ConfigureCourseManag(modelBuilder);
-        ConfigureMoocTeacher(modelBuilder);
+        ConfigureTeacher(modelBuilder);
+        ConfigureCategory(modelBuilder);
     }
 
     private static void ConfigureCourseManag(ModelBuilder modelBuilder)
@@ -58,7 +59,7 @@ public static class MoocDbContextModelCreatingExtensions
     /// <summary>
     /// Teacher
     /// <summary>
-    private static void ConfigureMoocTeacher(ModelBuilder modelBuilder)
+    private static void ConfigureTeacher(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Teacher>(b =>
         {
@@ -106,6 +107,40 @@ public static class MoocDbContextModelCreatingExtensions
             // .WithMany()
             // .HasForeignKey(x => x.UpdatedByUserId)
             // .OnDelete(DeleteBehavior.Cascade);
+        });
+    }
+    ///<summary>
+    /// Category
+    /// <summary>
+    private static void ConfigureCategory(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Category>(b =>
+        {
+            b.ToTable("Category");
+            b.HasKey(x => x.Id);
+            b.Property(e => e.Id).ValueGeneratedNever();
+            b.Property(cs => cs.CategoryName).IsRequired().HasMaxLength(CategoryEntityConsts.MaxCategoryNameLength);
+            b.Property(cs => cs.Description).IsRequired().HasMaxLength(CategoryEntityConsts.MaxDescriptionLength);
+            b.Property(cs => cs.IconUrl).IsRequired().HasMaxLength(CategoryEntityConsts.MaxIconUrlLength);
+            b.Property(cs => cs.CreatedAt).IsRequired();
+            b.Property(cs => cs.UpdatedAt);
+
+            // foreign keys 
+            b.HasOne(x => x.ParentCategory)
+            .WithMany()
+            .HasForeignKey(x => x.ParentId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            //foreign keys to User class
+            b.HasOne(x => x.CreatedByUser)
+            .WithMany()
+            .HasForeignKey(x => x.CreatedByUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasOne(x => x.UpdatedByUser)
+            .WithMany()
+            .HasForeignKey(x => x.UpdatedByUserId)
+            .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

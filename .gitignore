@@ -363,5 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Ignore contents of Migrations folder but keep the folder itself
-Mooc.Model/Migrations/*
-!Mooc.Model/Migrations/.gitkeep
+Mooc.Model/Migrations/

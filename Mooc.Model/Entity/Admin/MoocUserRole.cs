@@ -6,7 +6,9 @@ public class MoocUserRole : BaseEntity
 
     public long MoocUserId { get; set; }
 
-    // public Role Role { get; set; }
+    //public Role Role { get; set; }
 
     public long RoleId { get; set; }
+
+
 }

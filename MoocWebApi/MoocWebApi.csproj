@@ -41,10 +41,4 @@
 	  <Folder Include="AppData\" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <None Update="AppData\moocdb.db">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	</ItemGroup>
-
 </Project>

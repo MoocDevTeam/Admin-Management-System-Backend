@@ -1,4 +1,4 @@
-﻿namespace Mooc.Application.Contracts.Admin.Dto;
+namespace Mooc.Application.Contracts.Admin.Dto;
 
 public class CreateOrUpdateUserBaseDto : BaseEntityDto
 {
@@ -13,16 +13,12 @@ public class CreateOrUpdateUserBaseDto : BaseEntityDto
     public int Age { get; set; }
 
     public string? Email { get; set; }
-
-    public string? Phone { get; set; }
-
-    public string? Address { get; set; }
-
+    public Access Access { get; set; }
     public Gender Gender { get; set; }
 
     public string? Avatar { get; set; }
 
-    public DateTime? Created { get; set; }
-
+    public DateTime? CreatedDate { get; set; }
+    public bool IsActive { get; set; }
     public List<long> RoleIds { get; set; } = new List<long>();
 }

@@ -46,6 +46,7 @@ public static class MoocDbContextModelCreatingExtensions
         ConfigureTeacher(modelBuilder);
         ConfigureCategory(modelBuilder);
         ConfigureEnrollment(modelBuilder);
+        ConfigureCourse(modelBuilder);
     }
 
     private static void ConfigureCourseManag(ModelBuilder modelBuilder)
@@ -162,7 +163,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(e => e.EnrollEndDate).IsRequired();
             b.Property(e => e.MaxStudents)
                 .IsRequired()
-                .HasAnnotation("Range", new { Min = EnrollementEntityConsts.MinStudents, Max = EnrollementEntityConsts.MaxStudents });
+                .HasMaxLength(300);
             b.Property(e => e.CreatedByUserId).IsRequired();
             b.Property(e => e.UpdatedByUserId).IsRequired();
             b.Property(e => e.CreatedAt)

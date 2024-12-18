@@ -123,14 +123,15 @@ namespace Mooc.Model.Migrations
             modelBuilder.Entity("Mooc.Model.Entity.Enrollment", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<long>("CourseInstanceId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<long>("CreatedByUserId")
                         .HasColumnType("INTEGER");
@@ -141,21 +142,26 @@ namespace Mooc.Model.Migrations
                     b.Property<DateTime>("EnrollStartDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("EnrollmentStatus")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("EnrollmentStatus")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("MaxStudents")
+                        .HasMaxLength(300)
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<long>("UpdatedByUserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.ToTable("MoocEnrollment");
+                    b.ToTable("Enrollment", (string)null);
                 });
 
             modelBuilder.Entity("Mooc.Model.Entity.MoocCourse", b =>
@@ -208,6 +214,50 @@ namespace Mooc.Model.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MoocCourseInstances");
+                });
+
+            modelBuilder.Entity("Mooc.Model.Entity.Session", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long>("CreatedByUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long?>("UpdatedByUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("UpdatedByUserId");
+
+                    b.ToTable("Session", (string)null);
                 });
 
             modelBuilder.Entity("Mooc.Model.Entity.User", b =>
@@ -283,6 +333,24 @@ namespace Mooc.Model.Migrations
                 });
 
             modelBuilder.Entity("Mooc.Model.Entity.Course.Teacher", b =>
+                {
+                    b.HasOne("Mooc.Model.Entity.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mooc.Model.Entity.User", "UpdatedByUser")
+                        .WithMany()
+                        .HasForeignKey("UpdatedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("UpdatedByUser");
+                });
+
+            modelBuilder.Entity("Mooc.Model.Entity.Session", b =>
                 {
                     b.HasOne("Mooc.Model.Entity.User", "CreatedByUser")
                         .WithMany()

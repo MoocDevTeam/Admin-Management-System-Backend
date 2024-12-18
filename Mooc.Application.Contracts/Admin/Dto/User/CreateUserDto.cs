@@ -1,6 +1,6 @@
-﻿namespace Mooc.Application.Contracts.Admin;
+namespace Mooc.Application.Contracts.Admin;
 
-public class CreateUserDto: CreateOrUpdateUserBaseDto
+public class CreateUserDto : CreateOrUpdateUserBaseDto
 {
-  
+
 }

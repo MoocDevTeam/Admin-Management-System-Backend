@@ -37,4 +37,10 @@
 		<Folder Include="Option\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="Migrations\.gitkeep">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>

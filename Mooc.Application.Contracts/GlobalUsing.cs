@@ -2,4 +2,5 @@
 global using Mooc.Application.Contracts.Dto;
 global using Mooc.Shared;
 global using System.ComponentModel.DataAnnotations;
-//global using Mooc.Application.Contracts.Course.Dto;
+global using System.ComponentModel.DataAnnotations.Schema;
+

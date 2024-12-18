@@ -1,4 +1,6 @@
-﻿namespace Mooc.Application.Contracts.Admin;
+using System.Threading.Tasks;
+
+namespace Mooc.Application.Contracts.Admin;
 
 public interface IUserService : ICrudService<UserDto, UserDto, long, FilterPagedResultRequestDto, CreateUserDto, UpdateUserDto>
 {

@@ -120,17 +120,56 @@ namespace Mooc.Model.Migrations
                     b.ToTable("Teacher", (string)null);
                 });
 
-            modelBuilder.Entity("Mooc.Model.Entity.MoocCourse", b =>
+            modelBuilder.Entity("Mooc.Model.Entity.Enrollment", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<long>("CourseInstanceId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("CreatedByUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("EnrollEndDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("EnrollStartDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("EnrollmentStatus")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MaxStudents")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("UpdatedByUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MoocEnrollment");
+                });
+
+            modelBuilder.Entity("Mooc.Model.Entity.MoocCourse", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("CourseCode")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CoverImage")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("CreatedAt")
@@ -141,10 +180,12 @@ namespace Mooc.Model.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -155,7 +196,7 @@ namespace Mooc.Model.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MoocCourses");
+                    b.ToTable("MoocCourses", (string)null);
                 });
 
             modelBuilder.Entity("Mooc.Model.Entity.MoocCourseInstance", b =>

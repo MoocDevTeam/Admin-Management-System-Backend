@@ -113,8 +113,6 @@ namespace Mooc.UnitTest
                 user.Password = password;
                 user.Age = Age;
                 user.Email = email;
-                user.Phone = phone;
-                user.Address = address;
                 user.Gender = gender;
 
                 var jsonContent = JsonContent.Create(user);

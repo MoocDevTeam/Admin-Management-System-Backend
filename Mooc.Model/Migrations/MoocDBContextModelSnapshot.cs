@@ -169,6 +169,9 @@ namespace Mooc.Model.Migrations
                     b.Property<long>("Id")
                         .HasColumnType("INTEGER");
 
+                    b.Property<long>("CategoryId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("CourseCode")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -181,7 +184,7 @@ namespace Mooc.Model.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("CreatedByUserId")
+                    b.Property<long>("CreatedByUserId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
@@ -197,10 +200,16 @@ namespace Mooc.Model.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("UpdatedByUserId")
+                    b.Property<long>("UpdatedByUserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("UpdatedByUserId");
 
                     b.ToTable("MoocCourses", (string)null);
                 });
@@ -350,6 +359,7 @@ namespace Mooc.Model.Migrations
                     b.Navigation("UpdatedByUser");
                 });
 
+
             modelBuilder.Entity("Mooc.Model.Entity.Session", b =>
                 {
                     b.HasOne("Mooc.Model.Entity.User", "CreatedByUser")
@@ -363,10 +373,12 @@ namespace Mooc.Model.Migrations
                         .HasForeignKey("UpdatedByUserId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+
                     b.Navigation("CreatedByUser");
 
                     b.Navigation("UpdatedByUser");
                 });
+
 #pragma warning restore 612, 618
         }
     }

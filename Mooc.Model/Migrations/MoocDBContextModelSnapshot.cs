@@ -123,14 +123,15 @@ namespace Mooc.Model.Migrations
             modelBuilder.Entity("Mooc.Model.Entity.Enrollment", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<long>("CourseInstanceId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<long>("CreatedByUserId")
                         .HasColumnType("INTEGER");
@@ -141,26 +142,34 @@ namespace Mooc.Model.Migrations
                     b.Property<DateTime>("EnrollStartDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("EnrollmentStatus")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("EnrollmentStatus")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("MaxStudents")
+                        .HasMaxLength(300)
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<long>("UpdatedByUserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.ToTable("MoocEnrollment");
+                    b.ToTable("Enrollment", (string)null);
                 });
 
             modelBuilder.Entity("Mooc.Model.Entity.MoocCourse", b =>
                 {
                     b.Property<long>("Id")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("CategoryId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CourseCode")
@@ -175,7 +184,7 @@ namespace Mooc.Model.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("CreatedByUserId")
+                    b.Property<long>("CreatedByUserId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
@@ -191,10 +200,16 @@ namespace Mooc.Model.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("UpdatedByUserId")
+                    b.Property<long>("UpdatedByUserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("UpdatedByUserId");
 
                     b.ToTable("MoocCourses", (string)null);
                 });
@@ -298,6 +313,45 @@ namespace Mooc.Model.Migrations
                     b.Navigation("CreatedByUser");
 
                     b.Navigation("UpdatedByUser");
+                });
+
+            modelBuilder.Entity("Mooc.Model.Entity.MoocCourse", b =>
+                {
+                    b.HasOne("Mooc.Model.Entity.Course.Category", "Category")
+                        .WithMany("Courses")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Mooc.Model.Entity.User", "CreatedByUser")
+                        .WithMany("CreatedCourses")
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Mooc.Model.Entity.User", "UpdatedByUser")
+                        .WithMany("UpdatedCourses")
+                        .HasForeignKey("UpdatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("UpdatedByUser");
+                });
+
+            modelBuilder.Entity("Mooc.Model.Entity.Course.Category", b =>
+                {
+                    b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("Mooc.Model.Entity.User", b =>
+                {
+                    b.Navigation("CreatedCourses");
+
+                    b.Navigation("UpdatedCourses");
                 });
 #pragma warning restore 612, 618
         }

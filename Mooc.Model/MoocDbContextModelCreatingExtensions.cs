@@ -33,6 +33,18 @@ public static class MoocDbContextModelCreatingExtensions
                 v => v.ToString(),
                 v => (Gender)Enum.Parse(typeof(Gender), v)
             ).HasMaxLength(UserEntityConsts.MaxGenderLength);
+
+            // Explicit relationship to MoocCourse for CreatedCourses
+            b.HasMany(u => u.CreatedCourses)
+                .WithOne(c => c.CreatedByUser)
+                .HasForeignKey(c => c.CreatedByUserId)  // Foreign key property
+                .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
+
+            // Explicit relationship to MoocCourse for UpdatedCourses
+            b.HasMany(u => u.UpdatedCourses)
+                .WithOne(c => c.UpdatedByUser)
+                .HasForeignKey(c => c.UpdatedByUserId)  // Foreign key property
+                .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
         });
     }
 
@@ -101,15 +113,20 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(cs => cs.Description).HasMaxLength(CourseEntityConsts.MaxDescriptionLength);
 
             // //Foreign configuration temperarily use <User> until <MoocUser is created>
-            // b.HasOne<User>(x => x.CreatedByUser)
-            // .WithMany()
-            // .HasForeignKey(x => x.CreatedByUserId)
-            // .OnDelete(DeleteBehavior.Cascade);
+            b.HasOne(x => x.CreatedByUser)
+            .WithMany(u => u.CreatedCourses)  // User has many CreatedCourses
+            .HasForeignKey(x => x.CreatedByUserId)  // Foreign key property
+            .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
 
-            // b.HasOne<User>(x => x.UpdatedByUser)
-            // .WithMany()
-            // .HasForeignKey(x => x.UpdatedByUserId)
-            // .OnDelete(DeleteBehavior.Cascade);
+            b.HasOne(x => x.UpdatedByUser)
+            .WithMany(u => u.UpdatedCourses)  // User has many UpdatedCourses
+            .HasForeignKey(x => x.UpdatedByUserId)  // Foreign key property
+            .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
+
+            // b.HasOne(x => x.Category)  // One Category
+            // .WithMany(c => c.Courses) // Many Courses
+            // .HasForeignKey(x => x.CategoryId) // Foreign Key in MoocCourse
+            // .OnDelete(DeleteBehavior.Restrict); // Restrict delete if needed
         });
     }
     ///<summary>
@@ -144,6 +161,12 @@ public static class MoocDbContextModelCreatingExtensions
             .WithMany()
             .HasForeignKey(x => x.UpdatedByUserId)
             .OnDelete(DeleteBehavior.Restrict);
+
+            // Explicit relationship to MoocCourse for UpdatedCourses
+            b.HasMany(u => u.Courses)
+            .WithOne(c => c.Category)
+            .HasForeignKey(c => c.CategoryId)  // Foreign key property
+            .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
         });
     }
 

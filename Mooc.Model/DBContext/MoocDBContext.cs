@@ -15,7 +15,7 @@ public class MoocDBContext : DbContext
 
     public DbSet<MoocCourseInstance> MoocCourseInstances { get; set; }
     public DbSet<Teacher> MoocTeachers { get; set; }
-    public DbSet<Enrollment> MoocEnrollment{ get; set; }
+    public DbSet<Enrollment> MoocEnrollment { get; set; }
 
 
 

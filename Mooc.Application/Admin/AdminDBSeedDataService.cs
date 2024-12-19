@@ -17,7 +17,6 @@ namespace Mooc.Application.Admin
         {
             new User(){Id=1, UserName="admin",Age=30,Email="admin@demo.com",Address="Canberra",Gender= Gender.Male, Password=BCryptUtil.HashPassword("123456"), Created=DateTime.Now  },
             new User(){Id=2, UserName="test",Age=30,Email="test@demo.com",Address="Canberra",Gender= Gender.Male,Password=BCryptUtil.HashPassword("123456"), Created=DateTime.Now.AddMinutes(1)},
-
             new User(){Id=3, UserName="test1",Age=31,Email="test1@demo.com",Address="Canberra",Gender= Gender.Male,Password=BCryptUtil.HashPassword("123456"),Created=DateTime.Now.AddMinutes(2) },
             new User(){Id=4, UserName="test2",Age=31,Email="test2@demo.com",Address="Canberra",Gender= Gender.Male,Password=BCryptUtil.HashPassword("123456"),Created=DateTime.Now.AddMinutes(3) },
             new User(){Id=5, UserName="test3",Age=31,Email="test3@demo.com",Address="Canberra",Gender= Gender.Male,Password=BCryptUtil.HashPassword("123456"),Created=DateTime.Now.AddMinutes(4) },
@@ -32,7 +31,7 @@ namespace Mooc.Application.Admin
 
         public async Task<bool> InitAsync()
         {
-           
+
             if (!this._dbContext.Users.Any())
             {
 

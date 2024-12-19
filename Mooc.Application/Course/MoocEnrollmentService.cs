@@ -4,7 +4,7 @@ using Mooc.Application.Contracts;
 using Mooc.Application.Contracts.Dto;
 namespace Mooc.Application.Course;
 
-public class EnrollmentService : CrudService<Enrollment, EnrollmentDto, EnrollmentDto, long, FilterPagedResultRequestDto, CreateEnrollmentDto, UpdateEnrollmentDto>, 
+public class EnrollmentService : CrudService<Enrollment, EnrollmentDto, EnrollmentDto, long, FilterPagedResultRequestDto, CreateEnrollmentDto, UpdateEnrollmentDto>,
     IEnrollmentService, ITransientDependency
 
 {

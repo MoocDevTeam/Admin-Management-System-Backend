@@ -15,4 +15,7 @@ public class UserDto :BaseEntityDto
     public Gender Gender { get; set; }
 
     public string? Avatar { get; set; }
+
+    public DateTime? Created { get; set; }
+
 }

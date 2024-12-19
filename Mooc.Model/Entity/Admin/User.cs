@@ -20,4 +20,5 @@ public class User : BaseEntity
 
     public Gender Gender { get; set; }
 
+    public DateTime? Created { get; set; }
 }

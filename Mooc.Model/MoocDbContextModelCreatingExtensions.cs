@@ -16,16 +16,16 @@ public static class MoocDbContextModelCreatingExtensions
 
     private static void ConfigureUser(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<MoocUser>(b =>
+        modelBuilder.Entity<User>(b =>
         {
-            b.ToTable(TablePrefix + "MoocUser");
+            b.ToTable(TablePrefix + "User");
             b.HasKey(x => x.Id);
             b.Property(x => x.Id).ValueGeneratedNever();
             b.Property(x => x.UserName).IsRequired().HasMaxLength(UserEntityConsts.MaxUserNameLength);
             b.Property(x => x.Password).HasMaxLength(UserEntityConsts.MaxPasswordLength);
             b.Property(x => x.Email).HasMaxLength(UserEntityConsts.MaxEmailLength);
             b.Property(x => x.Age).HasMaxLength(UserEntityConsts.MaxAgeLength);
-            b.HasMany(x => x.MoocUserRole);
+            b.HasMany(x => x.UserRole);
             b.Property(x => x.Avatar).HasMaxLength(UserEntityConsts.MaxAvatarLength);
             b.Property(x => x.Gender).HasConversion(
                 v => v.ToString(),

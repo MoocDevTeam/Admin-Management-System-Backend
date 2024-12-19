@@ -1,4 +1,5 @@
 ﻿using Mooc.Shared.Entity.Admin;
+using Mooc.Shared.Enum;
 
 public static class MoocDbContextModelCreatingExtensions
 {
@@ -38,6 +39,32 @@ public static class MoocDbContextModelCreatingExtensions
 
 
         });
+
+        //Menu
+        modelBuilder.Entity<Menu>(b =>
+        {
+            b.ToTable(TablePrefix + "Menu");
+            b.HasKey(x => x.Id);
+            b.Property(e => e.Id).ValueGeneratedNever();
+            b.HasIndex(x => x.ParentId);
+            b.Property(cs => cs.Title).IsRequired().HasMaxLength(MenuEntityConsts.MaxTitleLength);
+            b.Property(cs => cs.Permission).HasMaxLength(MenuEntityConsts.MaxPermissionLength);
+            b.Property(cs => cs.Mark).HasMaxLength(MenuEntityConsts.MaxMarkLength);
+            b.Property(cs => cs.Route).HasMaxLength(MenuEntityConsts.MaxRouteLength);
+            b.Property(cs => cs.ComponentPath).HasMaxLength(MenuEntityConsts.MaxComponentPathLength);
+            b.Property(cs => cs.MenuType).HasConversion(
+               v => v.ToString(),
+               v => (MenuType)Enum.Parse(typeof(MenuType), v)
+           ).HasMaxLength(MenuEntityConsts.MaxMenuTypeLength);
+            //b.HasMany(cs => cs.RoleMenus);
+            b.HasOne(cs => cs.Parent).WithMany(cs => cs.Children).HasForeignKey(cs => cs.ParentId);
+        });
+
+        //modelBuilder.Entity<RoleMenu>(b =>
+        //{
+        //    b.ToTable(TablePrefix + "RoleMenu");
+        //    b.HasKey(x => x.Id);
+        //});
     }
     
 }

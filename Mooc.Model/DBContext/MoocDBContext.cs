@@ -8,6 +8,7 @@ public class MoocDBContext : DbContext
     }
     public DbSet<User> Users { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
+    public DbSet<Menu> Menus { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

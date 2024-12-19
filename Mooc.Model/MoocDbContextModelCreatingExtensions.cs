@@ -59,8 +59,10 @@ public static class MoocDbContextModelCreatingExtensions
         ConfigureCategory(modelBuilder);
         ConfigureEnrollment(modelBuilder);
         ConfigureCourse(modelBuilder);
+        ConfigureSessionManage(modelBuilder);
     }
 
+    ///COURSE 
     private static void ConfigureCourseManag(ModelBuilder modelBuilder)
     {
         //MoocCourseInstance
@@ -198,4 +200,51 @@ public static class MoocDbContextModelCreatingExtensions
         });
 
     }
+
+    ///Course-Session
+    private static void ConfigureSessionManage(this ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Session>(b =>
+        {
+            b.ToTable("Session");  // Set the table name as "Session"
+
+            b.HasKey(e => e.Id);  // Set the primary key to be the Id field
+
+            // Configure field properties
+            b.Property(x => x.Title)
+                .IsRequired()  // Mark Title as required (not nullable)
+                .HasMaxLength(SessionEntityConsts.MaxTitleLength);  // Set the maximum length to 50
+
+            b.Property(x => x.Description)
+                .HasMaxLength(SessionEntityConsts.MaxDescriptionLength);  // Set the maximum length to 255
+
+            b.Property(x => x.Order)
+                .IsRequired();  // Mark Order as required (not nullable)
+
+            b.Property(x => x.CreatedByUserId)
+                .IsRequired();  // Mark CreatedByUserId as required (not nullable)
+
+            b.Property(x => x.UpdatedByUserId)
+                .IsRequired(false);  // Mark UpdatedByUserId as optional (nullable)
+
+            b.Property(x => x.CreatedAt)
+                .IsRequired()  // Mark CreatedAt as required (not nullable)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");  // Set the default value to current timestamp
+
+            b.Property(x => x.UpdatedAt)
+                .IsRequired(false)  // Mark UpdatedAt as optional (nullable)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");  // Set the default value to current timestamp
+
+            b.HasOne<User>(x => x.CreatedByUser)
+                .WithMany()
+                .HasForeignKey(x => x.CreatedByUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            b.HasOne<User>(x => x.UpdatedByUser)
+                .WithMany()
+                .HasForeignKey(x => x.UpdatedByUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+    }
+
 }

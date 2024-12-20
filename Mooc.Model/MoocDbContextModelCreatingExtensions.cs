@@ -13,6 +13,7 @@ public static class MoocDbContextModelCreatingExtensions
     public static void ConfigureAdminManagement(this ModelBuilder modelBuilder)
     {
         ConfigureUser(modelBuilder);
+        ConfigureMenu(modelBuilder);
     }
 
     private static void ConfigureUser(ModelBuilder modelBuilder)
@@ -40,7 +41,11 @@ public static class MoocDbContextModelCreatingExtensions
 
         });
 
-        //Menu
+       
+    }
+
+    private static void ConfigureMenu(ModelBuilder modelBuilder)
+    {
         modelBuilder.Entity<Menu>(b =>
         {
             b.ToTable(TablePrefix + "Menu");
@@ -66,5 +71,5 @@ public static class MoocDbContextModelCreatingExtensions
         //    b.HasKey(x => x.Id);
         //});
     }
-    
+
 }

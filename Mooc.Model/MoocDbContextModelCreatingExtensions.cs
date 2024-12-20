@@ -37,11 +37,7 @@ public static class MoocDbContextModelCreatingExtensions
                 v => (Access)Enum.Parse(typeof(Access), v));
             b.Property(x => x.IsActive).IsRequired().HasDefaultValue(true);
             b.Property(x => x.CreatedDate).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");//for SQLite
-
-
         });
-
-       
     }
 
     private static void ConfigureMenu(ModelBuilder modelBuilder)

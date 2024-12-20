@@ -28,7 +28,9 @@ namespace Mooc.Model.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<long>("CreatedByUserId")
                         .HasColumnType("INTEGER");
@@ -47,7 +49,9 @@ namespace Mooc.Model.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<long?>("UpdatedByUserId")
                         .HasColumnType("INTEGER");
@@ -69,7 +73,9 @@ namespace Mooc.Model.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<long>("CreatedByUserId")
                         .HasColumnType("INTEGER");
@@ -106,7 +112,9 @@ namespace Mooc.Model.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<long?>("UpdatedByUserId")
                         .HasColumnType("INTEGER");
@@ -118,6 +126,48 @@ namespace Mooc.Model.Migrations
                     b.HasIndex("UpdatedByUserId");
 
                     b.ToTable("Teacher", (string)null);
+                });
+
+            modelBuilder.Entity("Mooc.Model.Entity.Course.TeacherCourseInstance", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<long>("CreatedByUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("MoocCourseInstanceId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PermissionType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("TeacherId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<long>("UpdatedByUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("MoocCourseInstanceId");
+
+                    b.HasIndex("UpdatedByUserId");
+
+                    b.ToTable("TeacherCourseInstance", (string)null);
                 });
 
             modelBuilder.Entity("Mooc.Model.Entity.Enrollment", b =>
@@ -220,7 +270,12 @@ namespace Mooc.Model.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<long?>("TeacherId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("MoocCourseInstances");
                 });
@@ -359,6 +414,74 @@ namespace Mooc.Model.Migrations
                     b.Navigation("UpdatedByUser");
                 });
 
+            modelBuilder.Entity("Mooc.Model.Entity.Course.TeacherCourseInstance", b =>
+                {
+                    b.HasOne("Mooc.Model.Entity.Course.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mooc.Model.Entity.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mooc.Model.Entity.MoocCourseInstance", "MoocCourseInstance")
+                        .WithMany()
+                        .HasForeignKey("MoocCourseInstanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mooc.Model.Entity.User", "UpdatedByUser")
+                        .WithMany()
+                        .HasForeignKey("UpdatedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("MoocCourseInstance");
+
+                    b.Navigation("Teacher");
+
+                    b.Navigation("UpdatedByUser");
+                });
+
+            modelBuilder.Entity("Mooc.Model.Entity.MoocCourse", b =>
+                {
+                    b.HasOne("Mooc.Model.Entity.Course.Category", "Category")
+                        .WithMany("Courses")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Mooc.Model.Entity.User", "CreatedByUser")
+                        .WithMany("CreatedCourses")
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Mooc.Model.Entity.User", "UpdatedByUser")
+                        .WithMany("UpdatedCourses")
+                        .HasForeignKey("UpdatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("UpdatedByUser");
+                });
+
+            modelBuilder.Entity("Mooc.Model.Entity.MoocCourseInstance", b =>
+                {
+                    b.HasOne("Mooc.Model.Entity.Course.Teacher", null)
+                        .WithMany("AssignedCourses")
+                        .HasForeignKey("TeacherId");
+                });
 
             modelBuilder.Entity("Mooc.Model.Entity.Session", b =>
                 {
@@ -373,12 +496,27 @@ namespace Mooc.Model.Migrations
                         .HasForeignKey("UpdatedByUserId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-
                     b.Navigation("CreatedByUser");
 
                     b.Navigation("UpdatedByUser");
                 });
 
+            modelBuilder.Entity("Mooc.Model.Entity.Course.Category", b =>
+                {
+                    b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("Mooc.Model.Entity.Course.Teacher", b =>
+                {
+                    b.Navigation("AssignedCourses");
+                });
+
+            modelBuilder.Entity("Mooc.Model.Entity.User", b =>
+                {
+                    b.Navigation("CreatedCourses");
+
+                    b.Navigation("UpdatedCourses");
+                });
 #pragma warning restore 612, 618
         }
     }

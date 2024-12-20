@@ -10,14 +10,12 @@ public class MoocDBContext : DbContext
     }
 
     public DbSet<User> Users { get; set; }
-
     public DbSet<MoocCourse> MoocCourses { get; set; }
-
     public DbSet<Session> Session { get; set; }
-
     public DbSet<MoocCourseInstance> MoocCourseInstances { get; set; }
     public DbSet<Teacher> MoocTeachers { get; set; }
     public DbSet<Enrollment> MoocEnrollment { get; set; }
+    public DbSet<TeacherCourseInstance> TeacherCourseInstances { get; set; }
 
 
 

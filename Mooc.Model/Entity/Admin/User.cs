@@ -16,8 +16,6 @@ public class User : BaseEntity
 
     public string Avatar { get; set; }
 
-    public DateTime? CreatedDate { get; set; }
-
     public bool IsActive { get; set; }
 
     public ICollection<UserRole> UserRole { get; set; } = new List<UserRole>();

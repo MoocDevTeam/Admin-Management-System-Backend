@@ -18,5 +18,5 @@ public class User : BaseEntity
 
     public bool IsActive { get; set; }
 
-    public ICollection<UserRole> UserRole { get; set; } = new List<UserRole>();
+    public virtual ICollection<UserRole> UserRole { get; set; } = new List<UserRole>();
 }

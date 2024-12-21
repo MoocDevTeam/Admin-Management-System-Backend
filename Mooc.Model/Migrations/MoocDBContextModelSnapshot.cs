@@ -17,7 +17,7 @@ namespace Mooc.Model.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
-            modelBuilder.Entity("Mooc.Model.Entity.Menu", b =>
+            modelBuilder.Entity("Mooc.Model.Entity.User", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("INTEGER");
@@ -155,7 +155,7 @@ namespace Mooc.Model.Migrations
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasMaxLength(100)
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

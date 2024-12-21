@@ -1,11 +1,11 @@
 namespace Mooc.Model.Entity;
 
-public class UserRole : BaseEntity
+public class RoleMenu : BaseEntity
 {
 
-    public User User { get; set; }
+    public Menu Menu { get; set; }
 
-    public long UserId { get; set; }
+    public long MenuId { get; set; }
 
     public Role Role { get; set; }
 

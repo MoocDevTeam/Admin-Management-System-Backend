@@ -16,6 +16,6 @@ public class Menu : BaseEntity
     public long? ParentId { get; set; }
     public Menu? Parent { get; set; }
 
-    //public virtual ICollection<RoleMenu> RoleMenus { get; set; } = new List<RoleMenu>();
+    public virtual ICollection<RoleMenu> RoleMenus { get; set; } = new List<RoleMenu>();
 
 }

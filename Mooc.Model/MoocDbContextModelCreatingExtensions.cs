@@ -14,6 +14,9 @@ public static class MoocDbContextModelCreatingExtensions
     {
         ConfigureUser(modelBuilder);
         ConfigureMenu(modelBuilder);
+        ConfigureRole(modelBuilder);
+        ConfigureRoleMenu(modelBuilder);
+        ConfigureUserRole(modelBuilder);
     }
 
     private static void ConfigureUser(ModelBuilder modelBuilder)
@@ -27,7 +30,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(x => x.Password).HasMaxLength(UserEntityConsts.MaxPasswordLength);
             b.Property(x => x.Email).HasMaxLength(UserEntityConsts.MaxEmailLength);
             b.Property(x => x.Age).HasMaxLength(UserEntityConsts.MaxAgeLength);
-            b.HasMany(x => x.UserRole);
+            b.HasMany(x => x.UserRoles);
             b.Property(x => x.Avatar).HasMaxLength(UserEntityConsts.MaxAvatarLength);
             b.Property(x => x.Gender).HasConversion(
                 v => v.ToString(),
@@ -36,7 +39,7 @@ public static class MoocDbContextModelCreatingExtensions
                 v => v.ToString(),
                 v => (Access)Enum.Parse(typeof(Access), v));
             b.Property(x => x.IsActive).IsRequired().HasDefaultValue(true);
-            b.Property(x => x.CreatedDate).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");//for SQLite
+            b.Property(x => x.CreatedAt).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");//for SQLite
         });
     }
 
@@ -57,7 +60,7 @@ public static class MoocDbContextModelCreatingExtensions
                v => v.ToString(),
                v => (MenuType)Enum.Parse(typeof(MenuType), v)
            ).HasMaxLength(MenuEntityConsts.MaxMenuTypeLength);
-            //b.HasMany(cs => cs.RoleMenus);
+            b.HasMany(cs => cs.RoleMenus);
             b.HasOne(cs => cs.Parent).WithMany(cs => cs.Children).HasForeignKey(cs => cs.ParentId);
         });
 
@@ -66,6 +69,55 @@ public static class MoocDbContextModelCreatingExtensions
         //    b.ToTable(TablePrefix + "RoleMenu");
         //    b.HasKey(x => x.Id);
         //});
+    }
+    private static void ConfigureRole(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Role>(b =>
+        {
+            b.ToTable(TablePrefix + "Role");
+            b.HasKey(x => x.Id);
+            b.Property(x => x.Id).ValueGeneratedNever();
+            b.Property(x => x.RoleName).IsRequired().HasMaxLength(RoleEntityConsts.MaxRoleNameLength);
+            b.Property(x => x.Description).IsRequired().HasMaxLength(RoleEntityConsts.MaxDescriptionLength);
+            b.HasMany(cs => cs.RoleMenus);
+            b.HasMany(x => x.UserRoles);
+        });
+    }
+
+    private static void ConfigureRoleMenu(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<RoleMenu>(b =>
+        {
+            b.ToTable(TablePrefix + "RoleMenu");
+            b.HasKey(x => x.Id);
+            b.Property(x => x.Id).ValueGeneratedNever();
+            b.HasKey(rm => new { rm.RoleId, rm.MenuId });
+            b.HasOne(rm => rm.Role)
+              .WithMany(r => r.RoleMenus)
+              .HasForeignKey(rm => rm.RoleId);
+            b.HasOne(rm => rm.Menu)
+             .WithMany(m => m.RoleMenus)
+             .HasForeignKey(rm => rm.MenuId);        
+        });
+    }
+
+    private static void ConfigureUserRole(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<UserRole>(b =>
+        {
+            b.ToTable(TablePrefix + "UserRole");
+            b.HasKey(x => x.Id);
+            b.Property(x => x.Id).ValueGeneratedNever();
+            b.HasKey(ur => new { ur.UserId, ur.RoleId });
+            b.HasOne(ur => ur.User)
+                  .WithMany(u => u.UserRoles)
+                  .HasForeignKey(ur => ur.UserId);
+            b.HasOne(ur => ur.Role)
+                  .WithMany(r => r.UserRoles)
+                  .HasForeignKey(ur => ur.RoleId);          
+        });
+
+
     }
 
 }

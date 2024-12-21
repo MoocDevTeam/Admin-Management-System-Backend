@@ -14,6 +14,7 @@ public static class MoocDbContextModelCreatingExtensions
     {
         ConfigureUser(modelBuilder);
         ConfigureMenu(modelBuilder);
+        
     }
 
     private static void ConfigureUser(ModelBuilder modelBuilder)
@@ -67,5 +68,8 @@ public static class MoocDbContextModelCreatingExtensions
         //    b.HasKey(x => x.Id);
         //});
     }
+
+   
+
 
 }

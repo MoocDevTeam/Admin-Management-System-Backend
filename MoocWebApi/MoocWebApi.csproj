@@ -42,7 +42,7 @@
 
 	<ItemGroup>
 		<None Update="AppData\moocdb.db">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 

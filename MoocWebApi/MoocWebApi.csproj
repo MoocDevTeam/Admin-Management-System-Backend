@@ -41,6 +41,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Content Update="appsettings.Development.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Update="AppData\moocdb.db">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

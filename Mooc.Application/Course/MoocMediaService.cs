@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mooc.Application.Course
 {
-    public class MoocMediaService
+    public class MoocMeidaService
     {
     }
 }

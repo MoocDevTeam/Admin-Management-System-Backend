@@ -61,7 +61,6 @@ public static class MoocDbContextModelCreatingExtensions
         ConfigureEnrollment(modelBuilder);
         ConfigureCourse(modelBuilder);
         ConfigureSessionManage(modelBuilder);
-        ConfigureMedia(modelBuilder);
         ConfigureTeacherCourseInstance(modelBuilder);
     }
 
@@ -314,58 +313,4 @@ public static class MoocDbContextModelCreatingExtensions
         );   
     }
 
-    private static void ConfigureMedia(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Media>(b =>
-        {
-            b.ToTable("Media");
-
-            // Primary key
-            b.HasKey(x => x.Id);
-            b.Property(e => e.Id).ValueGeneratedNever();
-
-            // Properties
-            b.Property(cs => cs.UploaderId).IsRequired();
-            b.Property(cs => cs.SessionId).IsRequired();
-            b.Property(cs => cs.FileType)
-                .IsRequired()
-                .HasConversion(
-                    v => v.ToString(),
-                    v => (FileTypeEnum)Enum.Parse(typeof(FileTypeEnum), v)
-                );
-            b.Property(cs => cs.FileName)
-                .IsRequired()
-                .HasMaxLength(255)
-                .HasColumnType("varchar(255)");
-            b.Property(cs => cs.FilePath)
-                .IsRequired()
-                .HasColumnType("text");
-            b.Property(cs => cs.ThumbnailPath)
-                .IsRequired()
-                .HasColumnType("text");
-            b.Property(cs => cs.CreatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
-            b.Property(cs => cs.UpdatedAt)
-                .IsRequired(false)
-                .HasDefaultValueSql("GETDATE()");
-            b.Property(cs => cs.ApprovalStatus)
-                .IsRequired()
-                .HasConversion(
-                    v => v.ToString(),
-                    v => (ApprovalStatusEnum)Enum.Parse(typeof(ApprovalStatusEnum), v)
-                );
-
-            // Relationships
-            b.HasOne<User>(x => x.Uploader)
-                .WithMany()
-                .HasForeignKey(x => x.UploaderId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            b.HasOne<Session>(x => x.Session)
-                .WithMany()
-                .HasForeignKey(x => x.SessionId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-    }
 }

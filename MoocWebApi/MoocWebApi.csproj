@@ -41,4 +41,10 @@
 	  <Folder Include="AppData\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="AppData\.gitkeep">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>

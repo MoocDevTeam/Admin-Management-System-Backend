@@ -23,7 +23,7 @@
         public virtual Category ParentCategory { get; set; }
 
         // Navigation for Courses (one-to-many)
-        public ICollection<MoocCourse> Courses { get; set; }
+        public ICollection<MoocCourse> Courses { get; set; }= new List<MoocCourse>();
 
 
     }

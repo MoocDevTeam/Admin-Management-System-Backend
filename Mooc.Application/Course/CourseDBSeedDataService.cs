@@ -39,19 +39,17 @@ namespace Mooc.Application.Course
         {
             if (!this._dbContext.Users.Any())
             {
-
                 await this._dbContext.Users.AddRangeAsync(users);
                 await this._dbContext.SaveChangesAsync();
             }
 
             if (!this._dbContext.MoocCourses.Any())
             {
-
                 await this._dbContext.MoocCourses.AddRangeAsync(courses);
                 await this._dbContext.SaveChangesAsync();
             }
 
-
+            await this._dbContext.SaveChangesAsync();
             return true;
         }
     }

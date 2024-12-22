@@ -1,12 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Mooc.Model.Entity.Course
+﻿
+namespace Mooc.Model.Entity
 {
-    internal class MoocEnrollment
+    public class Enrollment : BaseEntity
     {
+        [ForeignKey("CourseInstance")]
+        public long CourseInstanceId { get; set; }
+
+        public EnrollmentStatus EnrollmentStatus { get; set; }
+        public DateTime EnrollStartDate { get; set; }
+        public DateTime EnrollEndDate { get; set; }
+        public int MaxStudents { get; set; }
+
+        [ForeignKey("CreatedByUser")]
+        public long CreatedByUserId { get; set; }
+        [ForeignKey("UpdatedByUser")]
+        public long UpdatedByUserId { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+
     }
 }

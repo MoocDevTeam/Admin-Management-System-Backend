@@ -13,8 +13,7 @@ public class MoocDBContext : DbContext
     public DbSet<Comment> Comments { get; set; }
     public DbSet<RoleMenu> RoleMenus { get; set; }
     public DbSet<Role> Roles { get; set; }
-    public DbSet<UserRole> UserRole { get; set; }
-
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

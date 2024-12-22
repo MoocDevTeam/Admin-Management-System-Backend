@@ -37,52 +37,19 @@ namespace Mooc.Application.Course
         };
         public async Task<bool> InitAsync()
         {
-            // check existing data and insert
-            foreach (var user in users)
+            if (!this._dbContext.Users.Any())
             {
-                var existingUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == user.Id);
-                if (existingUser == null)
-                {
-                    await _dbContext.Users.AddAsync(user);
-                }
-                else
-                {
-                    existingUser.UserName = user.UserName;
-                    existingUser.Age = user.Age;
-                    existingUser.Email = user.Email;
-                    existingUser.Address = user.Address;
-                    existingUser.Gender = user.Gender;
-                    existingUser.Password = user.Password;
-                    existingUser.Created = user.Created;
-                }
+                await this._dbContext.Users.AddRangeAsync(users);
+                await this._dbContext.SaveChangesAsync();
             }
 
-
-            foreach (var course in courses)
+            if (!this._dbContext.MoocCourses.Any())
             {
-                var existingCourse = await _dbContext.MoocCourses.FirstOrDefaultAsync(c => c.Id == course.Id);
-                if (existingCourse == null)
-                {
-                    await _dbContext.MoocCourses.AddAsync(course);
-                }
-                else
-                {
-                    existingCourse.Title = course.Title;
-                    existingCourse.CourseCode = course.CourseCode;
-                    existingCourse.CoverImage = course.CoverImage;
-                    existingCourse.Description = course.Description;
-                    existingCourse.CreatedByUser = course.CreatedByUser;
-                    existingCourse.UpdatedByUser = course.UpdatedByUser;
-                    existingCourse.Category = course.Category;
-                    existingCourse.CreatedAt = course.CreatedAt;
-                    existingCourse.UpdatedAt = course.UpdatedAt;
-                }
+                await this._dbContext.MoocCourses.AddRangeAsync(courses);
+                await this._dbContext.SaveChangesAsync();
             }
-
 
             await this._dbContext.SaveChangesAsync();
-
-
             return true;
         }
     }

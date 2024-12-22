@@ -1,10 +1,6 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Mooc.Model.Entity.Course
+namespace Mooc.Model.Entity
 {
-    public class Media : BaseEntity
+    public class MoocMeida
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

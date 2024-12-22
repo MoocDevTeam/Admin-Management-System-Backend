@@ -2,7 +2,7 @@
 
 namespace MoocWebApi.Controllers.Course
 {
-    public class MoocTeacherController : Controller
+    public class TeacherController : Controller
     {
         public IActionResult Index()
         {

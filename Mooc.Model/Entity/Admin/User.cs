@@ -16,9 +16,13 @@ public class User : BaseEntity
 
     public string? Address { get; set; }
 
-    public string? Avatar { get; set; } 
+    public string? Avatar { get; set; }
 
     public Gender Gender { get; set; }
 
     public DateTime? Created { get; set; }
+
+    // MoocCourse foreign key to User
+    public ICollection<MoocCourse> CreatedCourses { get; set; }
+    public ICollection<MoocCourse> UpdatedCourses { get; set; }
 }

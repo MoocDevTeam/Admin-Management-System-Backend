@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mooc.Application.Contracts.Course
 {
-    internal interface IMoocTeacherService
+    public interface ITeacherService
 
     {
     }

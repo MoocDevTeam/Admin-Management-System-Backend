@@ -9,8 +9,6 @@ public class MoocDBContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<MoocUser> MoocUsers { get; set; }
     public DbSet<MoocUserRole> MoocUserRoles { get; set; }
-    public DbSet<ChoiceQuestion> ChoiceQuestions { get; set; }
-    public DbSet<Option> Options { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -19,6 +17,6 @@ public class MoocDBContext : DbContext
         //extension method
         modelBuilder.ConfigureAdminManagement();
 
-        modelBuilder.ConfigureExamManagement();
+        //modelBuilder.ConfigureMoocManagement();
     }
 }

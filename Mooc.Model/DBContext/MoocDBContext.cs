@@ -17,26 +17,5 @@ public class MoocDBContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        //extension method
-        modelBuilder.ConfigureAdminManagement();
-
-        modelBuilder.Entity<Carousel>()
-            .HasOne<User>()
-            .WithMany()
-            .HasForeignKey(c => c.CreatedByUserId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Carousel>()
-            .HasOne<User>()
-            .WithMany()
-            .HasForeignKey(c => c.UpdatedByUserId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Comment>()
-            .HasOne<Comment>()
-            .WithMany()
-            .HasForeignKey(c => c.ParentCommentId)
-            .OnDelete(DeleteBehavior.Restrict);
     }
 }

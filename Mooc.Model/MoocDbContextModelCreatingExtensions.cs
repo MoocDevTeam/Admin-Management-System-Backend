@@ -17,6 +17,8 @@ public static class MoocDbContextModelCreatingExtensions
         ConfigureRole(modelBuilder);
         ConfigureRoleMenu(modelBuilder);
         ConfigureUserRole(modelBuilder);
+        ConfigureCarousel(modelBuilder);
+        ConfigureComment(modelBuilder);
     }
 
     private static void ConfigureUser(ModelBuilder modelBuilder)
@@ -120,4 +122,36 @@ public static class MoocDbContextModelCreatingExtensions
 
     }
 
+    private static void ConfigureCarousel(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Carousel>(b =>
+        {
+            b.ToTable("Carousel");
+            b.HasKey(x => x.Id);
+            b.Property(x => x.Title).IsRequired().HasMaxLength(CarouselEntityConsts.MaxTitleLength);
+            b.Property(x => x.ImageUrl).IsRequired();
+            b.Property(x => x.RedirectUrl).HasMaxLength(CarouselEntityConsts.MaxRedirectUrlLength);
+            b.Property(x => x.IsActive).IsRequired().HasDefaultValue(CarouselEntityConsts.DefaultIsActive);
+            b.Property(x => x.UpdatedAt).IsRequired();
+            b.Property(x => x.StartDate).IsRequired();
+            b.Property(x => x.EndDate).IsRequired();
+            b.Property(x => x.Position).IsRequired();
+            b.HasOne<User>().WithMany().HasForeignKey(x => x.CreatedByUserId);
+            b.HasOne<User>().WithMany().HasForeignKey(x => x.UpdatedByUserId);
+        });
+    }
+
+    private static void ConfigureComment(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Comment>(b =>
+        {
+            b.ToTable("Comment");
+            b.HasKey(x => x.Id);
+            b.Property(x => x.Content).IsRequired().HasMaxLength(CommentEntityConsts.MaxContentLength);
+            b.Property(x => x.IsActive).IsRequired().HasDefaultValue(CommentEntityConsts.DefaultIsActive);
+            b.Property(x => x.IsFlagged).IsRequired().HasDefaultValue(CommentEntityConsts.DefaultIsFlagged);
+            b.HasOne<User>().WithMany().HasForeignKey(x => x.CreatedByUserId);
+            b.HasOne<Comment>().WithMany().HasForeignKey(x => x.ParentCommentId);
+        });
+    }
 }

@@ -55,7 +55,6 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasIndex(x => x.ParentId);
             b.Property(cs => cs.Title).IsRequired().HasMaxLength(MenuEntityConsts.MaxTitleLength);
             b.Property(cs => cs.Permission).HasMaxLength(MenuEntityConsts.MaxPermissionLength);
-            b.Property(cs => cs.Mark).HasMaxLength(MenuEntityConsts.MaxMarkLength);
             b.Property(cs => cs.Route).HasMaxLength(MenuEntityConsts.MaxRouteLength);
             b.Property(cs => cs.ComponentPath).HasMaxLength(MenuEntityConsts.MaxComponentPathLength);
             b.Property(cs => cs.MenuType).HasConversion(

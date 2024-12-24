@@ -365,8 +365,3 @@ FodyWeavers.xsd
 # Ignore contents of Migrations folder but keep the folder itself
 Mooc.Model/Migrations/*
 !Mooc.Model/Migrations/.gitkeep
-
-# Ignore contents of AppData folder but keep the folder itself
-MoocWebApi/AppData/*
-!MoocWebApi/AppData/.gitkeep
-MoocWebApi/AppData/db

@@ -1,10 +1,8 @@
-namespace Mooc.Model.Entity.ExamManagement;
+﻿namespace Mooc.Model.Entity.ExamManagement;
 
-public class ChoiceQuestion : BaseQuestion
+public class ShortAnsQuestion : BaseQuestion
 {
-    public string? CorrectAnswer { get; set; }
-
-    public ICollection<Option>? Option { get; set; }
+    public string? ReferenceAnswer { get; set; }
 
     public QuestionType? QuestionType { get; set; }
 
@@ -14,3 +12,4 @@ public class ChoiceQuestion : BaseQuestion
 
     //public ICollection<Course>? CourseId { get; set; }
 }
+

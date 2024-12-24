@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mooc.Model.DBContext;
 
@@ -10,12 +11,14 @@ using Mooc.Model.DBContext;
 namespace Mooc.Model.Migrations
 {
     [DbContext(typeof(MoocDBContext))]
-    partial class MoocDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241223164312_CreateUpdateQuestionBankStructure")]
+    partial class CreateUpdateQuestionBankStructure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
             modelBuilder.Entity("Mooc.Model.Entity.ExamManagement.ChoiceQuestion", b =>
                 {
@@ -38,9 +41,6 @@ namespace Mooc.Model.Migrations
                     b.Property<long>("CreatedByUserId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("CreatedByUserId1")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("Marks")
                         .HasColumnType("INTEGER");
 
@@ -57,9 +57,6 @@ namespace Mooc.Model.Migrations
                     b.Property<long>("QuestionTypeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("QuestionTypeId1")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
@@ -72,11 +69,7 @@ namespace Mooc.Model.Migrations
 
                     b.HasIndex("CreatedByUserId");
 
-                    b.HasIndex("CreatedByUserId1");
-
                     b.HasIndex("QuestionTypeId");
-
-                    b.HasIndex("QuestionTypeId1");
 
                     b.HasIndex("UpdatedByUserId");
 
@@ -107,9 +100,6 @@ namespace Mooc.Model.Migrations
                     b.Property<long>("CreatedByUserId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("CreatedByUserId1")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("Marks")
                         .HasColumnType("INTEGER");
 
@@ -126,9 +116,6 @@ namespace Mooc.Model.Migrations
                     b.Property<long>("QuestionTypeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("QuestionTypeId1")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
@@ -141,17 +128,13 @@ namespace Mooc.Model.Migrations
 
                     b.HasIndex("CreatedByUserId");
 
-                    b.HasIndex("CreatedByUserId1");
-
                     b.HasIndex("QuestionTypeId");
-
-                    b.HasIndex("QuestionTypeId1");
 
                     b.HasIndex("UpdatedByUserId");
 
                     b.ToTable("JudgementQuestion", null, t =>
                         {
-                            t.HasCheckConstraint("CK_JudgementQuestionn_Marks", "[Marks] >= 0 AND [Marks] <= 100");
+                            t.HasCheckConstraint("CK_JudgementQuestion_Marks", "[Marks] >= 0 AND [Marks] <= 100");
                         });
                 });
 
@@ -163,18 +146,12 @@ namespace Mooc.Model.Migrations
                     b.Property<long>("ChoiceQuestionId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("ChoiceQuestionId1")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<long>("CreatedByUserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("CreatedByUserId1")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ErrorExplanation")
@@ -208,11 +185,7 @@ namespace Mooc.Model.Migrations
 
                     b.HasIndex("ChoiceQuestionId");
 
-                    b.HasIndex("ChoiceQuestionId1");
-
                     b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("CreatedByUserId1");
 
                     b.HasIndex("UpdatedByUserId");
 
@@ -222,12 +195,12 @@ namespace Mooc.Model.Migrations
             modelBuilder.Entity("Mooc.Model.Entity.ExamManagement.QuestionType", b =>
                 {
                     b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("QuestionTypeName")
-                        .IsRequired()
+                    b.Property<int>("QuestionTypeName")
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -250,9 +223,6 @@ namespace Mooc.Model.Migrations
                     b.Property<long>("CreatedByUserId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("CreatedByUserId1")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("Marks")
                         .HasColumnType("INTEGER");
 
@@ -267,9 +237,6 @@ namespace Mooc.Model.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<long>("QuestionTypeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("QuestionTypeId1")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ReferenceAnswer")
@@ -289,11 +256,7 @@ namespace Mooc.Model.Migrations
 
                     b.HasIndex("CreatedByUserId");
 
-                    b.HasIndex("CreatedByUserId1");
-
                     b.HasIndex("QuestionTypeId");
-
-                    b.HasIndex("QuestionTypeId1");
 
                     b.HasIndex("UpdatedByUserId");
 
@@ -319,9 +282,6 @@ namespace Mooc.Model.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("ChoiceQuestionId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -330,12 +290,6 @@ namespace Mooc.Model.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
-
-                    b.Property<long?>("JudgementQuestionId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("OptionId")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -346,23 +300,12 @@ namespace Mooc.Model.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("ShortAnsQuestionId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ChoiceQuestionId");
-
-                    b.HasIndex("JudgementQuestionId");
-
-                    b.HasIndex("OptionId");
-
-                    b.HasIndex("ShortAnsQuestionId");
 
                     b.ToTable("User", (string)null);
                 });
@@ -375,29 +318,17 @@ namespace Mooc.Model.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Mooc.Model.Entity.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId1");
-
                     b.HasOne("Mooc.Model.Entity.ExamManagement.QuestionType", null)
-                        .WithMany("ChoiceQuestions")
+                        .WithMany()
                         .HasForeignKey("QuestionTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Mooc.Model.Entity.ExamManagement.QuestionType", "QuestionType")
-                        .WithMany()
-                        .HasForeignKey("QuestionTypeId1");
 
                     b.HasOne("Mooc.Model.Entity.User", null)
                         .WithMany()
                         .HasForeignKey("UpdatedByUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("QuestionType");
                 });
 
             modelBuilder.Entity("Mooc.Model.Entity.ExamManagement.JudgementQuestion", b =>
@@ -408,29 +339,17 @@ namespace Mooc.Model.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Mooc.Model.Entity.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId1");
-
                     b.HasOne("Mooc.Model.Entity.ExamManagement.QuestionType", null)
-                        .WithMany("JudgementQuestions")
+                        .WithMany()
                         .HasForeignKey("QuestionTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Mooc.Model.Entity.ExamManagement.QuestionType", "QuestionType")
-                        .WithMany()
-                        .HasForeignKey("QuestionTypeId1");
 
                     b.HasOne("Mooc.Model.Entity.User", null)
                         .WithMany()
                         .HasForeignKey("UpdatedByUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("QuestionType");
                 });
 
             modelBuilder.Entity("Mooc.Model.Entity.ExamManagement.Option", b =>
@@ -441,29 +360,17 @@ namespace Mooc.Model.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Mooc.Model.Entity.ExamManagement.ChoiceQuestion", "ChoiceQuestion")
-                        .WithMany("Option")
-                        .HasForeignKey("ChoiceQuestionId1");
-
                     b.HasOne("Mooc.Model.Entity.User", null)
                         .WithMany()
                         .HasForeignKey("CreatedByUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Mooc.Model.Entity.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId1");
-
                     b.HasOne("Mooc.Model.Entity.User", null)
                         .WithMany()
                         .HasForeignKey("UpdatedByUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ChoiceQuestion");
-
-                    b.Navigation("CreatedByUser");
                 });
 
             modelBuilder.Entity("Mooc.Model.Entity.ExamManagement.ShortAnsQuestion", b =>
@@ -474,79 +381,17 @@ namespace Mooc.Model.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Mooc.Model.Entity.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId1");
-
                     b.HasOne("Mooc.Model.Entity.ExamManagement.QuestionType", null)
-                        .WithMany("ShortAnsQuestions")
+                        .WithMany()
                         .HasForeignKey("QuestionTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Mooc.Model.Entity.ExamManagement.QuestionType", "QuestionType")
-                        .WithMany()
-                        .HasForeignKey("QuestionTypeId1");
-
                     b.HasOne("Mooc.Model.Entity.User", null)
                         .WithMany()
                         .HasForeignKey("UpdatedByUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("QuestionType");
-                });
-
-            modelBuilder.Entity("Mooc.Model.Entity.User", b =>
-                {
-                    b.HasOne("Mooc.Model.Entity.ExamManagement.ChoiceQuestion", null)
-                        .WithMany("UpdatedByUsers")
-                        .HasForeignKey("ChoiceQuestionId");
-
-                    b.HasOne("Mooc.Model.Entity.ExamManagement.JudgementQuestion", null)
-                        .WithMany("UpdatedByUsers")
-                        .HasForeignKey("JudgementQuestionId");
-
-                    b.HasOne("Mooc.Model.Entity.ExamManagement.Option", null)
-                        .WithMany("UpdatedByUsers")
-                        .HasForeignKey("OptionId");
-
-                    b.HasOne("Mooc.Model.Entity.ExamManagement.ShortAnsQuestion", null)
-                        .WithMany("UpdatedByUsers")
-                        .HasForeignKey("ShortAnsQuestionId");
-                });
-
-            modelBuilder.Entity("Mooc.Model.Entity.ExamManagement.ChoiceQuestion", b =>
-                {
-                    b.Navigation("Option");
-
-                    b.Navigation("UpdatedByUsers");
-                });
-
-            modelBuilder.Entity("Mooc.Model.Entity.ExamManagement.JudgementQuestion", b =>
-                {
-                    b.Navigation("UpdatedByUsers");
-                });
-
-            modelBuilder.Entity("Mooc.Model.Entity.ExamManagement.Option", b =>
-                {
-                    b.Navigation("UpdatedByUsers");
-                });
-
-            modelBuilder.Entity("Mooc.Model.Entity.ExamManagement.QuestionType", b =>
-                {
-                    b.Navigation("ChoiceQuestions");
-
-                    b.Navigation("JudgementQuestions");
-
-                    b.Navigation("ShortAnsQuestions");
-                });
-
-            modelBuilder.Entity("Mooc.Model.Entity.ExamManagement.ShortAnsQuestion", b =>
-                {
-                    b.Navigation("UpdatedByUsers");
                 });
 #pragma warning restore 612, 618
         }

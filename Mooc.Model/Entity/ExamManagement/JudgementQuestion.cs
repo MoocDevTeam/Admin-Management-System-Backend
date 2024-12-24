@@ -1,10 +1,8 @@
 namespace Mooc.Model.Entity.ExamManagement;
 
-public class ChoiceQuestion : BaseQuestion
+public  class JudgementQuestion: BaseQuestion
 {
-    public string? CorrectAnswer { get; set; }
-
-    public ICollection<Option>? Option { get; set; }
+    public bool CorrectAnswer {  get; set; }
 
     public QuestionType? QuestionType { get; set; }
 

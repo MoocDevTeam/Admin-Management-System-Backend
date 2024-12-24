@@ -22,5 +22,7 @@ public class CreateOrUpdateUserBaseDto : BaseEntityDto
 
     public string? Avatar { get; set; }
 
+    public DateTime? Created { get; set; }
+
     public List<long> RoleIds { get; set; } = new List<long>();
 }

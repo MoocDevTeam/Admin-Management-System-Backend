@@ -369,3 +369,4 @@ Mooc.Model/Migrations/*
 # Ignore contents of AppData folder but keep the folder itself
 MoocWebApi/AppData/*
 !MoocWebApi/AppData/.gitkeep
+MoocWebApi/AppData/db

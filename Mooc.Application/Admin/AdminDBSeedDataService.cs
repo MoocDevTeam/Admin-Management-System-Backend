@@ -1,5 +1,6 @@
 ﻿using Mooc.Application.Contracts;
 using Mooc.Core.Utils;
+using Mooc.Shared.Enum;
 
 namespace Mooc.Application.Admin
 {
@@ -36,6 +37,19 @@ namespace Mooc.Application.Admin
             new Comment(){Id=3, CourseId=102, CreatedByUserId=3, Content="Needs more examples.", IsActive=true, IsFlagged=false, ParentCommentId=null, CreatedAt=DateTime.Now.AddMinutes(2) }
         };
 
+        private List<Menu> menus = new List<Menu>()
+        {
+            new Menu(){Id=1, Title="Rights Management", Description="Rights Management", MenuType= MenuType.Dir, OrderNum=0, Permission=PermissionConsts.PermissionManagement},
+            new Menu(){Id=2, Title="User", Description="User", ParentId=1, MenuType=MenuType.Menu, OrderNum=1, Route="/user", ComponentPath="./pages/user/index.jsx", Permission=PermissionConsts.User.Default},
+            new Menu(){Id=3, Title="Add", Description="Add",ParentId=2, MenuType= MenuType.Btn, OrderNum=1, Permission=PermissionConsts.User.Add},
+            new Menu(){Id=4, Title="Update", Description="Update",ParentId=2, MenuType= MenuType.Btn, OrderNum=2, Permission=PermissionConsts.User.Update},
+            new Menu(){Id=5, Title="Delete", Description="Delete",ParentId=2, MenuType= MenuType.Btn, OrderNum=3, Permission=PermissionConsts.User.Delete},
+            new Menu(){Id=6, Title="Role", Description="Role",ParentId=1,MenuType= MenuType.Menu, OrderNum=2,Route="/role", ComponentPath="./pages/role/index.jsx", Permission=PermissionConsts.Role.Default },
+            new Menu(){Id=7, Title="Add",Description="Add",ParentId=6, MenuType=MenuType.Btn, OrderNum=1, Permission=PermissionConsts.Role.Add},
+            new Menu(){Id=8, Title="Update",Description="Update",ParentId=6, MenuType=MenuType.Btn, OrderNum=2, Permission=PermissionConsts.Role.Update},
+            new Menu(){Id=9, Title="Delete",Description="Delete",ParentId=6, MenuType=MenuType.Btn, OrderNum=3, Permission=PermissionConsts.Role.Delete},
+        };
+
         public async Task<bool> InitAsync()
         {
             if (!this._dbContext.Users.Any())
@@ -53,6 +67,12 @@ namespace Mooc.Application.Admin
             if (!this._dbContext.Comments.Any())
             {
                 await this._dbContext.Comments.AddRangeAsync(comments);
+                await this._dbContext.SaveChangesAsync();
+            }
+
+            if (!this._dbContext.Menus.Any())
+            {
+                await this._dbContext.Menus.AddRangeAsync(menus);
                 await this._dbContext.SaveChangesAsync();
             }
 

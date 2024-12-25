@@ -1,7 +1,7 @@
 ﻿
 namespace Mooc.Shared
 {
-    public enum MoocCourseInstanceOpenStatus : int
+    public enum CourseInstanceStatus : int
     {
         Close = 0,
 

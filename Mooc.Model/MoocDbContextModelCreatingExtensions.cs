@@ -2,6 +2,7 @@
 using Mooc.Model.Entity.Course;
 using Mooc.Shared.Entity.Course;
 using Mooc.Shared.Enum;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 public static class MoocDbContextModelCreatingExtensions
 {
@@ -55,7 +56,7 @@ public static class MoocDbContextModelCreatingExtensions
     /// <param name="modelBuilder"></param>
     public static void ConfigureCourseManagement(this ModelBuilder modelBuilder)
     {
-        ConfigureCourseManag(modelBuilder);
+        ConfigureCourseInstance(modelBuilder);
         ConfigureTeacher(modelBuilder);
         ConfigureCategory(modelBuilder);
         ConfigureEnrollment(modelBuilder);
@@ -65,20 +66,76 @@ public static class MoocDbContextModelCreatingExtensions
         ConfigureTeacherCourseInstance(modelBuilder);
     }
 
-    ///COURSE 
-    private static void ConfigureCourseManag(ModelBuilder modelBuilder)
+    private static void ConfigureCourseInstance(ModelBuilder modelBuilder)
     {
-        //MoocCourseInstance
-        //modelBuilder.Entity<MoocCourseInstance>(e =>
-        //{
-        //    e.ToTable(TablePrefix + "MoocCourseInstance");
-        //});
+        modelBuilder.Entity<CourseInstance>(c =>
+        {
+            c.ToTable(TablePrefix + "CourseInstances");
+            c.HasKey(x => x.Id);
+            c.Property(x => x.Id).ValueGeneratedNever();
+            c.Property(x => x.MoocCourseId).IsRequired();
+            c.Property(x => x.TotalSessions).IsRequired();
+            c.Property(x => x.Status).HasConversion(
+                v => v.ToString(),
+                v => (CourseInstanceStatus)Enum.Parse(typeof(CourseInstanceStatus), v))
+            .IsRequired()
+            .HasMaxLength(CourseInstanceEntityConsts.MaxStatusLength);
+            c.Property(x => x.Permission).HasConversion(
+                v => v.ToString(),
+                v => (CourseInstancePermission)Enum.Parse(typeof(CourseInstancePermission), v))
+            .IsRequired()
+            .HasMaxLength(CourseInstanceEntityConsts.MaxPermissionLength);
+            c.Property(x => x.StartDate).IsRequired();
+            c.Property(x => x.EndDate).IsRequired();
+            c.Property(x => x.CreatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
+            c.Property(x => x.UpdatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
+            c.Property(x => x.CreatedByUserId).IsRequired();
+            c.HasOne(x => x.CreatedByUser)
+                .WithMany(u => u.CreatedCourseInstances)
+                .HasForeignKey(x => x.CreatedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            c.Property(x => x.UpdatedByUserId).IsRequired();
+            c.HasOne(x => x.UpdatedByUser)
+                .WithMany(u => u.UpdatedCourseInstances)
+                .HasForeignKey(x => x.UpdatedByUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            // One to One: CourseInstance->MoocCourse
+            c.HasOne(x => x.MoocCourse)
+                .WithOne() //.WithOne(mc => mc.CourseInstance) add 
+                .HasForeignKey<CourseInstance>(x => x.MoocCourseId)
+                .OnDelete(DeleteBehavior.Cascade);
+            // One to Many: CourseInstance->Sessions
+            //c.HasMany(x => x.Sessions)
+            //.WithOne(s => s.CourseInstance)
+            // .HasForeignKey(s => s.CourseInstanceId)
+            //  .OnDelete(DeleteBehavior.Cascade);
+            //One to Many: CourseInstance->TeacherCourseInstances
+            c.HasMany(x => x.TeacherCourseInstances)
+                .WithOne(tci => tci.CourseInstance)
+                .HasForeignKey(tci => tci.CourseInstanceId)
+                .OnDelete(DeleteBehavior.Restrict);
+            // One-to-One: CourseInstance -> Enrollment
+            //c.HasOne(x => x.Enrollment)
+            //    .WithOne(e => e.CourseInstance)
+            //    .HasForeignKey<Enrollment>(e => e.CourseInstanceId)
+            //    .OnDelete(DeleteBehavior.Cascade);
 
-        /// <summary>
-        /// Teacher
-        /// <summary>
-        /// 
+            // They will be moved to MoocUser Configuration later
+            // One to Many: MoocUser->CreatedCourseInstances
+            //b.HasMany(cs => cs.CreatedCourseInstances)
+            //            .WithOne(cci => cci.CreatedByUser)
+            //            .HasForeignKey(cci => cci.CreatedByUserId)
+            //            .OnDelete(DeleteBehavior.Restrict);
+            // One to Many: MoocUser->UpdatedCourseInstances
+            //b.HasMany(cs => cs.UpdatedCourseInstances)
+            //            .WithOne(uci => uci.UpdatedByUser)
+            //            .HasForeignKey(uci => uci.UpdatedByUserId)
+            //            .OnDelete(DeleteBehavior.Restrict);
+        });
     }
+    /// <summary>
+    /// Teacher
+    /// <summary>
     private static void ConfigureTeacher(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Teacher>(b =>
@@ -168,7 +225,7 @@ public static class MoocDbContextModelCreatingExtensions
 
             b.Property(e => e.UpdatedAt).ValueGeneratedOnUpdate();
 
-            // foreign keys 
+            // foreign keys
             b.HasOne(x => x.ParentCategory)
             .WithMany()
             .HasForeignKey(x => x.ParentId)
@@ -267,7 +324,7 @@ public static class MoocDbContextModelCreatingExtensions
         });
     }
 
-    private static void ConfigureTeacherCourseInstance(ModelBuilder modelBuilder) 
+    private static void ConfigureTeacherCourseInstance(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TeacherCourseInstance>(b =>
             {
@@ -287,7 +344,7 @@ public static class MoocDbContextModelCreatingExtensions
                 b.Property(e => e.UpdatedAt)
                     .IsRequired(false)
                     .HasDefaultValueSql("GETDATE()");
-                
+
                 b.Property (e => e.UpdatedAt).ValueGeneratedOnUpdate();
 
                 //Foreign Keys
@@ -306,12 +363,12 @@ public static class MoocDbContextModelCreatingExtensions
                     .HasForeignKey(x => x.CreatedByUserId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                b.HasOne<MoocCourseInstance>(x => x.MoocCourseInstance)
+                b.HasOne<CourseInstance>(x => x.CourseInstance)
                     .WithMany()
-                    .HasForeignKey(x => x.MoocCourseInstanceId)
+                    .HasForeignKey(x => x.CourseInstanceId)
                     .OnDelete(DeleteBehavior.Cascade);
             }
-        );   
+        );
     }
 
     private static void ConfigureMedia(ModelBuilder modelBuilder)

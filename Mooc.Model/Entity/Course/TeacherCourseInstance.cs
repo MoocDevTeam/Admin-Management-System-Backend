@@ -13,7 +13,7 @@ namespace Mooc.Model.Entity.Course
         public long TeacherId { get; set;}
         
         //Change this to CourseInstanceId when Kwon updates his part
-        public long MoocCourseInstanceId { get; set; } 
+        public long CourseInstanceId { get; set; } 
 
         //Nav attributes
 
@@ -21,6 +21,6 @@ namespace Mooc.Model.Entity.Course
         public User UpdatedByUser { get; set; }
         public Teacher Teacher { get; set; }
         // need to modify this to { CourseInstance }when courseInstance updated
-        public MoocCourseInstance MoocCourseInstance { get; set; }
+        public CourseInstance CourseInstance { get; set; }
     }
 }

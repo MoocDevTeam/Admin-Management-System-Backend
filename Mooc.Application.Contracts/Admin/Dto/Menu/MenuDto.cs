@@ -9,7 +9,6 @@ namespace Mooc.Application.Contracts.Admin
         public string? Permission { get; set; }
         public MenuType MenuType { get; set; }
         public string? Description { get; set; }
-        public string? Mark { get; set; }
         public int OrderNum { get; set; } = 0;
         public string? Route { get; set; }
         public string? ComponentPath { get; set; }

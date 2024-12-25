@@ -1,5 +1,7 @@
 ﻿
 
+using System;
+
 namespace Mooc.Model.Entity;
 
 public class User : BaseEntity
@@ -25,4 +27,8 @@ public class User : BaseEntity
     // MoocCourse foreign key to User
     public ICollection<MoocCourse> CreatedCourses { get; set; }
     public ICollection<MoocCourse> UpdatedCourses { get; set; }
+
+    // Kwon: Navigation Properties for CourseInstance. They will be moved to MoocUser later
+    public ICollection<CourseInstance> CreatedCourseInstances { get; set; }
+    public ICollection<CourseInstance> UpdatedCourseInstances { get; set; }
 }

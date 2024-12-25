@@ -27,6 +27,6 @@
         // Nav to a collction of CourseInstance assigned to this teacher
         //Need to modify when MoocCourseInstance is renamed!!!
         // - Collection Initializer: Ensures the property is not null by default and ready for use.
-        public virtual ICollection<MoocCourseInstance> AssignedCourses { get; set; } = new List<MoocCourseInstance>();
+        public virtual ICollection<CourseInstance> AssignedCourses { get; set; } = new List<CourseInstance>();
     }
 }

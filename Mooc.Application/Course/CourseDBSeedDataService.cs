@@ -1,4 +1,5 @@
-﻿using Mooc.Application.Admin;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Mooc.Application.Admin;
 using Mooc.Application.Contracts;
 using Mooc.Core.Utils;
 using Mooc.Model.Entity.Course;
@@ -11,10 +12,6 @@ namespace Mooc.Application.Course
         {
             this._dbContext = dbContext;
         }
-        //private List<MoocCourseInstance> moocCourseInstances= new List<MoocCourseInstance>()
-        //{
-        //    new MoocCourseInstance(){Id=1, SesstionId=1, CourseId=1, TeacherId=1, StartDate="1", EndDate="1", TotalSession=1, OpenStatus=MoocCourseInstanceOpenStatus.Open, Permisstion = MoocCourseInstancePermission.Private, CreatedByUserId=1, UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
-        //};
 
         // If run program.cs return error adn can't add data to empty database,
         // Add father table first. Example: MoocCourse has two foreign table: User, Category. Add User table -> Add Category table -> Add MoocCourse table
@@ -35,20 +32,19 @@ namespace Mooc.Application.Course
             new MoocCourse(){Id=2, Title=".Net",CourseCode="101",CoverImage="xxx.png",Description=".Net",CreatedByUser= users.First(u => u.Id == 1),UpdatedByUser=users.First(u => u.Id == 1), Category= categories.First(u => u.Id == 1),CreatedAt=DateTime.Now ,UpdatedAt=DateTime.Now.AddMinutes(1)},
             new MoocCourse(){Id=3, Title="Nodejs",CourseCode="102",CoverImage="xxx.png",Description="Nodejs",CreatedByUser= users.First(u => u.Id == 1),UpdatedByUser=users.First(u => u.Id == 1), Category= categories.First(u => u.Id == 1),CreatedAt=DateTime.Now ,UpdatedAt=DateTime.Now.AddMinutes(1)},
         };
+
+        private List<CourseInstance> courseInstances = new List<CourseInstance>()
+        {
+            new CourseInstance(){Id=1, MoocCourseId=1, TotalSessions=10, Status=CourseInstanceStatus.Open, Permission=CourseInstancePermission.Private, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(1), CreatedByUser=users.First(u => u.Id == 1) ,UpdatedByUser=users.First(u => u.Id == 1), CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=2, MoocCourseId=2, TotalSessions=20, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUser=users.First(u => u.Id == 1) ,UpdatedByUser=users.First(u => u.Id == 1), CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+        };
+
         public async Task<bool> InitAsync()
         {
-            if (!this._dbContext.Users.Any())
-            {
-                await this._dbContext.Users.AddRangeAsync(users);
-                await this._dbContext.SaveChangesAsync();
-            }
 
-            if (!this._dbContext.MoocCourses.Any())
-            {
-                await this._dbContext.MoocCourses.AddRangeAsync(courses);
-                await this._dbContext.SaveChangesAsync();
-            }
-
+            await this._dbContext.Users.AddRangeAsync(users);
+            await this._dbContext.MoocCourses.AddRangeAsync(courses);
+            await this._dbContext.CourseInstances.AddRangeAsync(courseInstances);
             await this._dbContext.SaveChangesAsync();
             return true;
         }

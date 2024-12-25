@@ -1,6 +1,6 @@
 ﻿namespace Mooc.Shared
 {
-    public enum MoocCourseInstancePermission : int
+    public enum CourseInstancePermission : int
     {
         Private = 0,
 

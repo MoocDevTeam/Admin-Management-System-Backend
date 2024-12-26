@@ -363,4 +363,8 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Ignore contents of Migrations folder but keep the folder itself
-Mooc.Model/Migrations/
+Mooc.Model/Migrations/*
+
+# Ignore database file
+MoocWebApi/AppData/moocdb.db
+Mooc.Model/Migrations/MoocDBContextModelSnapshot.cs

@@ -2,11 +2,11 @@
 
 public class UserEntityConsts
 {
-    public const int MaxUserNameLength = 100;
+    public const int MaxUserNameLength = 200;
 
-    public const int MaxEmailLength = 256;
+    public const int MaxEmailLength = 200;
 
-    public const int MaxPhoneLength = 16;
+    public const int MaxPhoneLength = 100;
 
     public const int MaxPasswordLength = 300;
 
@@ -14,10 +14,10 @@ public class UserEntityConsts
 
     public const int MaxAddressLength = 200;
 
-    public const int MaxGenderLength = 50;
+    public const int MaxGenderLength = 100;
 
     public const int MaxAvatarLength = 300;
 
-    public const int MaxAgeLength = 60;
+    public const int MaxAgeLength = 100;
 
 }

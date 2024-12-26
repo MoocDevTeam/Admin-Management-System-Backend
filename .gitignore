@@ -366,5 +366,5 @@ FodyWeavers.xsd
 Mooc.Model/Migrations/*
 
 # Ignore database file
-MoocWebApi/AppData/moocdb.db
+MoocWebApi/AppData/*
 Mooc.Model/Migrations/MoocDBContextModelSnapshot.cs

@@ -52,7 +52,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.ToTable(TablePrefix + "ChoiceQuestion", t =>
             {
                 t.HasCheckConstraint("CK_ChoiceQuestion_Marks",
-                    $"[Marks] >= {BaseQuestionEntityConsts.MinMarksValue} AND [Marks] <= {BaseQuestionEntityConsts.MaxMarksValue}");
+                    $"Marks >= {BaseQuestionEntityConsts.MinMarksValue} AND Marks <= {BaseQuestionEntityConsts.MaxMarksValue}");
             });
 
             b.HasKey(cq => cq.Id);
@@ -77,10 +77,10 @@ public static class MoocDbContextModelCreatingExtensions
 
             b.Property(cq => cq.CreatedAt)
                 .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
             b.Property(cq => cq.UpdatedAt)
                 .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
             b.Property(cq => cq.QuestionBody)
                 .IsRequired()
                 .HasMaxLength(BaseQuestionEntityConsts.MaxQuestionBodyLength);
@@ -128,13 +128,13 @@ public static class MoocDbContextModelCreatingExtensions
 
             b.Property(o => o.CreatedAt)
                 .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
             b.Property(o => o.UpdatedAt)
                 .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
-            b.Property(o => o.Field)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+/*            b.Property(o => o.Field)
                 .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP)");*/
             b.Property(o => o.OptionOrder)
                 .IsRequired()
                 .HasMaxLength(OptionEntityConsts.MaxOrderLength);
@@ -154,7 +154,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.ToTable(TablePrefix + "JudgementQuestion", t =>
             {
                 t.HasCheckConstraint("CK_JudgementQuestionn_Marks",
-                    $"[Marks] >= {BaseQuestionEntityConsts.MinMarksValue} AND [Marks] <= {BaseQuestionEntityConsts.MaxMarksValue}");
+                    $"Marks >= {BaseQuestionEntityConsts.MinMarksValue} AND Marks <= {BaseQuestionEntityConsts.MaxMarksValue}");
             });
 
             b.HasKey(jq => jq.Id);
@@ -179,10 +179,10 @@ public static class MoocDbContextModelCreatingExtensions
 
             b.Property(jq => jq.CreatedAt)
                 .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
             b.Property(jq => jq.UpdatedAt)
                 .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
             b.Property(jq => jq.QuestionBody)
                 .IsRequired()
                 .HasMaxLength(BaseQuestionEntityConsts.MaxQuestionBodyLength);
@@ -207,7 +207,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.ToTable(TablePrefix + "ShortAnsQuestion", t =>
             {
                 t.HasCheckConstraint("CK_ShortAnsQuestion_Marks",
-                    $"[Marks] >= {BaseQuestionEntityConsts.MinMarksValue} AND [Marks] <= {BaseQuestionEntityConsts.MaxMarksValue}");
+                    $"Marks >= {BaseQuestionEntityConsts.MinMarksValue} AND Marks <= {BaseQuestionEntityConsts.MaxMarksValue}");
             });
 
             b.HasKey(saq => saq.Id);
@@ -232,10 +232,10 @@ public static class MoocDbContextModelCreatingExtensions
 
             b.Property(saq => saq.CreatedAt)
                 .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
             b.Property(saq => saq.UpdatedAt)
                 .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
             b.Property(saq => saq.QuestionBody)
                 .IsRequired()
                 .HasMaxLength(BaseQuestionEntityConsts.MaxQuestionBodyLength);

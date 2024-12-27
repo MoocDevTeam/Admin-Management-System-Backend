@@ -21,7 +21,5 @@ public class MoocDBContext : DbContext
         //extension method
         modelBuilder.ConfigureAdminManagement();
         modelBuilder.ConfigureExamManagement();
-
-        //modelBuilder.ConfigureMoocManagement();
     }
 }

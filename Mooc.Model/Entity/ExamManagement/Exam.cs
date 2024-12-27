@@ -1,16 +1,26 @@
-namespace Mooc.Model.Entity;
-public class Exam:BaseEntity
-{
-  public int courseId { get; set; }
-  public string examTitle { get; set; }
-  public int? remark { get; set; }
-  public int examinationTime { get; set; }
-  public DateTime createdAt { get; set; }
-  public int createdByUserId { get; set; }
-  public int? updatedByUserId { get; set; }
-  public DateTime? updatedAt { get; set; }
+using Mooc.Model.Entity.ExamManagement;
 
-  public QuestionUpload autoOrManual { get; set; }
-  public int totalScore { get; set; }
-  public int timePeriod { get; set; }
+namespace Mooc.Model.Entity;
+public class Exam : BaseExam
+{
+/*  public long CourseId { get; set; }*/
+
+  public string ExamTitle { get; set; }
+
+  public int? Remark { get; set; }
+
+  public int ExaminationTime { get; set; }
+
+  public QuestionUpload AutoOrManual { get; set; }
+
+  public int TotalScore { get; set; }
+
+  public int TimePeriod { get; set; }
+
+ // foreign key reference:
+  public ICollection<ExamQuestion>? ExamQuestion { get; set; }
+
+  public ExamPublish ExamPublish { get; set; }
+
+/*  public Course Course { get; set; }*/
 }

@@ -1,9 +1,21 @@
 namespace Mooc.Model.Entity;
 public class ExamPublish:BaseEntity
 {
-  public int examId { get; set; }
-  public DateTime publishedAt { get; set; }
-  public int publishedByUserId { get; set; }
-  public DateTime? closeAt { get; set; }
-  public int courseInstanceId { get; set; }
+  public long ExamId { get; set; }
+
+  public DateTime PublishedAt { get; set; }
+
+  public long PublishedByUserId { get; set; }
+
+  public DateTime? CloseAt { get; set; }
+
+  /*  public int CourseInstanceId { get; set; }*/
+
+  // foreign key reference:
+
+  public Exam? Exam { get; set; }
+
+  public User? PublishedByUser { get; set; }
+
+ /*  public Course Course { get; set; }*/
 }

@@ -35,9 +35,7 @@ public static class MoocDbContextModelCreatingExtensions
                 v => v.ToString(),
                 v => (Access)Enum.Parse(typeof(Access), v));
             b.Property(x => x.IsActive).IsRequired().HasDefaultValue(true);
-            b.Property(x => x.CreatedDate).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");//for SQLite
-
-
+            b.Property(x => x.CreatedDate).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP"); //for SQLite
         });
     }
 
@@ -54,35 +52,80 @@ public static class MoocDbContextModelCreatingExtensions
         {
             b.ToTable(TablePrefix + "Exam");
             b.HasKey(x => x.Id);
-            // b.Property(x => x.Id).ValueGeneratedNever();
-            b.Property(x => x.courseId).IsRequired();
-            b.Property(x => x.examTitle).HasMaxLength(ExamEntityConsts.MaxExamTitleLength);
-            b.Property(x => x.remark).HasMaxLength(ExamEntityConsts.MaxRemarklLength);
-            b.Property(x => x.examinationTime).IsRequired().HasMaxLength(ExamEntityConsts.MaxExaminationTimeLength);
-            b.Property(x => x.createdAt).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");//for SQLite
-            b.Property(x => x.createdByUserId).IsRequired();
-            // updatedByUserId，updatedAt do not need setting?
-            b.Property(x => x.updatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-            b.Property(x => x.autoOrManual).IsRequired().HasConversion(
-                v => v.ToString(),
-                v => (QuestionUpload)Enum.Parse(typeof(QuestionUpload), v));
-            b.Property(x => x.totalScore).IsRequired().HasMaxLength(ExamEntityConsts.MaxTotalScoreLength);
-            b.Property(x => x.timePeriod).IsRequired().HasMaxLength(ExamEntityConsts.MaxTimePeriodLength);
+            b.Property(x => x.Id).ValueGeneratedNever();
+         /* b.HasOne<Course>()
+                .WithMany()
+                .HasForeignKey(x => x.CourseId); */
+            b.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(x => x.CreatedByUserId);
+            b.HasOne<User>()
+            // HasMany wait future needs
+                .WithMany()
+                .HasForeignKey(x => x.UpdatedByUserId);
+            b.Property(x => x.CreatedAt)
+                .IsRequired()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP"); //for SQLite
+            b.Property(x => x.UpdatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP"); //for SQLite
+            b.Property(x => x.ExamTitle)
+                .HasMaxLength(ExamEntityConsts.MaxExamTitleLength);
+            b.Property(x => x.Remark)
+                .HasMaxLength(ExamEntityConsts.MaxRemarklLength);
+            b.Property(x => x.ExaminationTime)
+                .IsRequired()
+                .HasMaxLength(ExamEntityConsts.MaxExaminationTimeLength);
+            b.Property(x => x.AutoOrManual)
+                .IsRequired()
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (QuestionUpload)Enum.Parse(typeof(QuestionUpload), v)
+                );
+            b.Property(x => x.TotalScore)
+                .IsRequired()
+                .HasMaxLength(ExamEntityConsts.MaxTotalScoreLength);
+            b.Property(x => x.TimePeriod)
+                .IsRequired()
+                .HasMaxLength(ExamEntityConsts.MaxTimePeriodLength);
         });
     }
     private static void ConfigureExamQuestion(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ExamQuestion>(b =>
         {
-            b.ToTable(TablePrefix + "Exam Question");
+            b.ToTable(TablePrefix + "ExamQuestion");
             b.HasKey(x => x.Id);
-            // b.Property(x => x.Id).ValueGeneratedNever();
-            b.Property(x => x.examId).IsRequired();
-            b.Property(x => x.questionId).IsRequired();
-            b.Property(x => x.marks).IsRequired().HasMaxLength(ExamQuestionEntityConsts.MaxMarksLength);
-            b.Property(x => x.questionOrder).IsRequired().HasMaxLength(ExamQuestionEntityConsts.MaxQuestionOrderLength);
-            b.Property(x => x.createdAt).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");
-            b.Property(x => x.updatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            b.Property(x => x.Id).ValueGeneratedNever();
+            b.HasOne<Exam>()
+                .WithMany()
+                .HasForeignKey(x => x.ExamId);
+            /*          b.HasOne<ChoiceQuestion>()
+                           .WithMany()
+                               .HasForeignKey(x => x.QuestionId);
+                        b.HasOne<JudgementQuestion>()
+                           .WithMany()
+                               .HasForeignKey(x => x.QuestionId);
+                        b.HasOne<ShortAnsQuestion>()
+                           .WithMany()
+                               .HasForeignKey(x => x.QuestionId);*/
+            b.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(x => x.CreatedByUserId);
+            b.HasOne<User>()
+            // HasMany wait future needs
+                .WithMany()
+                .HasForeignKey(x => x.UpdatedByUserId);
+            b.Property(x => x.Marks)
+                .IsRequired()
+                .HasMaxLength(ExamQuestionEntityConsts.MaxMarksLength);
+            b.Property(x => x.QuestionOrder)
+                .IsRequired()
+                .HasMaxLength(ExamQuestionEntityConsts.MaxQuestionOrderLength);
+            b.Property(x => x.CreatedAt)
+                .IsRequired()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            b.Property(x => x.UpdatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
     }
 
@@ -90,13 +133,18 @@ public static class MoocDbContextModelCreatingExtensions
     {
         modelBuilder.Entity<ExamPublish>(b =>
         {
-            b.ToTable(TablePrefix + "Exam Publish");
+            b.ToTable(TablePrefix + "ExamPublish");
             b.HasKey(x => x.Id);
-            // b.Property(x => x.Id).ValueGeneratedNever();
-            b.Property(x => x.examId).IsRequired();
-            b.Property(x => x.publishedAt).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");
-            b.Property(x => x.closeAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-            b.Property(x => x.courseInstanceId).IsRequired();
+            b.Property(x => x.Id).ValueGeneratedNever();
+            b.HasOne(x => x.Exam) // Navigation property in ExamPublish
+                .WithOne(x => x.ExamPublish) // Navigation property in Exam
+                .HasForeignKey<ExamPublish>(x => x.ExamId); // ExamPublish.ExamId is the FK to Exam.Id
+            b.HasOne(x => x.PublishedByUser); // default
+            b.Property(x => x.PublishedAt)
+                .IsRequired()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            b.Property(x => x.CloseAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
     }
 

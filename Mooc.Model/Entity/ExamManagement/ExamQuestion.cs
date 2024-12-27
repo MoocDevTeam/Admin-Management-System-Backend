@@ -1,13 +1,21 @@
+using Mooc.Model.Entity.ExamManagement;
+
 namespace Mooc.Model.Entity;
-public class ExamQuestion:BaseEntity
+public class ExamQuestion : BaseExam
 {
-  public int examId { get; set; }
-  public int questionId { get; set; }
-  public int marks { get; set; }
-  public int questionOrder { get; set; }
-  public DateTime createdAt { get; set; }
-  public int createdByUserId { get; set; }
-  public int? updatedByUserId { get; set; }
-  public DateTime? updatedAt { get; set; }
-  public int questionTypeId { get; set; }
+  public long ExamId { get; set; }
+
+  public long QuestionId { get; set; }
+
+  public int Marks { get; set; }
+
+  public int QuestionOrder { get; set; }
+
+  public int QuestionTypeId { get; set; }
+
+    // foreign key reference:
+    public Exam? Exam { get; set; }
+/*  public ChoiceQuestion ChoiceQuestion { get; set; }
+    public JudgementQuestion JudgementQuestion { get; set; }
+    public ShortAnsQuestion ShortAnsQuestion { get; set; }*/
 }

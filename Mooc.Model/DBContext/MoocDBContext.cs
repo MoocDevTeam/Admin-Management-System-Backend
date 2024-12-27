@@ -17,7 +17,7 @@ public class MoocDBContext : DbContext
     public DbSet<Teacher> MoocTeachers { get; set; }
     public DbSet<Enrollment> MoocEnrollment { get; set; }
     public DbSet<TeacherCourseInstance> TeacherCourseInstances { get; set; }
-
+    public DbSet<Category> Category { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

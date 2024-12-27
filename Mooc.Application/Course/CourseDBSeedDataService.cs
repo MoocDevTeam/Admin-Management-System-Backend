@@ -13,7 +13,7 @@ namespace Mooc.Application.Course
             this._dbContext = dbContext;
         }
 
-        // If run program.cs return error adn can't add data to empty database,
+        // If run program.cs return error and can't add data to empty database,
         // Add father table first. Example: MoocCourse has two foreign table: User, Category. Add User table -> Add Category table -> Add MoocCourse table
         private static List<User> users = new List<User>()
         {
@@ -42,10 +42,19 @@ namespace Mooc.Application.Course
         public async Task<bool> InitAsync()
         {
 
-            await this._dbContext.Users.AddRangeAsync(users);
-            await this._dbContext.MoocCourses.AddRangeAsync(courses);
-            await this._dbContext.CourseInstances.AddRangeAsync(courseInstances);
-            await this._dbContext.SaveChangesAsync();
+            if (_dbContext.Users.Any() || _dbContext.MoocCourses.Any() || _dbContext.CourseInstances.Any()) // check existing data
+            {
+                return true; // if exist, skip seeding
+            }
+            else
+            {
+                await this._dbContext.Users.AddRangeAsync(users);
+                await this._dbContext.MoocCourses.AddRangeAsync(courses);
+                await this._dbContext.CourseInstances.AddRangeAsync(courseInstances);
+                await this._dbContext.Category.AddRangeAsync(categories);
+                await this._dbContext.SaveChangesAsync();
+            }
+
             return true;
         }
     }

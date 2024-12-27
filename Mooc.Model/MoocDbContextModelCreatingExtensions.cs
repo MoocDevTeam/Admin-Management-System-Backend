@@ -183,6 +183,11 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(cs => cs.CourseCode).IsRequired().HasMaxLength(CourseEntityConsts.MaxCourseCodeLength);
             b.Property(cs => cs.CoverImage).IsRequired();
             b.Property(cs => cs.Description).HasMaxLength(CourseEntityConsts.MaxDescriptionLength);
+            b.Property(cs => cs.CreatedAt)
+            .ValueGeneratedOnAdd(); //  
+
+            b.Property(cs => cs.UpdatedAt)
+                .ValueGeneratedOnAddOrUpdate();
 
             // //Foreign configuration temperarily use <User> until <MoocUser is created>
             b.HasOne(x => x.CreatedByUser)
@@ -195,10 +200,10 @@ public static class MoocDbContextModelCreatingExtensions
             .HasForeignKey(x => x.UpdatedByUserId)  // Foreign key property
             .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
 
-            // b.HasOne(x => x.Category)  // One Category
-            // .WithMany(c => c.Courses) // Many Courses
-            // .HasForeignKey(x => x.CategoryId) // Foreign Key in MoocCourse
-            // .OnDelete(DeleteBehavior.Restrict); // Restrict delete if needed
+            b.HasOne(x => x.Category)  // One Category
+            .WithMany(c => c.Courses) // Many Courses
+            .HasForeignKey(x => x.CategoryId) // Foreign Key in MoocCourse
+            .OnDelete(DeleteBehavior.Restrict); // Restrict delete if needed
         });
     }
     ///<summary>
@@ -345,7 +350,7 @@ public static class MoocDbContextModelCreatingExtensions
                     .IsRequired(false)
                     .HasDefaultValueSql("GETDATE()");
 
-                b.Property (e => e.UpdatedAt).ValueGeneratedOnUpdate();
+                b.Property(e => e.UpdatedAt).ValueGeneratedOnUpdate();
 
                 //Foreign Keys
                 b.HasOne<User>(x => x.CreatedByUser)

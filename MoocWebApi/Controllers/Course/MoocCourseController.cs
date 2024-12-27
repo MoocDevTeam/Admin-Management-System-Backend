@@ -19,32 +19,32 @@ namespace MoocWebApi.Controllers.Course
             _courseService = courseService;
         }
 
-        // [HttpGet]
-        // public async Task<PagedResultDto<CourseDto>> GetByPageAsync([FromQuery] FilterPagedResultRequestDto input)
-        // {
-        //     var pagedResult = await _courseService.GetListAsync(input);
+        [HttpPost]
+        public async Task<bool> Add([FromBody] CreateCourseDto input)
+        {
+            var courseDto = await _courseService.CreateAsync(input);
+            return courseDto.Id > 0;
+        }
 
-        //     return pagedResult;
-        // }
+        [HttpDelete("{id}")]
+        public async Task<bool> Delete(long id)
+        {
+            await _courseService.DeleteAsync(id);
+            return true;
+        }
 
-        // [HttpGet("{courseName}")]
-        // public async Task<IActionResult> GetByCourseNameAsync(string courseName)
-        // {
-        //     var course = await _courseService.GetByCourseNameAsync(courseName);
-        //     if (course == null)
-        //         return NotFound(new { Message = $"Course with name '{courseName}' not found." });
-        //     return Ok(course);
-        // }
+        [HttpGet("{courseName}")]
+        public async Task<CourseDto> GetByCourseNameAsync(string courseName)
+        {
+            var course = await _courseService.GetByCourseNameAsync(courseName);
+            return course;
+        }
 
-        // [HttpGet]
-        // public async Task<IActionResult> GetAll()
-        // {
-        //     var course = await _courseService.GetAllAsync();
-        //     if (course == null)
-        //     {
-        //         return NotFound("No courses found.");
-        //     }
-        //     return Ok(course);
-        // }
+        [HttpGet]
+        public async Task<List<CourseDto>> GetAll()
+        {
+            var courses = await _courseService.GetAllAsync();
+            return courses;
+        }
     }
 }

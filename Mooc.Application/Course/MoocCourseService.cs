@@ -15,13 +15,14 @@ namespace Mooc.Application.Course
     IMoocCourseService, ITransientDependency
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IMapper _mapper;
 
         public MoocCourseService(MoocDBContext dbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment) : base(dbContext, mapper)
         {
             this._webHostEnvironment = webHostEnvironment;
+            this._mapper = mapper;
         }
 
-        // 创建带过滤条件的查询
         protected override IQueryable<MoocCourse> CreateFilteredQuery(FilterPagedResultRequestDto input)
         {
             if (!string.IsNullOrEmpty(input.Filter))
@@ -31,61 +32,58 @@ namespace Mooc.Application.Course
             return base.CreateFilteredQuery(input);
         }
 
-        // 创建新课程
         public override async Task<CourseDto> CreateAsync(CreateCourseDto input)
         {
-            await ValidateCourseCodeAsync(input.Title, 0);
 
             var courseDto = await base.CreateAsync(input);
             return courseDto;
         }
 
 
-        // 更新课程
         public override async Task<CourseDto> UpdateAsync(long id, UpdateCourseDto input)
         {
-            // 更新前可以加入验证，确保没有其他课程使用相同的课程代码
-            await ValidateCourseCodeAsync(input.CourseCode, id);
+            await ValidateCourseNameAsync(input.CourseCode, id);
             return await base.UpdateAsync(id, input);
         }
 
-        // 课程代码的唯一性验证
-        protected virtual async Task ValidateCourseCodeAsync(string courseCode, long? expectedId = null)
+        protected virtual async Task ValidateCourseNameAsync(string courseName, long? expectedId = null)
         {
-            var course = await this.GetQueryable().FirstOrDefaultAsync(c => c.CourseCode == courseCode);
-            if (course != null && course.Id != expectedId)
+            var course = await this.GetQueryable().FirstOrDefaultAsync(c => c.Title == courseName);
+            if (course != null)
             {
-                throw new EntityAlreadyExistsException($"Course with code {courseCode} already exists", $"{courseCode} already exists");
+                throw new EntityAlreadyExistsException($"Course with code {courseName} already exists", $"{courseName} already exists");
             }
         }
 
-        // 获取课程通过课程代码
-        public async Task<MoocCourse> GetByCourseNameAsync(string courseName)
+        public async Task<CourseDto> GetByCourseNameAsync(string courseName)
         {
             var course = await this.McDBContext.MoocCourses.FirstOrDefaultAsync(x => x.Title == courseName);
-            // if (course == null)
-            //     return null;
-            // CourseDto courseOutput = _mapper.Map<CourseDto>(course);
-            return course;
+            if (course == null)
+                return null;
+
+            var courseOutput = this.Mapper.Map<CourseDto>(course);
+            return courseOutput;
         }
 
 
-        Task<CourseDto> IMoocCourseService.GetByCourseNameAsync(string courseName)
+
+
+        public async Task<List<CourseDto>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var courses = await this.McDBContext.MoocCourses.ToListAsync();
+
+            if (courses.Count == 0)
+                return new List<CourseDto>();
+            var courseOutput = this._mapper.Map<List<CourseDto>>(courses);
+            return courseOutput;
+
         }
 
-        // public async Task<List<CourseDto>> GetAllAsync()
-        // {
-        //     var courses = await this.McDBContext.MoocCourses.ToListAsync();
-
-
-        //     if (courses.Count == 0)
-        //         return new List<CourseDto>(); // 如果没有课程，返回空列表
-        //     var courseOutput = this._mapper.Map<List<CourseDto>>(courses);
-        //     return courseOutput;
-
-        // }
+        public async Task<bool> CourseExist(string title)
+        {
+            // return _context.Stock.AnyAsync(s => s.Id == id);
+            return await this.McDBContext.MoocCourses.AnyAsync(c => c.Title == title);
+        }
 
 
     }

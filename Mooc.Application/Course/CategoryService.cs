@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Mooc.Application.Course;
 
-namespace Mooc.Application.Course
+public class CategoryService
 {
-    public class CategoryService
-    {
-    }
 }

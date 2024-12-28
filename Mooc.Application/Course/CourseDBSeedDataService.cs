@@ -39,6 +39,12 @@ namespace Mooc.Application.Course
             new CourseInstance(){Id=2, MoocCourseId=2, TotalSessions=20, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUser=users.First(u => u.Id == 1) ,UpdatedByUser=users.First(u => u.Id == 1), CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
         };
 
+        private List<Enrollment> enrollments = new List<Enrollment>()
+        {
+            new Enrollment(){Id=1, CourseInstanceId=1,  EnrollmentStatus=EnrollmentStatus.Open,  EnrollStartDate=DateTime.Now, EnrollEndDate =DateTime.Now.AddMonths(1), CreatedByUserId =1 ,UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new Enrollment(){Id=2, CourseInstanceId=2,  EnrollmentStatus=EnrollmentStatus.Close, EnrollStartDate=DateTime.Now, EnrollEndDate =DateTime.Now.AddMonths(2), CreatedByUserId =2, UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+        };
+     
         public async Task<bool> InitAsync()
         {
 
@@ -52,6 +58,7 @@ namespace Mooc.Application.Course
                 await this._dbContext.MoocCourses.AddRangeAsync(courses);
                 await this._dbContext.CourseInstances.AddRangeAsync(courseInstances);
                 await this._dbContext.Category.AddRangeAsync(categories);
+                await this._dbContext.Enrollment.AddRangeAsync(enrollments);
                 await this._dbContext.SaveChangesAsync();
             }
 

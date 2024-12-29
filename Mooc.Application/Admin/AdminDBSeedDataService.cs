@@ -23,6 +23,16 @@ namespace Mooc.Application.Admin
             new User(){Id=6, UserName="student3", Password=BCryptUtil.HashPassword("123456"), Email="student3@demo.com", Age=22, Access=Access.student, Gender=Gender.Male, Avatar="student3-avatar.png", CreatedAt=DateTime.Now.AddMinutes(5), IsActive=true }
 
         };
+        private List<Role> roles = new List<Role>()
+        {
+            new Role(){Id=1, RoleName="admin1",   Description="with full permission to crud"},
+            new Role(){Id=2, RoleName="admin2",   Description="with full permission to crud"},
+            new Role(){Id=3, RoleName="admin3",   Description="with full permission to crud"},
+            new Role(){Id=4, RoleName="teacher1", Description="with limited permission to crud"},
+            new Role(){Id=5, RoleName="teacher2", Description="with limited permission to crud"},
+            new Role(){Id=6, RoleName="teacher3", Description="with limited permission to crud"},
+        };
+
 
         private List<Carousel> carousels = new List<Carousel>()
         {
@@ -57,7 +67,11 @@ namespace Mooc.Application.Admin
                 await this._dbContext.Users.AddRangeAsync(users);
                 await this._dbContext.SaveChangesAsync();
             }
-
+            if (!this._dbContext.Roles.Any())
+            {
+                await this._dbContext.Roles.AddRangeAsync(roles);
+                await this._dbContext.SaveChangesAsync();
+            }
             if (!this._dbContext.Carousels.Any())
             {
                 await this._dbContext.Carousels.AddRangeAsync(carousels);

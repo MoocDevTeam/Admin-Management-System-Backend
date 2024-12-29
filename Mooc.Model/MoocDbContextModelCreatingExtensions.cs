@@ -64,12 +64,6 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasMany(cs => cs.RoleMenus);
             b.HasOne(cs => cs.Parent).WithMany(cs => cs.Children).HasForeignKey(cs => cs.ParentId);
         });
-
-        //modelBuilder.Entity<RoleMenu>(b =>
-        //{
-        //    b.ToTable(TablePrefix + "RoleMenu");
-        //    b.HasKey(x => x.Id);
-        //});
     }
     private static void ConfigureRole(ModelBuilder modelBuilder)
     {

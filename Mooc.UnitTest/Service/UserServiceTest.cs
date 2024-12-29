@@ -15,7 +15,7 @@ namespace Mooc.UnitTest.Service
     {
         private readonly IMapper _mapper;
         private readonly Mock<IWebHostEnvironment> _mockWebHostEnvironment;
-        private List<User> users;
+        //private List<User> users;
         private string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MockData", "users.json");
 
         public UserServiceTest()
@@ -45,7 +45,7 @@ namespace Mooc.UnitTest.Service
             //arrange 
             var users = LoadUsersFromJson(path);
             var options = new DbContextOptionsBuilder<MoocDBContext>()
-           .UseInMemoryDatabase("InMemoryDB_1")
+           .UseInMemoryDatabase("InMemoryDB_POST")
            .Options;
             var newUser = new CreateUserDto()
             {
@@ -67,9 +67,9 @@ namespace Mooc.UnitTest.Service
                 var result = await service.CreateAsync(newUser);
                 // Assert
                 Assert.NotNull(result);
-                Assert.AreEqual(newUser.UserName, result.UserName);
-                Assert.AreEqual(newUser.Age, result.Age);
-                Assert.AreEqual(newUser.Email, result.Email);
+                Assert.That(result.UserName, Is.EqualTo(newUser.UserName));
+                Assert.That(result.Age, Is.EqualTo(newUser.Age));
+                Assert.That(result.Email, Is.EqualTo(newUser.Email));
             }
         }
         [Test]
@@ -78,7 +78,7 @@ namespace Mooc.UnitTest.Service
             // Arrange
             var users = LoadUsersFromJson(path);
             var options = new DbContextOptionsBuilder<MoocDBContext>()
-           .UseInMemoryDatabase("InMemoryDB_2")
+           .UseInMemoryDatabase("InMemoryDB_GET")
            .Options;
             using (var context = new MoocDBContext(options))
             {
@@ -91,7 +91,7 @@ namespace Mooc.UnitTest.Service
                 //Assert
                 Assert.NotNull(result);
                 Assert.Null(inValidResult);
-                Assert.AreEqual("A1", result.UserName);
+                Assert.That(result.UserName, Is.EqualTo("A1"));
             }
         }
         [Test]
@@ -100,7 +100,7 @@ namespace Mooc.UnitTest.Service
             // Arrange
             var users = LoadUsersFromJson(path);
             var options = new DbContextOptionsBuilder<MoocDBContext>()
-           .UseInMemoryDatabase("InMemoryDB_3")
+           .UseInMemoryDatabase("InMemoryDB_PUT")
            .Options;
             var updatedUser = new UpdateUserDto()
             {
@@ -121,7 +121,7 @@ namespace Mooc.UnitTest.Service
                 var updatedResult = await service.UpdateAsync(5, updatedUser);
                 //Assert
                 Assert.NotNull(updatedResult);
-                Assert.AreEqual(updatedUser.UserName, updatedResult.UserName);
+                Assert.That( updatedResult.UserName, Is.EqualTo(updatedUser.UserName));
             }
         }
     }

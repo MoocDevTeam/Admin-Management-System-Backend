@@ -1,6 +1,6 @@
 namespace Mooc.Model.Entity.ExamManagement;
 
-public class ExamQuestion
+public class ExamQuestion: BaseEntity
 {
     public long examId { get; set; }
     public long questionId { get; set; }

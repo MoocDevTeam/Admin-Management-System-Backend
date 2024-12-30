@@ -1,6 +1,6 @@
 namespace Mooc.Model.Entity.ExamManagement;
 
-public class ExamPublish
+public class ExamPublish: BaseEntity
 {
     public long examId { get; set; }
     public DateTime publishedAt { get; set; }

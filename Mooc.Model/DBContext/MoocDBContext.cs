@@ -14,9 +14,6 @@ public class MoocDBContext : DbContext
     public DbSet<ShortAnsQuestion> ShortAnsQuestion { get; set; }
     public DbSet<Option> Option { get; set; }
     public DbSet<QuestionType> QuestionType { get; set; }
-    public DbSet<Exam> Exam { get; set; }
-    public DbSet<ExamQuestion> ExamQuestion { get; set; }
-    public DbSet<ExamPublish> ExamPublish { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -321,14 +321,14 @@ public static class MoocDbContextModelCreatingExtensions
             b.ToTable(TablePrefix + "ExamQuestion");
             b.HasKey(eq => eq.Id);
             b.Property(eq => eq.Id).ValueGeneratedNever();
-            /*         b.HasOne(eq => eq.Exam)
-                         .WithMany(e => e.ExamQuestion)
-                         .HasForeignKey(eq => eq.ExamId);  // have side effects*/
-            b.HasOne<Exam>()
+            b.HasOne(eq => eq.Exam)
+                .WithMany(e => e.ExamQuestion)
+                .HasForeignKey(eq => eq.ExamId);  // have side effects
+           /* b.HasOne<Exam>()
                 .WithMany()
-                .HasForeignKey(x => x.ExamId);  // use this alternative method, because the above have side effects
-                                                // we can choose either have 3 columns (ChoiceQuestionId, JudgementQuestionId, ShortAnsQuestionId) or have 1 column (questionId)
-            b.HasOne<ChoiceQuestion>()
+                .HasForeignKey(x => x.ExamId);*/  // use this alternative method, because the above have side effects
+           // we can choose either have 3 columns (ChoiceQuestionId, JudgementQuestionId, ShortAnsQuestionId) or have 1 column (questionId)
+/*          b.HasOne<ChoiceQuestion>()
                 .WithMany()
                 .HasForeignKey(eq => eq.ChoiceQuestionId);
             b.HasOne<JudgementQuestion>()
@@ -336,9 +336,9 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasForeignKey(eq => eq.JudgementQuestionId);
             b.HasOne<ShortAnsQuestion>()
                 .WithMany()
-                .HasForeignKey(eq => eq.ShortAnsQuestionId);
+                .HasForeignKey(eq => eq.ShortAnsQuestionId);*/
             // 3 columns (ChoiceQuestionId, JudgementQuestionId, ShortAnsQuestionId) like above commented
-            // b.Property(x => x.QuestionType).IsRequired();
+            b.Property(x => x.QuestionType).IsRequired();
             // 1 column  (questionId) when use add controller, frontend need to send / backend controller need to accept 1 extra parameter QuestionType
             b.HasOne(eq => eq.CreatedByUser)
                 .WithMany()

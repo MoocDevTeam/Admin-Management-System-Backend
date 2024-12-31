@@ -44,7 +44,7 @@ public static class MoocDbContextModelCreatingExtensions
                 v => v.ToString(),
                 v => (Access)Enum.Parse(typeof(Access), v));
             b.Property(x => x.IsActive).IsRequired().HasDefaultValue(true);
-            b.Property(x => x.CreatedAt).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");//for SQLite
+            b.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");//for SQLite
         });
     }
 
@@ -67,12 +67,6 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasMany(cs => cs.RoleMenus);
             b.HasOne(cs => cs.Parent).WithMany(cs => cs.Children).HasForeignKey(cs => cs.ParentId);
         });
-
-        //modelBuilder.Entity<RoleMenu>(b =>
-        //{
-        //    b.ToTable(TablePrefix + "RoleMenu");
-        //    b.HasKey(x => x.Id);
-        //});
     }
     private static void ConfigureRole(ModelBuilder modelBuilder)
     {

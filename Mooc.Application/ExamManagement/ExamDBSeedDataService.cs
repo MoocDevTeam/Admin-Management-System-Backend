@@ -22,9 +22,9 @@ namespace Mooc.Application.ExamManagement
 
         private List<ExamQuestion> examQuestions = new List<ExamQuestion>()
         {
-            new ExamQuestion(){Id=1, ExamId=1, ChoiceQuestionId=1, JudgementQuestionId=null, ShortAnsQuestionId=null, Marks=5, QuestionTypeId=1, QuestionOrder=1, CreatedByUserId=1, CreatedAt=DateTime.Now, UpdatedByUserId=1, UpdatedAt=DateTime.Now, },
-            new ExamQuestion(){Id=2, ExamId=1, ChoiceQuestionId=null, JudgementQuestionId=1, ShortAnsQuestionId=null, Marks=5, QuestionTypeId=2, QuestionOrder=1, CreatedByUserId=1, CreatedAt=DateTime.Now, UpdatedByUserId=1, UpdatedAt=DateTime.Now, },
-            new ExamQuestion(){Id=3, ExamId=1, ChoiceQuestionId=null, JudgementQuestionId=null, ShortAnsQuestionId=1, Marks=5, QuestionTypeId=3, QuestionOrder=1, CreatedByUserId=1, CreatedAt=DateTime.Now, UpdatedByUserId=1, UpdatedAt=DateTime.Now, },
+            new ExamQuestion(){Id=1, ExamId=1, QuestionId=1, QuestionType="Choice", Marks=5, QuestionTypeId=1, QuestionOrder=1, CreatedByUserId=1, CreatedAt=DateTime.Now, UpdatedByUserId=1, UpdatedAt=DateTime.Now, },
+            new ExamQuestion(){Id=2, ExamId=1, QuestionId=2, QuestionType="Judgement", Marks=5, QuestionTypeId=2, QuestionOrder=1, CreatedByUserId=1, CreatedAt=DateTime.Now, UpdatedByUserId=1, UpdatedAt=DateTime.Now, },
+            new ExamQuestion(){Id=3, ExamId=1, QuestionId=3, QuestionType="Short Answer", Marks=5, QuestionTypeId=3, QuestionOrder=1, CreatedByUserId=1, CreatedAt=DateTime.Now, UpdatedByUserId=1, UpdatedAt=DateTime.Now, },
         };
 
         private List<ExamPublish> examPublish = new List<ExamPublish>()

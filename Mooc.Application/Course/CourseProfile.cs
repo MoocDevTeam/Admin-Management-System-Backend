@@ -7,12 +7,11 @@ public class CourseProfile : Profile
 {
     public CourseProfile()
     {
-        CreateMap<EnrollmentDto, Enrollment>();
+
         CreateMap<Enrollment, EnrollmentDto>();
         CreateMap<CreateEnrollmentDto, Enrollment>();
-        CreateMap<Enrollment, CreateEnrollmentDto>();
         CreateMap<UpdateEnrollmentDto, Enrollment>();
-        CreateMap<Enrollment, UpdateEnrollmentDto>();
+
 
         CreateMap<CourseDto, MoocCourse>();
         CreateMap<MoocCourse, CourseDto>();
@@ -20,12 +19,12 @@ public class CourseProfile : Profile
         CreateMap<MoocCourse, CreateCourseDto>();
         CreateMap<UpdateCourseDto, MoocCourse>();
 
-        CreateMap<CategoryDto, Category>();
-        CreateMap<Category, CategoryDto>();
+
+        CreateMap<Category, CategoryDto>()
+                 .ForMember(dest => dest.Courses, opt => opt.MapFrom(src => src.Courses));
         CreateMap<CreateCategoryDto, Category>();
-        CreateMap<Category, CreateCategoryDto>();
         CreateMap<UpdateCategoryDto, Category>();
-        CreateMap<Category, UpdateCategoryDto>();
+
 
         //CreateMap<CreateUserDto, User>();
         //CreateMap<UpdateUserDto, User>();

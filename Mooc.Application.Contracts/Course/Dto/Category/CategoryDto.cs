@@ -1,6 +1,4 @@
-﻿using Mooc.Model.Entity;
-
-namespace Mooc.Application.Contracts.Course;
+﻿namespace Mooc.Application.Contracts.Course;
 
 public class CategoryDto:BaseEntityDto
 {
@@ -10,7 +8,7 @@ public class CategoryDto:BaseEntityDto
     public string? IconUrl { get; set; }
     public long? ParentId { get; set; }
 
-    public ICollection<MoocCourse> Courses { get; set; } = new List<MoocCourse>();
+    public ICollection<CourseDto> Courses { get; set; } = new List<CourseDto>();
 
     public long CreatedByUserId { get; set; }
     public long UpdatedByUserId { get; set; }

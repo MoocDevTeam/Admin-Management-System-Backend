@@ -34,8 +34,6 @@ namespace MoocWebApi
                     // Handle requests up to 50 MB
                     options.Limits.MaxRequestBodySize = 52428800;
                 });
-
-
                 //autofac
                 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
                 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>

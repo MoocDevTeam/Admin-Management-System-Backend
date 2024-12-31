@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -11,12 +11,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Include="..\AssemblyInfo.cs" Link="AssemblyInfo.cs" />
+		<Compile Include="..\AssemblyInfo.cs" Link="AssemblyInfo.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="coverlet.collector" Version="6.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.10" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
 		<PackageReference Include="Moq" Version="4.20.70" />
 		<PackageReference Include="NUnit" Version="3.14.0" />
@@ -25,11 +26,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\MoocWebApi\MoocWebApi.csproj" />
+		<ProjectReference Include="..\MoocWebApi\MoocWebApi.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Using Include="NUnit.Framework" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="MockData\users.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>

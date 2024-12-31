@@ -2,9 +2,9 @@
 
 public class BaseQuestion: BaseEntity
 {
-    public long QuestionTypeId { get; set; }
+ /*   public long QuestionTypeId { get; set; }*/
 
-    public long CourseId { get; set; }
+   /* public long CourseId { get; set; }*/
 
     public long CreatedByUserId { get; set; }
 

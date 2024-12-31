@@ -9,3 +9,4 @@ global using Mooc.Model.DBContext;
 global using Mooc.Model.Entity;
 global using Mooc.Shared;
 global using System.Linq.Dynamic.Core;
+global using Mooc.Application.Contracts.Course;

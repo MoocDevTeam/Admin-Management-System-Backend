@@ -14,7 +14,7 @@ public class MoocCourse : BaseEntity
     public long CreatedByUserId { get; set; }
     public long UpdatedByUserId { get; set; }
     // public Category Category { get; set; }
-    public DateTime? CreatedAt { get; set; }
+    //public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 
     // Foreign key for Category

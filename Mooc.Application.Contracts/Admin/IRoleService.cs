@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace Mooc.Application.Contracts.Admin
 {
-    public interface IRoleService : ICrudService<CreateRoleDto, long, FilterPagedResultRequestDto,  UpdateRoleDto>
+    public interface IRoleService : ICrudService<RoleDto, RoleDto, long, FilterPagedResultRequestDto, CreateRoleDto, UpdateRoleDto>
     {
-        Task<List<CreateRoleDto>> GetAllRolesAsync();
+     //   Task<List<CreateRoleDto>> GetAllRolesAsync();
     }
 }

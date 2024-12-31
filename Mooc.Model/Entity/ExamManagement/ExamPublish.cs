@@ -1,10 +1,21 @@
-namespace Mooc.Model.Entity.ExamManagement;
-
-public class ExamPublish: BaseEntity
+namespace Mooc.Model.Entity;
+public class ExamPublish : BaseEntity
 {
-    public long examId { get; set; }
-    public DateTime publishedAt { get; set; }
-    public long publishedByUserId { get; set; }
-    public DateTime closedAt { get; set; }
-    public long courseInstanceId { get; set; }
+  public long ExamId { get; set; }
+
+  public DateTime PublishedAt { get; set; }
+
+  public long PublishedByUserId { get; set; }
+
+  public DateTime? CloseAt { get; set; }
+
+    /*  public int CourseInstanceId { get; set; }*/
+
+    // Navigation propertye:
+
+  public Exam? Exam { get; set; }
+
+  public User? PublishedByUser { get; set; }
+
+ /*  public Course Course { get; set; }*/
 }

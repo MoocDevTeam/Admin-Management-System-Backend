@@ -5,7 +5,7 @@ public class ExamPublish : BaseEntity
 
   public DateTime PublishedAt { get; set; }
 
-  public long PublishedByUserId { get; set; }
+  public long? PublishedByUserId { get; set; }
 
   public DateTime? CloseAt { get; set; }
 

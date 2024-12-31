@@ -18,7 +18,7 @@ public class Option : BaseEntity
 
     public long UpdatedByUserId { get; set; }
 
-    public ICollection<User>? UpdatedByUsers { get; set; }
+    public virtual ICollection<User>? UpdatedByUsers { get; set; }
 
     public DateTime UpdatedAt { get; set; }
 

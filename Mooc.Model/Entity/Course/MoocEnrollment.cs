@@ -16,7 +16,7 @@ namespace Mooc.Model.Entity
         [ForeignKey("UpdatedByUser")]
         public long UpdatedByUserId { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        //public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
     }

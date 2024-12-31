@@ -12,7 +12,7 @@ namespace Mooc.Model.Entity
         public DateTime EndDate { get; set; }
         public long CreatedByUserId { get; set; }
         public long UpdatedByUserId { get; set; }
-        public DateTime CreatedAt { get; set; }
+        //public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
         //Navigation Properties

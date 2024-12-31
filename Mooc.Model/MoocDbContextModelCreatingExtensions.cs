@@ -155,17 +155,20 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasOne<User>().WithMany().HasForeignKey(x => x.CreatedByUserId);
             b.HasOne<Comment>().WithMany().HasForeignKey(x => x.ParentCommentId);
 
-            // Explicit relationship to MoocCourse for CreatedCourses
-            b.HasMany(u => u.CreatedCourses)
-                .WithOne(c => c.CreatedByUser)
-                .HasForeignKey(c => c.CreatedByUserId)  // Foreign key property
-                .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
 
-            // Explicit relationship to MoocCourse for UpdatedCourses
-            b.HasMany(u => u.UpdatedCourses)
-                .WithOne(c => c.UpdatedByUser)
-                .HasForeignKey(c => c.UpdatedByUserId)  // Foreign key property
-                .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
+            //Need to communicate with Young to fix
+
+            //// Explicit relationship to MoocCourse for CreatedCourses
+            //b.HasMany(u => u.CreatedCourses)
+            //    .WithOne(c => c.CreatedByUser)
+            //    .HasForeignKey(c => c.CreatedByUserId)  // Foreign key property
+            //    .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
+
+            //// Explicit relationship to MoocCourse for UpdatedCourses
+            //b.HasMany(u => u.UpdatedCourses)
+            //    .WithOne(c => c.UpdatedByUser)
+            //    .HasForeignKey(c => c.UpdatedByUserId)  // Foreign key property
+            //    .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
         });
     }
 
@@ -209,15 +212,21 @@ public static class MoocDbContextModelCreatingExtensions
             c.Property(x => x.CreatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
             c.Property(x => x.UpdatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
             c.Property(x => x.CreatedByUserId).IsRequired();
-            c.HasOne(x => x.CreatedByUser)
-                .WithMany(u => u.CreatedCourseInstances)
-                .HasForeignKey(x => x.CreatedByUserId)
-                .OnDelete(DeleteBehavior.Restrict);
+
+            //Contact Kwon
+
+            //c.HasOne(x => x.CreatedByUser)
+            //    .WithMany(u => u.CreatedCourseInstances)
+            //    .HasForeignKey(x => x.CreatedByUserId)
+            //    .OnDelete(DeleteBehavior.Restrict);
+
             c.Property(x => x.UpdatedByUserId).IsRequired();
-            c.HasOne(x => x.UpdatedByUser)
-                .WithMany(u => u.UpdatedCourseInstances)
-                .HasForeignKey(x => x.UpdatedByUserId)
-                .OnDelete(DeleteBehavior.Cascade);
+
+            //Contact Kwon
+            //c.HasOne(x => x.UpdatedByUser)
+            //    .WithMany(u => u.UpdatedCourseInstances)
+            //    .HasForeignKey(x => x.UpdatedByUserId)
+            //    .OnDelete(DeleteBehavior.Cascade);
             // One to One: CourseInstance->MoocCourse
             c.HasOne(x => x.MoocCourse)
                 .WithOne() //.WithOne(mc => mc.CourseInstance) add 
@@ -309,15 +318,15 @@ public static class MoocDbContextModelCreatingExtensions
                 .ValueGeneratedOnAddOrUpdate();
 
             // //Foreign configuration temperarily use <User> until <MoocUser is created>
-            b.HasOne(x => x.CreatedByUser)
-            .WithMany(u => u.CreatedCourses)  // User has many CreatedCourses
-            .HasForeignKey(x => x.CreatedByUserId)  // Foreign key property
-            .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
+            //b.HasOne(x => x.CreatedByUser)
+            ////.WithMany(u => u.CreatedCourses)  // User has many CreatedCourses
+            //.HasForeignKey(x => x.CreatedByUserId)  // Foreign key property
+            //.OnDelete(DeleteBehavior.Restrict);  // Delete behavior
 
-            b.HasOne(x => x.UpdatedByUser)
-            .WithMany(u => u.UpdatedCourses)  // User has many UpdatedCourses
-            .HasForeignKey(x => x.UpdatedByUserId)  // Foreign key property
-            .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
+            //b.HasOne(x => x.UpdatedByUser)
+            //.WithMany(u => u.UpdatedCourses)  // User has many UpdatedCourses
+            //.HasForeignKey(x => x.UpdatedByUserId)  // Foreign key property
+            //.OnDelete(DeleteBehavior.Restrict);  // Delete behavior
 
             b.HasOne(x => x.Category)  // One Category
             .WithMany(c => c.Courses) // Many Courses

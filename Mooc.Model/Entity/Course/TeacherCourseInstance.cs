@@ -4,7 +4,7 @@ namespace Mooc.Model.Entity.Course
     public class TeacherCourseInstance : BaseEntity
     {
         public TeacherCourseInstancePermissionType PermissionType { get; set; }
-        public DateTime CreatedAt { get; set; }
+        //public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
         //foreign keys

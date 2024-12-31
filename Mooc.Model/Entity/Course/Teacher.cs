@@ -17,7 +17,7 @@
         public long? UpdatedByUserId { get; set; }
 
         // timestamp
-        public DateTime CreatedAt { get; set; }
+        //public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
         // Nav use MoocUser class later

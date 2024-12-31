@@ -17,8 +17,8 @@ namespace Mooc.Application.Course
         // Add father table first. Example: MoocCourse has two foreign table: User, Category. Add User table -> Add Category table -> Add MoocCourse table
         private static List<User> users = new List<User>()
         {
-            new User(){Id=1, UserName="admin",Age=30,Email="admin@demo.com",Address="Canberra",Gender= Gender.Male, Password=BCryptUtil.HashPassword("123456"), Created=DateTime.Now  },
-            new User(){Id=2, UserName="test",Age=30,Email="test@demo.com",Address="Canberra",Gender= Gender.Male,Password=BCryptUtil.HashPassword("123456"), Created=DateTime.Now.AddMinutes(1)},
+            new User(){Id=1, UserName="admin",Age=30,Email="admin@demo.com",Gender= Gender.Male, Password=BCryptUtil.HashPassword("123456")},
+            new User(){Id=2, UserName="test",Age=30,Email="test@demo.com",Gender= Gender.Male,Password=BCryptUtil.HashPassword("123456")},
         };
         private static List<Category> categories = new List<Category>()
         {
@@ -48,10 +48,10 @@ namespace Mooc.Application.Course
             }
             else
             {
-                await this._dbContext.Users.AddRangeAsync(users);
-                await this._dbContext.MoocCourses.AddRangeAsync(courses);
-                await this._dbContext.CourseInstances.AddRangeAsync(courseInstances);
-                await this._dbContext.Category.AddRangeAsync(categories);
+                //await this._dbContext.Users.AddRangeAsync(users);
+                //await this._dbContext.MoocCourses.AddRangeAsync(courses);
+                //await this._dbContext.CourseInstances.AddRangeAsync(courseInstances);
+                //await this._dbContext.Category.AddRangeAsync(categories);
                 await this._dbContext.SaveChangesAsync();
             }
 

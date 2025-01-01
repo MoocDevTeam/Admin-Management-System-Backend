@@ -5,6 +5,8 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.WebEncoders;
 using Mooc.Application;
+using Mooc.Application.Contracts.Course;
+using Mooc.Application.Course;
 using Mooc.Core;
 using Mooc.Model.DBContext;
 using MoocWebApi.Filters;
@@ -32,8 +34,6 @@ namespace MoocWebApi
                     // Handle requests up to 50 MB
                     options.Limits.MaxRequestBodySize = 52428800;
                 });
-
-
                 //autofac
                 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
                 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
@@ -52,7 +52,9 @@ namespace MoocWebApi
 
                 //Add Mooc Application services
                 builder.Services.AddApplication();
-                
+
+                builder.Services.AddAutoMapper(typeof(Program));
+
                 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
                 builder.Services.AddDbContext<MoocDBContext>(option =>

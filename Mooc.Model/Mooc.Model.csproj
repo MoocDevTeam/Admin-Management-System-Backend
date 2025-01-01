@@ -14,6 +14,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Entity\Admin\Role.cs~RF26ad0a90.TMP" />
+	  <None Remove="Entity\Admin\RoleMenu.cs~RF2683ab51.TMP" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Compile Include="..\AssemblyInfo.cs" Link="AssemblyInfo.cs" />
 	</ItemGroup>
 
@@ -33,6 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="Migrations\" />
 		<Folder Include="Option\" />
 	</ItemGroup>
 

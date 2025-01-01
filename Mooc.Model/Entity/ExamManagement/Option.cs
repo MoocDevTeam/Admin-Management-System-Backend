@@ -10,15 +10,15 @@ public class Option : BaseEntity
 
     public string? OptionValue { get; set; }
 
-    public long CreatedByUserId { get; set; }
+    public long? CreatedByUserId { get; set; }
 
     public User? CreatedByUser { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
-    public long UpdatedByUserId { get; set; }
+    public long? UpdatedByUserId { get; set; }
 
-    public ICollection<User>? UpdatedByUsers { get; set; }
+    public virtual ICollection<User>? UpdatedByUsers { get; set; }
 
     public DateTime UpdatedAt { get; set; }
 

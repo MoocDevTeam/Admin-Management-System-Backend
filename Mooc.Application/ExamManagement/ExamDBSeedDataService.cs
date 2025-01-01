@@ -1,10 +1,13 @@
 using Mooc.Application.Contracts;
+using Mooc.Core.MoocAttribute;
 using Mooc.Core.Utils;
 using Mooc.Model.Entity.ExamManagement;
 using StackExchange.Redis;
 
 namespace Mooc.Application.ExamManagement
 {
+
+    [DBSeedDataOrder(4)]
     public class ExamDBSeedDataService : IDBSeedDataService, ITransientDependency
     {
         private readonly MoocDBContext _dbContext;

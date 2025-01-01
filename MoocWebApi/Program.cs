@@ -5,15 +5,18 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.WebEncoders;
 using Mooc.Application;
+using Mooc.Application.Contracts;
 using Mooc.Application.Contracts.Course;
 using Mooc.Application.Course;
 using Mooc.Core;
+using Mooc.Core.MoocAttribute;
 using Mooc.Model.DBContext;
 using MoocWebApi.Filters;
 using MoocWebApi.Init;
 using MoocWebApi.Middlewares;
 using NLog;
 using NLog.Web;
+using System.Reflection;
 using System.Text.Json;
 
 namespace MoocWebApi
@@ -120,9 +123,20 @@ namespace MoocWebApi
                 using (var socpe = app.Services.CreateScope())
                 {
                     var dbSeedDataSevices = socpe.ServiceProvider.GetRequiredService<IEnumerable<IDBSeedDataService>>();
+
+                    SortedDictionary<int, IDBSeedDataService> sdSeedData = new SortedDictionary<int, IDBSeedDataService>();
+
                     foreach (var dbSeedDataSevice in dbSeedDataSevices)
                     {
-                        dbSeedDataSevice.InitAsync().GetAwaiter().GetResult();
+                        var orderAttri = dbSeedDataSevice.GetType().GetCustomAttribute<DBSeedDataOrderAttribute>();
+                        if (orderAttri!=null)
+                        {
+                            sdSeedData.Add(orderAttri.Order, dbSeedDataSevice);
+                        }
+                    }
+                    foreach (var item in sdSeedData)
+                    {
+                        item.Value.InitAsync().GetAwaiter().GetResult();
                     }
                 }
 

@@ -20,25 +20,35 @@ namespace MoocWebApi.Filters
             if (controllerActionDescriptor == null)
                 return;
 
-
             if (!context.ModelState.IsValid)
             {
                 var errorResultsDic = new Dictionary<string, List<string>>();
-                var errorResults = new ErrorResults();
+                // List to hold errors for multiple fields
+                var errorResultsList = new List<ErrorResults>();
+
                 foreach (var item in context.ModelState)
                 {
                     if (item.Value.Errors.Count > 0)
                     {
-                        errorResults.Field = item.Key;
-                        errorResults.Errors.AddRange(item.Value.Errors.Select(x => x.ErrorMessage));
-                        errorResultsDic.Add(item.Key, item.Value.Errors.Select(x => x.ErrorMessage).ToList());
+                        var fieldErrors = new ErrorResults
+                        {
+                            Field = item.Key,
+                            Errors = item.Value.Errors.Select(x => x.ErrorMessage).ToList()
+                        };
+
+                        errorResultsList.Add(fieldErrors);
+                        errorResultsDic.Add(item.Key, fieldErrors.Errors);
                     }
                 }
-                var apiResponseResult = new ApiResponseResult<ErrorResults>();
-                apiResponseResult.IsSuccess = true;
-                apiResponseResult.Status = (int)HttpStatusCode.BadRequest;
-                apiResponseResult.Time = DateTime.Now;
-                apiResponseResult.Data = errorResults;
+
+                var apiResponseResult = new ApiResponseResult<List<ErrorResults>>
+                {
+                    IsSuccess = false,
+                    Status = (int)HttpStatusCode.BadRequest,
+                    Time = DateTime.Now,
+                    // Return the list of field-specific errors
+                    Data = errorResultsList
+                };
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 //var serializeOptions = new JsonSerializerOptions
                 //{
@@ -49,8 +59,6 @@ namespace MoocWebApi.Filters
                 //};
                 //var json = JsonSerializer.Serialize(apiResponseResult, serializeOptions);
                 context.Result = new JsonResult(apiResponseResult);
-
-
             }
         }
     }

@@ -13,27 +13,33 @@ public static class MoocDbContextModelCreatingExtensions
     /// <param name="modelBuilder"></param>
     public static void ConfigureAdminManagement(this ModelBuilder modelBuilder)
     {
-   
+        ConfigureUser(modelBuilder);
+    }
 
-        //User
-        modelBuilder.Entity<User>(b =>
+    private static void ConfigureUser(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<MoocUser>(b =>
         {
-            b.ToTable(TablePrefix + "User");
+            b.ToTable(TablePrefix + "MoocUser");
             b.HasKey(x => x.Id);
-            b.Property(e => e.Id).ValueGeneratedNever();
-            b.Property(cs => cs.UserName).IsRequired().HasMaxLength(UserEntityConsts.MaxUserNameLength);
-            b.Property(cs => cs.Password).HasMaxLength(UserEntityConsts.MaxPasswordLength);
-            b.Property(cs => cs.Email).HasMaxLength(UserEntityConsts.MaxEmailLength);
-            b.Property(cs => cs.Address).HasMaxLength(UserEntityConsts.MaxAddressLength);
-            b.Property(cs => cs.Phone).HasMaxLength(UserEntityConsts.MaxPhoneLength);
-            b.Property(cs => cs.Avatar).HasMaxLength(UserEntityConsts.MaxAvatarLength);
-            b.Property(cs => cs.Gender).HasConversion(
+            b.Property(x => x.Id).ValueGeneratedNever();
+            b.Property(x => x.UserName).IsRequired().HasMaxLength(UserEntityConsts.MaxUserNameLength);
+            b.Property(x => x.Password).HasMaxLength(UserEntityConsts.MaxPasswordLength);
+            b.Property(x => x.Email).HasMaxLength(UserEntityConsts.MaxEmailLength);
+            b.Property(x => x.Age).HasMaxLength(UserEntityConsts.MaxAgeLength);
+            b.HasMany(x => x.MoocUserRole);
+            b.Property(x => x.Avatar).HasMaxLength(UserEntityConsts.MaxAvatarLength);
+            b.Property(x => x.Gender).HasConversion(
                 v => v.ToString(),
-                v => (Gender)Enum.Parse(typeof(Gender), v)
-            ).HasMaxLength(UserEntityConsts.MaxGenderLength);
-        });
+                v => (Gender)Enum.Parse(typeof(Gender), v));
+            b.Property(x => x.Access).HasConversion(
+                v => v.ToString(),
+                v => (Access)Enum.Parse(typeof(Access), v));
+            b.Property(x => x.IsActive).IsRequired().HasDefaultValue(true);
+            b.Property(x => x.CreatedDate).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");//for SQLite
 
-    
+
+        });
     }
 
     public static void ConfigureExamManagement(this ModelBuilder modelBuilder)
@@ -43,9 +49,12 @@ public static class MoocDbContextModelCreatingExtensions
         ConfigureShortAnsQuestion(modelBuilder);
         ConfigureOption(modelBuilder);
         ConfigureQuestionType(modelBuilder);
+        ConfigureExam(modelBuilder);
+        ConfigureExamQuestion(modelBuilder);
+        ConfigureExamPublish(modelBuilder);
     }
 
-    public static void ConfigureChoiceQuestion(ModelBuilder modelBuilder)
+    private static void ConfigureChoiceQuestion(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ChoiceQuestion>(b =>
         {
@@ -56,17 +65,16 @@ public static class MoocDbContextModelCreatingExtensions
             });
 
             b.HasKey(cq => cq.Id);
-            b.Property(cq => cq.Id)
-                .ValueGeneratedNever();
+            b.Property(cq => cq.Id).ValueGeneratedNever();
             //b.HasOne<Course>()
             //    .WithMany()
             //    .HasForeignKey(cq => cq.CourseId);
 
-            b.HasOne<User>()
+            b.HasOne(cq => cq.CreatedByUser)
                 //.WithMany(u => u.CreatedChoiceQuestions)
                 .WithMany()
-                .HasForeignKey(cq => cq.CreatedByUserId);
-            
+                .HasForeignKey(o => o.CreatedByUserId);
+
             b.HasOne<User>()
             //b.HasMany<User>()
                 //.WithMany(u => u.UpdatedChoiceQuestions)
@@ -91,8 +99,8 @@ public static class MoocDbContextModelCreatingExtensions
                 .IsRequired()
                 .HasMaxLength(ChoiceQuestionEntityConsts.MaxCorrectAnswerLength);
             b.Property(cq => cq.Marks)
-                .IsRequired();
-            b.HasOne<QuestionType>()
+               .IsRequired();
+            b.HasOne(cq => cq.QuestionType)
                  .WithMany(qt => qt.ChoiceQuestions)
                  .HasForeignKey(cq => cq.QuestionTypeId);
             b.HasMany<Option>()
@@ -101,7 +109,7 @@ public static class MoocDbContextModelCreatingExtensions
         });
     }
 
-    public static void ConfigureOption(ModelBuilder modelBuilder)
+    private static void ConfigureOption(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Option>(b =>
         {
@@ -109,11 +117,11 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasKey(o => o.Id);
             b.Property(o => o.Id)
                 .ValueGeneratedNever();
-            b.HasOne<ChoiceQuestion>()
-                .WithMany()
+            b.HasOne(o => o.ChoiceQuestion)
+                .WithMany(cq => cq.Option)
                 .HasForeignKey(o => o.ChoiceQuestionId);
 
-            b.HasOne<User>()
+            b.HasOne(o => o.CreatedByUser)
                 //.WithMany(u => u.CreatedChoiceQuestions)
                 .WithMany()
                 .HasForeignKey(o => o.CreatedByUserId);
@@ -147,7 +155,7 @@ public static class MoocDbContextModelCreatingExtensions
         });
     }
 
-    public static void ConfigureJudgementQuestion(ModelBuilder modelBuilder)
+    private static void ConfigureJudgementQuestion(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<JudgementQuestion>(b =>
         {
@@ -164,7 +172,7 @@ public static class MoocDbContextModelCreatingExtensions
             //    .WithMany()
             //    .HasForeignKey(jq => jq.CourseId);
 
-            b.HasOne<User>()
+            b.HasOne(jq => jq.CreatedByUser)
                 //.WithMany(u => u.CreatedChoiceQuestions)
                 .WithMany()
                 .HasForeignKey(jq => jq.CreatedByUserId);
@@ -194,13 +202,13 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasDefaultValue(JudgementQuestionEntityConsts.DefaultCorrectAnswer);
             b.Property(jq => jq.Marks)
                 .IsRequired();
-            b.HasOne<QuestionType>()
-                 .WithMany(qt => qt.JudgementQuestions)
-                 .HasForeignKey(jq => jq.QuestionTypeId);
+            b.HasOne(jq => jq.QuestionType)
+                .WithMany(qt => qt.JudgementQuestions)
+                .HasForeignKey(cq => cq.QuestionTypeId);
         });
     }
 
-    public static void ConfigureShortAnsQuestion(ModelBuilder modelBuilder)
+    private static void ConfigureShortAnsQuestion(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ShortAnsQuestion>(b =>
         {
@@ -217,10 +225,10 @@ public static class MoocDbContextModelCreatingExtensions
             //    .WithMany()
             //    .HasForeignKey(saq => saq.CourseId);
 
-            b.HasOne<User>()
-                //.WithMany(u => u.CreatedChoiceQuestions)
-                .WithMany()
-                .HasForeignKey(saq => saq.CreatedByUserId);
+            b.HasOne(saq => saq.CreatedByUser)
+                 //.WithMany(u => u.CreatedChoiceQuestions)
+                 .WithMany()
+                 .HasForeignKey(saq => saq.CreatedByUserId);
 
             b.HasOne<User>()
                 //b.HasMany<User>()
@@ -247,12 +255,12 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasMaxLength(ShortAnsQuestionEntityConsts.MaxReferenceAnsLength);
             b.Property(saq => saq.Marks)
                 .IsRequired();
-            b.HasOne<QuestionType>()
-                 .WithMany(qt => qt.ShortAnsQuestions)
-                 .HasForeignKey(saq => saq.QuestionTypeId);
+            b.HasOne(saq => saq.QuestionType)
+                .WithMany(qt => qt.ShortAnsQuestions)
+                .HasForeignKey(saq => saq.QuestionTypeId);
         });
     }
-    public static void ConfigureQuestionType(ModelBuilder modelBuilder)
+    private static void ConfigureQuestionType(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<QuestionType>(b =>
         {
@@ -265,4 +273,118 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasMaxLength(QuestionTypeEntityConsts.MaxQuestionTypeNameLength);
         });
     }
+
+    private static void ConfigureExam(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Exam>(b =>
+        {
+            b.ToTable(TablePrefix + "Exam");
+            b.HasKey(e => e.Id);
+            b.Property(e => e.Id).ValueGeneratedNever();
+            /* b.HasOne<Course>()
+                   .WithMany()
+                   .HasForeignKey(e => e.CourseId); */
+            b.HasOne(e => e.CreatedByUser)
+                .WithMany()
+                .HasForeignKey(e => e.CreatedByUserId);
+            b.HasOne<User>()
+            // HasMany wait future needs
+                .WithMany()
+                .HasForeignKey(e => e.UpdatedByUserId);
+            b.Property(e => e.CreatedAt)
+                .IsRequired()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP"); //for SQLite
+            b.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP"); //for SQLite
+            b.Property(e => e.ExamTitle)
+                .HasMaxLength(ExamEntityConsts.MaxExamTitleLength);
+            b.Property(e => e.Remark)
+                .HasMaxLength(ExamEntityConsts.MaxRemarklLength);
+            b.Property(e => e.ExaminationTime)
+                .IsRequired()
+                .HasMaxLength(ExamEntityConsts.MaxExaminationTimeLength);
+            b.Property(e => e.AutoOrManual)
+                .IsRequired()
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (QuestionUpload)Enum.Parse(typeof(QuestionUpload), v)
+                );
+            b.Property(e => e.TotalScore)
+                .IsRequired()
+                .HasMaxLength(ExamEntityConsts.MaxTotalScoreLength);
+            b.Property(e => e.TimePeriod)
+                .IsRequired()
+                .HasMaxLength(ExamEntityConsts.MaxTimePeriodLength);
+            b.HasMany<ExamQuestion>()
+               .WithOne(eq => eq.Exam)
+               .HasForeignKey(e => e.ExamId);
+        });
+    }
+    private static void ConfigureExamQuestion(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<ExamQuestion>(b =>
+        {
+            b.ToTable(TablePrefix + "ExamQuestion");
+            b.HasKey(eq => eq.Id);
+            b.Property(eq => eq.Id).ValueGeneratedNever();
+            b.HasOne(eq => eq.Exam)
+                .WithMany(e => e.ExamQuestion)
+                .HasForeignKey(eq => eq.ExamId);  // have side effects
+            /* b.HasOne<Exam>()
+                 .WithMany()
+                 .HasForeignKey(x => x.ExamId);*/  // use this alternative method, because the above have side effects
+                                                   // we can choose either have 3 columns (ChoiceQuestionId, JudgementQuestionId, ShortAnsQuestionId) or have 1 column (questionId)
+            /*          b.HasOne<ChoiceQuestion>()
+                            .WithMany()
+                            .HasForeignKey(eq => eq.ChoiceQuestionId);
+                        b.HasOne<JudgementQuestion>()
+                            .WithMany()
+                            .HasForeignKey(eq => eq.JudgementQuestionId);
+                        b.HasOne<ShortAnsQuestion>()
+                            .WithMany()
+                            .HasForeignKey(eq => eq.ShortAnsQuestionId);*/
+            // 3 columns (ChoiceQuestionId, JudgementQuestionId, ShortAnsQuestionId) like above commented
+            b.Property(x => x.QuestionType)
+                .IsRequired();
+            // 1 column  (questionId) when use add controller, frontend need to send / backend controller need to accept 1 extra parameter QuestionType
+            b.HasOne(eq => eq.CreatedByUser)
+                .WithMany()
+                .HasForeignKey(eq => eq.CreatedByUserId);
+            b.HasOne<User>()
+            // HasMany wait future needs
+                .WithMany()
+                .HasForeignKey(eq => eq.UpdatedByUserId);
+            b.Property(eq => eq.Marks)
+                .IsRequired()
+                .HasMaxLength(ExamQuestionEntityConsts.MaxMarksLength);
+            b.Property(eq => eq.QuestionOrder)
+                .IsRequired()
+                .HasMaxLength(ExamQuestionEntityConsts.MaxQuestionOrderLength);
+            b.Property(eq => eq.CreatedAt)
+                .IsRequired()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            b.Property(eq => eq.UpdatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+    }
+
+    private static void ConfigureExamPublish(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<ExamPublish>(b =>
+        {
+            b.ToTable(TablePrefix + "ExamPublish");
+            b.HasKey(ep => ep.Id);
+            b.Property(ep => ep.Id).ValueGeneratedNever();
+            b.HasOne(ep => ep.Exam) // Navigation property in ExamPublish
+                .WithOne(e => e.ExamPublish) // Navigation property in Exam
+                .HasForeignKey<ExamPublish>(x => x.ExamId); // ExamPublish.ExamId is the FK to Exam.Id
+            b.HasOne(ep => ep.PublishedByUser); // default
+            b.Property(ep => ep.PublishedAt)
+                .IsRequired()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            b.Property(ep => ep.CloseAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+    }
+
 }

@@ -23,7 +23,7 @@ namespace MoocWebApi.Controllers.Admin
             _configuration = configuration;
         }
 
-        //POST: api/auth/login
+        //POST: api/authcontroller/login
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
@@ -66,7 +66,7 @@ namespace MoocWebApi.Controllers.Admin
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        //POST: api/auth/register
+        //POST: api/authcontroller/register
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest model)
         {

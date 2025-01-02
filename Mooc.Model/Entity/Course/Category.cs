@@ -11,9 +11,9 @@ public class Category : BaseEntity
     public long CreatedByUserId { get; set; }
     public long? UpdatedByUserId { get; set; }
 
-    // timestamp
-    public DateTime CreatedAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
+        // timestamp
+        //public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
     // Nav user
     public virtual User CreatedByUser { get; set; }

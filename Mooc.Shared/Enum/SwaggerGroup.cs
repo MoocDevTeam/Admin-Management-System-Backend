@@ -10,5 +10,17 @@ public enum SwaggerGroup
     /// <summary>
     /// Course Service
     /// </summary>
-    CourseService = 2
+    MoocService = 2,
+
+    ///<summary>
+    /// AdminService
+    /// </summary>
+     AdminService = 3,
+
+    /// <summary>
+    /// Coures service
+    /// </summary>
+    CourseService = 4
+    
+
 }

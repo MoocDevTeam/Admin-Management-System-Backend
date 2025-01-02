@@ -1,6 +1,7 @@
 ﻿global using AutoMapper;
 global using Microsoft.EntityFrameworkCore;
 global using Mooc.Application.Contracts.Admin;
+global using Mooc.Application.Contracts.ExamManagement;
 global using Mooc.Application.Contracts.Dto;
 global using Mooc.Core.Caching;
 global using Mooc.Core.DependencyInjection;

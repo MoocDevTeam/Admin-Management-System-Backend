@@ -10,5 +10,8 @@ public class AdminProfile: Profile
         CreateMap<Menu, MenuDto>();
         CreateMap<CreateMenuDto, Menu>();
         CreateMap<UpdateMenuDto, Menu>();
+        CreateMap<Role, RoleDto>();
+        CreateMap<CreateRoleDto, Role>();
+        CreateMap<UpdateRoleDto, Role>();
     }
 }

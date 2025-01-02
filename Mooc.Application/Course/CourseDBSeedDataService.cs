@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Mooc.Application.Admin;
 using Mooc.Application.Contracts;
+using Mooc.Core.MoocAttribute;
 using Mooc.Core.Utils;
 using Mooc.Model.Entity.Course;
 namespace Mooc.Application.Course
 {
+
+    [DBSeedDataOrder(2)]
     public class CourseDBSeedDataService : IDBSeedDataService, ITransientDependency
     {
         private readonly MoocDBContext _dbContext;

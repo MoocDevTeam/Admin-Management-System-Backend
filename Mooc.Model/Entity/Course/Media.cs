@@ -30,8 +30,8 @@ namespace Mooc.Model.Entity.Course
         [Column(TypeName = "text")]
         public string ThumbnailPath { get; set; }
 
-        [Required]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        //[Required]
+        //public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? UpdatedAt { get; set; }
 

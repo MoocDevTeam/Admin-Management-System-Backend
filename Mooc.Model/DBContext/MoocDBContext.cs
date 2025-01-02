@@ -1,4 +1,8 @@
+
+﻿using Mooc.Model.Entity.ExamManagement;
+
 ﻿using Mooc.Model.Entity.Course;
+
 
 namespace Mooc.Model.DBContext;
 
@@ -8,8 +12,13 @@ public class MoocDBContext : DbContext
     {
 
     }
-
     public DbSet<User> Users { get; set; }
+    public DbSet<UserRole> UserRoles { get; set; }
+    public DbSet<Menu> Menus { get; set; }
+    public DbSet<Carousel> Carousels { get; set; }
+    public DbSet<Comment> Comments { get; set; }
+    public DbSet<RoleMenu> RoleMenus { get; set; }
+    public DbSet<Role> Roles { get; set; }
     public DbSet<MoocCourse> MoocCourses { get; set; }
     public DbSet<Session> Session { get; set; }
     public DbSet<Media> Media { get; set; }
@@ -20,6 +29,16 @@ public class MoocDBContext : DbContext
     public DbSet<Category> Category { get; set; }
 
 
+    public DbSet<ChoiceQuestion> ChoiceQuestion { get; set; }
+    public DbSet<JudgementQuestion> JudgementQuestion { get; set; }
+    public DbSet<ShortAnsQuestion> ShortAnsQuestion { get; set; }
+    public DbSet<Option> Option { get; set; }
+    public DbSet<QuestionType> QuestionType { get; set; }
+
+    public DbSet<Exam> Exam { get; set; }
+    public DbSet<ExamQuestion> ExamQuestion { get; set; }
+    public DbSet<ExamPublish> ExamPublish { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -27,7 +46,10 @@ public class MoocDBContext : DbContext
         //extension method
         modelBuilder.ConfigureAdminManagement();
 
+        modelBuilder.ConfigureExamManagement();
+
         modelBuilder.ConfigureCourseManagement();
+
     }
 
 }

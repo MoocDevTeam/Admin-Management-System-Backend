@@ -39,8 +39,8 @@ namespace Mooc.UnitTest.Controller
             // Act
             var result = await _controller.GetByPageAsync(input);
             // Assert
-            Assert.AreEqual(result, pagedResult);
-            Assert.AreEqual(result.Total, pagedResult.Total);
+            Assert.That(pagedResult, Is.EqualTo(result));
+            Assert.That(pagedResult.Total, Is.EqualTo(result.Total));
             _userServiceMock.Verify(s => s.GetListAsync(input), Times.Once);
         }
 
@@ -74,12 +74,12 @@ namespace Mooc.UnitTest.Controller
             var userDtoadded = await _userServiceMock.Object.CreateAsync(input);
             var result = await _controller.Add(input);
             // Assert
-            Assert.AreEqual(userDtoadded.Age, useDto.Age);
-            Assert.AreEqual(userDtoadded.UserName, useDto.UserName);
-            Assert.AreEqual(userDtoadded.Avatar, useDto.Avatar);
-            Assert.AreEqual(userDtoadded.Email, useDto.Email);
-            Assert.AreEqual(userDtoadded.Gender, useDto.Gender);
-            Assert.AreEqual(userDtoadded.Avatar, useDto.Avatar);
+            Assert.That(useDto.Age, Is.EqualTo(userDtoadded.Age));
+            Assert.That(useDto.UserName, Is.EqualTo(userDtoadded.UserName));
+            Assert.That(useDto.Avatar, Is.EqualTo(userDtoadded.Avatar));
+            Assert.That(useDto.Email, Is.EqualTo(userDtoadded.Email));
+            Assert.That(useDto.Gender, Is.EqualTo(userDtoadded.Gender));
+            Assert.That(useDto.Avatar, Is.EqualTo(userDtoadded.Avatar));
             Assert.IsTrue(result);
             _userServiceMock.Verify(s => s.CreateAsync(input), Times.AtLeastOnce);
         }
@@ -106,6 +106,7 @@ namespace Mooc.UnitTest.Controller
                 Avatar = "123",
             };
             _userServiceMock.Setup(s => s.CreateAsync(input)).Returns(Task.FromResult(inputIncomplete));
+           
             //Act
             _controller.ModelState.AddModelError("Gender", "Gender is a requried field");
             var badResponse = await _userServiceMock.Object.CreateAsync(input);
@@ -143,12 +144,12 @@ namespace Mooc.UnitTest.Controller
             _userServiceMock.Setup(s => s.UpdateAsync(input.Id, input)).Returns(Task.FromResult(output));
             var updatedUser = await _userServiceMock.Object.UpdateAsync(input.Id, input);
             //Assert
-            Assert.AreEqual(updatedUser.Age, output.Age);
-            Assert.AreEqual(updatedUser.UserName, output.UserName);
-            Assert.AreEqual(updatedUser.Avatar, output.Avatar);
-            Assert.AreEqual(updatedUser.Email, output.Email);
-            Assert.AreEqual(updatedUser.Gender, output.Gender);
-            Assert.AreEqual(updatedUser.Avatar, output.Avatar);
+            Assert.That(output.Age, Is.EqualTo(updatedUser.Age));
+            Assert.That(output.UserName, Is.EqualTo(updatedUser.UserName));
+            Assert.That(output.Avatar, Is.EqualTo(updatedUser.Avatar));
+            Assert.That(output.Email, Is.EqualTo(updatedUser.Email));
+            Assert.That(output.Gender, Is.EqualTo(updatedUser.Gender));
+            Assert.That(output.Avatar, Is.EqualTo(updatedUser.Avatar));
             _userServiceMock.Verify(s => s.UpdateAsync(input.Id, input), Times.Once);
         }
         [Test]
@@ -211,7 +212,7 @@ namespace Mooc.UnitTest.Controller
             var ValidResult = _controller.Delete(validId);
             var listCountResult = await _controller.GetByPageAsync(input);
             //Assert
-            Assert.AreEqual(4, listCountResult.Total);
+            Assert.That(listCountResult.Total, Is.EqualTo(4));
             Assert.IsTrue(ValidResult.Result);
             _userServiceMock.Verify(s => s.DeleteAsync(validId), Times.Once);
             //invalid Id case
@@ -230,7 +231,7 @@ namespace Mooc.UnitTest.Controller
             var InvalidResult = _controller.Delete(validId);
             var listCountResult2 = await _controller.GetByPageAsync(input2);
             //Assert
-            Assert.AreEqual(5, listCountResult2.Total);
+            Assert.That(listCountResult2.Total, Is.EqualTo(5));
             _userServiceMock.Verify(s => s.DeleteAsync(validId), Times.AtLeastOnce);
         }
     }

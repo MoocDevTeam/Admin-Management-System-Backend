@@ -1,6 +1,6 @@
-﻿namespace Mooc.Application.Contracts.Course;
+﻿namespace Mooc.Model.Entity;
 
-public class EnrollmentDto:BaseEntityDto
+public class Enrollment : BaseEntity
 {
     [ForeignKey("CourseInstance")]
     public long CourseInstanceId { get; set; }
@@ -10,7 +10,9 @@ public class EnrollmentDto:BaseEntityDto
     public DateTime EnrollEndDate { get; set; }
     public int MaxStudents { get; set; }
 
+    [ForeignKey("CreatedByUser")]
     public long CreatedByUserId { get; set; }
+    [ForeignKey("UpdatedByUser")]
     public long UpdatedByUserId { get; set; }
 
     public DateTime CreatedAt { get; set; }

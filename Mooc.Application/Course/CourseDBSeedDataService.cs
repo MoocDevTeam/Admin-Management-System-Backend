@@ -218,20 +218,10 @@ namespace Mooc.Application.Course
         public async Task<bool> InitAsync()
         {
 
-            if (!_dbContext.MoocCourses.Any())
-            {
-                await this._dbContext.MoocCourses.AddRangeAsync(courses);
-                await this._dbContext.SaveChangesAsync();
-            }
 
             if (!_dbContext.Category.Any())
             {
                 await this._dbContext.Category.AddRangeAsync(categories);
-                await this._dbContext.SaveChangesAsync();
-            }
-            if (!_dbContext.CourseInstances.Any())
-            {
-                await this._dbContext.CourseInstances.AddRangeAsync(courseInstances);
                 await this._dbContext.SaveChangesAsync();
             }
 
@@ -245,6 +235,17 @@ namespace Mooc.Application.Course
                 await this._dbContext.Enrollment.AddRangeAsync(enrollments);
                 await this._dbContext.SaveChangesAsync();
             }
+            if (!_dbContext.MoocCourses.Any())
+            {
+                await this._dbContext.MoocCourses.AddRangeAsync(courses);
+                await this._dbContext.SaveChangesAsync();
+            }
+            if (!_dbContext.CourseInstances.Any())
+            {
+                await this._dbContext.CourseInstances.AddRangeAsync(courseInstances);
+                await this._dbContext.SaveChangesAsync();
+            }
+
             return true;
         }
     }

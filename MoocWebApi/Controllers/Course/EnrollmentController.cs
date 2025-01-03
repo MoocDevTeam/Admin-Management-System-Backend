@@ -15,10 +15,10 @@ public class EnrollmentController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<EnrollmentDto>> GetByIdAsync(long id)
+    public async Task<EnrollmentDto> GetbyIdAsync(long id)
     {            
         var enrollment = await _enrollmentService.GetAsync(id);    
-        return Ok(enrollment);
+        return enrollment;
     }
 
     [HttpPost]

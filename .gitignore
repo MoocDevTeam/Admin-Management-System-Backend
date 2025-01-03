@@ -365,3 +365,4 @@ Mooc.Model/Migrations/20250103141613_intialMigration.Designer.cs
 Mooc.Model/Migrations/20250103141613_intialMigration.cs
 Mooc.Model/Migrations/20250101132041_initalMigration.Designer.cs
 Mooc.Model/Migrations/20250101132041_initalMigration.cs
+MoocWebApi/AppData/moocdb.db

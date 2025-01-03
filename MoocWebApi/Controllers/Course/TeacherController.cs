@@ -1,4 +1,5 @@
 ﻿using Mooc.Application.Contracts.Course.Dto;
+using Mooc.Application.Contracts.Course.Dto;
 
 namespace MoocWebApi.Controllers.Course
 {

@@ -1,9 +1,12 @@
 ﻿using Mooc.Application.Contracts;
+using Mooc.Core.MoocAttribute;
 using Mooc.Core.Utils;
 using Mooc.Shared.Enum;
 
 namespace Mooc.Application.Admin
 {
+
+    [DBSeedDataOrder(1)]
     public class AdminDBSeedDataService : IDBSeedDataService, ITransientDependency
     {
         private readonly MoocDBContext _dbContext;

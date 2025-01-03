@@ -38,6 +38,7 @@
 
 	<ItemGroup>
 		<Folder Include="AppData\" />
+		<Folder Include="Controllers\ExamManagement\Exam\" />
 	</ItemGroup>
 
 	<ItemGroup>

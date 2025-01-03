@@ -15,5 +15,10 @@ public enum SwaggerGroup
     ///<summary>
     /// AdminService
     /// </summary>
-     AdminService = 3
+    AdminService = 3,
+
+    ///<summary>
+    /// ExamManagementService
+    /// </summary>
+    ExamManagement = 4
 }

@@ -1,5 +1,5 @@
-
-﻿using Mooc.Model.Entity.ExamManagement;
+﻿
+using Mooc.Model.Entity.ExamManagement;
 using Mooc.Shared.Entity.Admin;
 using Mooc.Shared.Entity.ExamManagement;
 using Mooc.Model.Entity.Course;
@@ -314,16 +314,16 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(cs => cs.UpdatedAt)
                 .ValueGeneratedOnAddOrUpdate();
 
-            // //Foreign configuration temperarily use <User> until <MoocUser is created>
-            //b.HasOne(x => x.CreatedByUser)
-            ////.WithMany(u => u.CreatedCourses)  // User has many CreatedCourses
-            //.HasForeignKey(x => x.CreatedByUserId)  // Foreign key property
-            //.OnDelete(DeleteBehavior.Restrict);  // Delete behavior
+            //Foreign configuration temperarily use <User> until <MoocUser is created>
+            b.HasOne(x => x.CreatedByUser)
+            .WithMany()  // User has many CreatedCourses
+            .HasForeignKey(x => x.CreatedByUserId)  // Foreign key property
+            .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
 
-            //b.HasOne(x => x.UpdatedByUser)
-            //.WithMany(u => u.UpdatedCourses)  // User has many UpdatedCourses
-            //.HasForeignKey(x => x.UpdatedByUserId)  // Foreign key property
-            //.OnDelete(DeleteBehavior.Restrict);  // Delete behavior
+            b.HasOne(x => x.UpdatedByUser)
+            .WithMany()  // User has many UpdatedCourses
+            .HasForeignKey(x => x.UpdatedByUserId)  // Foreign key property
+            .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
 
             b.HasOne(x => x.Category)  // One Category
             .WithMany(c => c.Courses) // Many Courses

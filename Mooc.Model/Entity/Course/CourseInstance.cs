@@ -1,6 +1,4 @@
-﻿using Mooc.Model.Entity.Course;
-
-namespace Mooc.Model.Entity
+﻿namespace Mooc.Model.Entity
 {
     public class CourseInstance : BaseEntity
     {
@@ -17,7 +15,7 @@ namespace Mooc.Model.Entity
 
         //Navigation Properties
         public MoocCourse MoocCourse { get; set; }
-        //public virtual Enrollment Enrollment { get; set; }
+        //public virtual Enrollment Enrollment { get; set; } //not comment out
         public virtual ICollection<Session> Sessions { get; set; }
         public virtual ICollection<TeacherCourseInstance> TeacherCourseInstances { get; set; }
         public User CreatedByUser { get; set; }

@@ -15,6 +15,7 @@
         // foreign keys
         public long CreatedByUserId { get; set; }
         public long? UpdatedByUserId { get; set; }
+        public long UserId { get; set; }
 
         // timestamp
         //public DateTime CreatedAt { get; set; }
@@ -23,6 +24,7 @@
         // Nav use MoocUser class later
         public virtual User CreatedByUser { get; set; }
         public virtual User UpdatedByUser { get; set; }
+        public virtual User User { get; set; }
 
         // Nav to a collction of CourseInstance assigned to this teacher
         //Need to modify when MoocCourseInstance is renamed!!!

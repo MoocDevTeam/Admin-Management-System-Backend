@@ -18,6 +18,8 @@ public class Enrollment : BaseEntity
     [ForeignKey("UpdatedByUser")]
     public long UpdatedByUserId { get; set; }
 
+    //public CourseInstance CourseInstance { get; set; }
+
     public virtual User CreatedByUser { get; set; }
     public virtual User UpdatedByUser { get; set; }
 }

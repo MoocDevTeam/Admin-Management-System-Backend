@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Mooc.Application.Contracts.Course.Dto;
-using Mooc.Model.Entity.Course;
 
 namespace Mooc.Application.Course
 {
@@ -80,8 +79,5 @@ namespace Mooc.Application.Course
             SetIdForLong(entity);
             return entity;
         }
-
-
-
     }
 }

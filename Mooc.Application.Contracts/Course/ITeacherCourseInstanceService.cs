@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Mooc.Application.Contracts.Course
+﻿namespace Mooc.Application.Contracts.Course
 {
-    public interface ITeacherCourseInstanceService
+    public interface ITeacherCourseInstanceService : ICrudService<TeacherCourseInstanceReadDto, TeacherCourseInstanceReadDto, long, FilterPagedResultRequestDto, TeacherCourseInstanceCreateOrUpdateDto, TeacherCourseInstanceCreateOrUpdateDto>
     {
+        Task<TeacherCourseInstanceReadDto> GetTeacherCourseInstanceById(long id);
     }
 }

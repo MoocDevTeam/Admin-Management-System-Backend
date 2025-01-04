@@ -3,7 +3,8 @@ using Mooc.Application.Admin;
 using Mooc.Application.Contracts;
 using Mooc.Core.MoocAttribute;
 using Mooc.Core.Utils;
-using Mooc.Model.Entity.Course;
+using Mooc.Model.Entity;
+using Mooc.Shared.Enum;
 namespace Mooc.Application.Course
 {
 
@@ -18,11 +19,6 @@ namespace Mooc.Application.Course
 
         // If run program.cs return error and can't add data to empty database,
         // Add father table first. Example: MoocCourse has two foreign table: User, Category. Add User table -> Add Category table -> Add MoocCourse table
-        private static List<User> users = new List<User>()
-        {
-            new User(){Id=1, UserName="admin",Age=30,Email="admin@demo.com",Gender= Gender.Male, Password=BCryptUtil.HashPassword("123456"), Avatar= "some_url?"},
-            new User(){Id=2, UserName="test",Age=30,Email="test@demo.com",Gender= Gender.Male,Password=BCryptUtil.HashPassword("123456"), Avatar= "some_url?"},
-        };
         private static List<Category> categories = new List<Category>()
         {
             new Category(){Id=1, CategoryName="Category1",Description="",IconUrl="xxx@demo.com",CreatedByUserId=1,CreatedAt= DateTime.Now },
@@ -36,19 +32,19 @@ namespace Mooc.Application.Course
             new MoocCourse() { Id = 3, Title = "Nodejs", CourseCode = "102", CoverImage = "xxx.png", Description = "Nodejs", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
         };
 
-
-
         private List<CourseInstance> courseInstances = new List<CourseInstance>()
         {
             new CourseInstance(){Id=1, MoocCourseId=1, TotalSessions=10, Status=CourseInstanceStatus.Open, Permission=CourseInstancePermission.Private, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(1), CreatedByUserId=1 ,UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
             new CourseInstance(){Id=2, MoocCourseId=2, TotalSessions=20, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
         };
 
+
         private List<Enrollment> enrollments = new List<Enrollment>()
         {
             new Enrollment(){Id=1, CourseInstanceId=1, MaxStudents=200, EnrollmentStatus=EnrollmentStatus.Open,  EnrollStartDate=DateTime.Now, EnrollEndDate =DateTime.Now.AddMonths(1), CreatedByUserId =1 ,UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
             new Enrollment(){Id=2, CourseInstanceId=2, MaxStudents=50,  EnrollmentStatus=EnrollmentStatus.Close, EnrollStartDate=DateTime.Now, EnrollEndDate =DateTime.Now.AddMonths(2), CreatedByUserId =2, UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
         };
+
 
         //Teacher Data seeding
         private static List<Teacher> teachers = new List<Teacher>()
@@ -215,38 +211,139 @@ namespace Mooc.Application.Course
             }
         };
 
+        //TeacherCourseInstance Data seeding
+        private static List<TeacherCourseInstance> teacherCourseInstances = new List<TeacherCourseInstance>()
+        {    
+            new TeacherCourseInstance() { Id = 1, PermissionType = TeacherCourseInstancePermissionType.CanEdit, CourseInstanceId = 1, TeacherId = 1, CreatedAt = DateTime.Now, CreatedByUserId= 1, UpdatedByUserId= 1 },
+            new TeacherCourseInstance() { Id = 2, PermissionType = TeacherCourseInstancePermissionType.NoAutherization, CourseInstanceId = 1, TeacherId = 2, CreatedAt = DateTime.Now, CreatedByUserId= 1, UpdatedByUserId= 1}
+        };
+
+        private List<Session> sessions = new List<Session>()
+        {
+            new Session(){
+                Id=1,
+                Title = "Introduction to .Net",
+                Description = "Overview of the .Net framework",
+                Order = 1,
+                CourseInstanceId = 1, // relate to CourseInstanceId 1
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt=DateTime.Now,
+                UpdatedAt=DateTime.Now.AddMinutes(1)
+                },
+            new Session(){
+                Id=2,
+                Title = "Setting up the Development Environment",
+                Description = "Step-by-step guide",
+                Order = 2,
+                CourseInstanceId = 1, // relate to CourseInstanceId 1
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt=DateTime.Now,
+                UpdatedAt=DateTime.Now.AddMinutes(1)
+                },
+            new Session(){
+                Id=3,
+                Title = "Basic Syntax and Data Types",
+                Description = "Learn about variables",
+                Order = 3,
+                CourseInstanceId = 1, // relate to CourseInstanceId 1
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt=DateTime.Now,
+                UpdatedAt=DateTime.Now.AddMinutes(1)
+                },
+            new Session(){
+                Id=4,
+                Title = "Object-Oriented Programming in .Net",
+                Description = "Dive into OOP concepts",
+                Order = 4,
+                CourseInstanceId = 1, // relate to CourseInstanceId 1
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt=DateTime.Now,
+                UpdatedAt=DateTime.Now.AddMinutes(1)
+                },
+            new Session(){
+                Id=5,
+                Title = "Advanced C# Features",
+                Description = "Learn about delegates, events, and lambda expressions",
+                Order = 5,
+                CourseInstanceId = 2, // relate to CourseInstanceId 2
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt=DateTime.Now,
+                UpdatedAt=DateTime.Now.AddMinutes(1),
+                },
+            new Session(){
+                Id=6,
+                Title = "Async Programming in C#",
+                Description = "Introduction to async and await",
+                Order = 6,
+                CourseInstanceId = 2, // relate to CourseInstanceId 2
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt=DateTime.Now,
+                UpdatedAt=DateTime.Now.AddMinutes(1),
+            },
+            new Session(){
+                Id=7,
+                Title = "Testing C# Applications",
+                Description = "Learn how to effectively test and debug C# code",
+                Order = 7,
+                CourseInstanceId = 2, // relate to CourseInstanceId 2
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt=DateTime.Now,
+                UpdatedAt=DateTime.Now.AddMinutes(1),
+            }
+        };
 
         public async Task<bool> InitAsync()
         {
-
-
             if (!_dbContext.Category.Any())
             {
                 await this._dbContext.Category.AddRangeAsync(categories);
                 await this._dbContext.SaveChangesAsync();
             }
 
-            if (!_dbContext.Teachers.Any())
-            {
-                await this._dbContext.Teachers.AddRangeAsync(teachers);
-                await this._dbContext.SaveChangesAsync();
-            }
-            if (!_dbContext.Enrollment.Any())
-            {
-                await this._dbContext.Enrollment.AddRangeAsync(enrollments);
-                await this._dbContext.SaveChangesAsync();
-            }
             if (!_dbContext.MoocCourses.Any())
             {
                 await this._dbContext.MoocCourses.AddRangeAsync(courses);
                 await this._dbContext.SaveChangesAsync();
             }
+
             if (!_dbContext.CourseInstances.Any())
             {
                 await this._dbContext.CourseInstances.AddRangeAsync(courseInstances);
                 await this._dbContext.SaveChangesAsync();
             }
 
+            if (!_dbContext.Enrollment.Any())
+            {
+                await this._dbContext.MoocCourses.AddRangeAsync(courses);
+                await this._dbContext.SaveChangesAsync();
+            }
+
+            
+            if (!_dbContext.Session.Any())
+            {
+                await this._dbContext.Session.AddRangeAsync(sessions);
+                await this._dbContext.SaveChangesAsync();
+            }
+
+            if (!_dbContext.Teachers.Any())
+             {
+                await this._dbContext.Teachers.AddRangeAsync(teachers);
+                await this._dbContext.SaveChangesAsync();
+            }   
+             
+            if (!_dbContext.TeacherCourseInstances.Any())
+            {
+                await this._dbContext.TeacherCourseInstances.AddRangeAsync(teacherCourseInstances);
+                await this._dbContext.SaveChangesAsync();
+            }
+            
 
             return true;
         }

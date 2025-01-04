@@ -1,5 +1,4 @@
 ﻿using Mooc.Application.Contracts.Course.Dto.Category;
-using Mooc.Model.Entity.Course;
 using Mooc.Application.Contracts.Course.Dto;
 
 namespace Mooc.Application.Course;
@@ -46,9 +45,10 @@ public class CourseProfile : Profile
         //  Database  -> Backend -> Frontend
         CreateMap<Session, ReadSessionDto>();
         
-        
-        //CreateMap<CreateUserDto, User>();
-        //CreateMap<UpdateUserDto, User>();
+        // CourseInstance Mapping
+        CreateMap<CourseInstance, CourseInstanceDto>();        
+        CreateMap<CreateCourseInstanceDto, CourseInstance>();
+        CreateMap<UpdateCourseInstanceDto, CourseInstance>();
     }
 }
 

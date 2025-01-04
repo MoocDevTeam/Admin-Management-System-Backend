@@ -1,5 +1,3 @@
-using Mooc.Model.Entity.Course;
-
 namespace Mooc.Model.Entity
 {
     public class Session : BaseEntity

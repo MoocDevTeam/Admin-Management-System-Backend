@@ -5,6 +5,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("Mooc")]
 [assembly: AssemblyCopyright("Copyright © Your Company 2024")]
 
-[assembly: AssemblyVersion("1.0.0.36")]
-[assembly: AssemblyFileVersion("1.0.0.36")]
+[assembly: AssemblyVersion("1.0.0.39")]
+[assembly: AssemblyFileVersion("1.0.0.39")]
 

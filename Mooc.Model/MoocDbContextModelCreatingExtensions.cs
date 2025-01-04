@@ -4,6 +4,7 @@ using Mooc.Shared.Entity.Admin;
 using Mooc.Shared.Entity.ExamManagement;
 using Mooc.Model.Entity.Course;
 using Mooc.Shared.Entity.Course;
+using Mooc.Model.Entity;
 
 
 
@@ -397,14 +398,23 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(e => e.MaxStudents)
                 .IsRequired()
                 .HasMaxLength(300);
-            b.Property(e => e.CreatedByUserId).IsRequired();
-            b.Property(e => e.UpdatedByUserId).IsRequired();
+            
             b.Property(e => e.CreatedAt)
                 .IsRequired()
                 .HasDefaultValueSql("GETDATE()");
             b.Property(e => e.UpdatedAt)
                .IsRequired()
                .HasDefaultValueSql("GETDATE()");
+
+            b.HasOne(x => x.CreatedByUser)
+            .WithMany()
+            .HasForeignKey(x => x.CreatedByUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasOne(x => x.UpdatedByUser)
+            .WithMany()
+            .HasForeignKey(x => x.UpdatedByUserId)
+            .OnDelete(DeleteBehavior.Restrict);
         });
 
     }

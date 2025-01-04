@@ -2,7 +2,7 @@
 
 public class BaseExam : BaseEntity
 {
-    public long? CreatedByUserId { get; set; }
+    public long CreatedByUserId { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

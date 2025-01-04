@@ -11,11 +11,14 @@ public class BaseEntity
 /// </summary>
 public class BaseEntityWithAudit: BaseEntity
 {
-    public long CreatedByUserId { get; set; }
+    public long? CreatedByUserId { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public User? CreatedByUser { get; set; }
 
-    public long UpdatedByUserId { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
-    public DateTime UpdatedAt { get; set; }
+    public long? UpdatedByUserId { get; set; }
+
+    public User? UpdatedByUser { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 }

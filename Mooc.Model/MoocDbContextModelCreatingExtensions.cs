@@ -76,12 +76,12 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasForeignKey(o => o.CreatedByUserId);
 
             b.HasOne<User>()
-            //b.HasMany<User>()
+                //b.HasMany<User>()
                 //.WithMany(u => u.UpdatedChoiceQuestions)
                 .WithMany()
                 //.UsingEntity(j =>
                 //    j.ToTable("ChoiceQuestionUpdatedByUsers"));
-                .HasForeignKey(cq => cq.UpdatedByUserId); 
+                .HasForeignKey(cq => cq.UpdatedByUserId);
 
             b.Property(cq => cq.CreatedAt)
                 .IsRequired()
@@ -140,9 +140,9 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(o => o.UpdatedAt)
                 .IsRequired()
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
-/*            b.Property(o => o.Field)
-                .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP)");*/
+            /*            b.Property(o => o.Field)
+                            .IsRequired()
+                            .HasDefaultValueSql("CURRENT_TIMESTAMP)");*/
             b.Property(o => o.OptionOrder)
                 .IsRequired()
                 .HasMaxLength(OptionEntityConsts.MaxOrderLength);
@@ -276,26 +276,58 @@ public static class MoocDbContextModelCreatingExtensions
 
     private static void ConfigureExam(ModelBuilder modelBuilder)
     {
+        //modelBuilder.Entity<Exam>(b =>
+        //{
+        //    b.ToTable(TablePrefix + "Exam");
+        //    b.HasKey(e => e.Id);
+        //    b.Property(e => e.Id).ValueGeneratedNever();
+        //    //b.HasOne<Course>()
+        //    //      .WithMany()
+        //    //      .HasForeignKey(e => e.CourseId);
+        //    b.HasOne<User>()
+        //    // HasMany wait future needs
+        //        .WithMany()
+        //        .HasForeignKey(e => e.UpdatedByUserId);
+        //    b.Property(e => e.CreatedAt)
+        //        .IsRequired()
+        //        .HasDefaultValueSql("CURRENT_TIMESTAMP"); //for SQLite
+        //    b.Property(e => e.UpdatedAt)
+        //        .HasDefaultValueSql("CURRENT_TIMESTAMP"); //for SQLite
+        //    b.Property(e => e.ExamTitle)
+        //        .HasMaxLength(ExamEntityConsts.MaxExamTitleLength);
+        //    b.Property(e => e.Remark)
+        //        .HasMaxLength(ExamEntityConsts.MaxRemarklLength);
+        //    b.Property(e => e.ExaminationTime)
+        //        .IsRequired()
+        //        .HasMaxLength(ExamEntityConsts.MaxExaminationTimeLength);
+        //    b.Property(e => e.AutoOrManual)
+        //        .IsRequired()
+        //        .HasConversion(
+        //            v => v.ToString(),
+        //            v => (QuestionUpload)Enum.Parse(typeof(QuestionUpload), v)
+        //        );
+        //    b.Property(e => e.TotalScore)
+        //        .IsRequired()
+        //        .HasMaxLength(ExamEntityConsts.MaxTotalScoreLength);
+        //    b.Property(e => e.TimePeriod)
+        //        .IsRequired()
+        //        .HasMaxLength(ExamEntityConsts.MaxTimePeriodLength);
+        //    b.HasMany<ExamQuestion>()
+        //       .WithOne(eq => eq.Exam)
+        //       .HasForeignKey(e => e.ExamId);
+        //});
+
+
         modelBuilder.Entity<Exam>(b =>
         {
             b.ToTable(TablePrefix + "Exam");
             b.HasKey(e => e.Id);
             b.Property(e => e.Id).ValueGeneratedNever();
-            /* b.HasOne<Course>()
-                   .WithMany()
-                   .HasForeignKey(e => e.CourseId); */
-            b.HasOne(e => e.CreatedByUser)
-                .WithMany()
-                .HasForeignKey(e => e.CreatedByUserId);
-            b.HasOne<User>()
-            // HasMany wait future needs
-                .WithMany()
-                .HasForeignKey(e => e.UpdatedByUserId);
-            b.Property(e => e.CreatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP"); //for SQLite
-            b.Property(e => e.UpdatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP"); //for SQLite
+
+            b.HasMany(m => m.ExamQuestions).
+            WithOne(c => c.Exam).
+            HasForeignKey(c => c.ExamId);
+
             b.Property(e => e.ExamTitle)
                 .HasMaxLength(ExamEntityConsts.MaxExamTitleLength);
             b.Property(e => e.Remark)
@@ -315,45 +347,69 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(e => e.TimePeriod)
                 .IsRequired()
                 .HasMaxLength(ExamEntityConsts.MaxTimePeriodLength);
-            b.HasMany<ExamQuestion>()
-               .WithOne(eq => eq.Exam)
-               .HasForeignKey(e => e.ExamId);
+           
         });
     }
     private static void ConfigureExamQuestion(ModelBuilder modelBuilder)
     {
+        //modelBuilder.Entity<ExamQuestion>(b =>
+        //{
+        //    b.ToTable(TablePrefix + "ExamQuestion");
+        //    b.HasKey(eq => eq.Id);
+        //    b.Property(eq => eq.Id).ValueGeneratedNever();
+        //    //b.HasOne(eq => eq.Exam)
+        //    //    .WithMany(e => e.ExamQuestion)
+        //    //    .HasForeignKey(eq => eq.ExamId);  // have side effects
+        //    b.HasOne<Exam>();
+        //    //.WithMany()
+        //    //.HasForeignKey(x => x.ExamId);  // use this alternative method, because the above have side effects
+        //    // we can choose either have 3 columns (ChoiceQuestionId, JudgementQuestionId, ShortAnsQuestionId) or have 1 column (questionId)
+        //    b.HasOne<ChoiceQuestion>()
+        //           .WithMany()
+        //           .HasForeignKey(eq => eq.ChoiceQuestionId);
+        //    b.HasOne<JudgementQuestion>()
+        //        .WithMany()
+        //        .HasForeignKey(eq => eq.JudgementQuestionId);
+        //    b.HasOne<ShortAnsQuestion>()
+        //        .WithMany()
+        //        .HasForeignKey(eq => eq.ShortAnsQuestionId);
+        //    // 3 columns (ChoiceQuestionId, JudgementQuestionId, ShortAnsQuestionId) like above commented
+
+        //    // 1 column  (questionId) when use add controller, frontend need to send / backend controller need to accept 1 extra parameter QuestionType
+
+        //    b.HasOne<User>()
+        //    // HasMany wait future needs
+        //        .WithMany()
+        //        .HasForeignKey(eq => eq.UpdatedByUserId);
+        //    b.Property(eq => eq.Marks)
+        //        .IsRequired()
+        //        .HasMaxLength(ExamQuestionEntityConsts.MaxMarksLength);
+        //    b.Property(eq => eq.QuestionOrder)
+        //        .IsRequired()
+        //        .HasMaxLength(ExamQuestionEntityConsts.MaxQuestionOrderLength);
+        //    b.Property(eq => eq.CreatedAt)
+        //        .IsRequired()
+        //        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+        //    b.Property(eq => eq.UpdatedAt)
+        //        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+        //});
+
         modelBuilder.Entity<ExamQuestion>(b =>
         {
             b.ToTable(TablePrefix + "ExamQuestion");
             b.HasKey(eq => eq.Id);
             b.Property(eq => eq.Id).ValueGeneratedNever();
-            b.HasOne(eq => eq.Exam)
-                .WithMany(e => e.ExamQuestion)
-                .HasForeignKey(eq => eq.ExamId);  // have side effects
-            /* b.HasOne<Exam>()
-                 .WithMany()
-                 .HasForeignKey(x => x.ExamId);*/  // use this alternative method, because the above have side effects
-                                                   // we can choose either have 3 columns (ChoiceQuestionId, JudgementQuestionId, ShortAnsQuestionId) or have 1 column (questionId)
-            /*          b.HasOne<ChoiceQuestion>()
-                            .WithMany()
-                            .HasForeignKey(eq => eq.ChoiceQuestionId);
-                        b.HasOne<JudgementQuestion>()
-                            .WithMany()
-                            .HasForeignKey(eq => eq.JudgementQuestionId);
-                        b.HasOne<ShortAnsQuestion>()
-                            .WithMany()
-                            .HasForeignKey(eq => eq.ShortAnsQuestionId);*/
-            // 3 columns (ChoiceQuestionId, JudgementQuestionId, ShortAnsQuestionId) like above commented
-            b.Property(x => x.QuestionType)
-                .IsRequired();
-            // 1 column  (questionId) when use add controller, frontend need to send / backend controller need to accept 1 extra parameter QuestionType
-            b.HasOne(eq => eq.CreatedByUser)
+          
+            b.HasOne(m=>m.ChoiceQuestion).WithMany().
+                   HasForeignKey(eq => eq.ChoiceQuestionId);
+            b.HasOne(m=>m.JudgementQuestion)
                 .WithMany()
-                .HasForeignKey(eq => eq.CreatedByUserId);
-            b.HasOne<User>()
-            // HasMany wait future needs
+                .HasForeignKey(eq => eq.JudgementQuestionId);
+            b.HasOne(m=> m.ShortAnsQuestion)
                 .WithMany()
-                .HasForeignKey(eq => eq.UpdatedByUserId);
+               .HasForeignKey(eq => eq.ShortAnsQuestionId);
+            
+           
             b.Property(eq => eq.Marks)
                 .IsRequired()
                 .HasMaxLength(ExamQuestionEntityConsts.MaxMarksLength);
@@ -378,11 +434,15 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasOne(ep => ep.Exam) // Navigation property in ExamPublish
                 .WithOne(e => e.ExamPublish) // Navigation property in Exam
                 .HasForeignKey<ExamPublish>(x => x.ExamId); // ExamPublish.ExamId is the FK to Exam.Id
-            b.HasOne(ep => ep.PublishedByUser); // default
-            b.Property(ep => ep.PublishedAt)
+            b.Property(ep => ep.CloseAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            b.HasOne(ep => ep.CreatedByUser); // default
+            b.Property(ep => ep.CreatedAt)
                 .IsRequired()
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
-            b.Property(ep => ep.CloseAt)
+
+            b.HasOne(ep => ep.UpdatedByUser); // default
+            b.Property(ep => ep.UpdatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
     }

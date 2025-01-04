@@ -17,7 +17,7 @@ public class ChoiceQuestion : BaseQuestion
 
     public virtual ICollection<User>? UpdatedByUsers { get; set; }
 
-/*    public virtual ICollection<ExamQuestion>? ExamQuestions { get; set; }*/
+    //public virtual ICollection<ExamQuestion>? ExamQuestions { get; set; }
 
     //public ICollection<Course>? CourseId { get; set; }
 }

@@ -298,8 +298,6 @@ namespace Mooc.Application.Course
 
         public async Task<bool> InitAsync()
         {
-
-
             if (!_dbContext.Category.Any())
             {
                 await this._dbContext.Category.AddRangeAsync(categories);
@@ -309,12 +307,6 @@ namespace Mooc.Application.Course
             if (!_dbContext.MoocCourses.Any())
             {
                 await this._dbContext.MoocCourses.AddRangeAsync(courses);
-                await this._dbContext.SaveChangesAsync();
-            }
-
-            if (!_dbContext.Teachers.Any())
-            {
-                await this._dbContext.Teachers.AddRangeAsync(teachers);
                 await this._dbContext.SaveChangesAsync();
             }
             
@@ -331,6 +323,10 @@ namespace Mooc.Application.Course
             if (!_dbContext.Session.Any())
             {
                 await this._dbContext.Session.AddRangeAsync(sessions);
+
+            if (!_dbContext.Teachers.Any())
+            {
+                await this._dbContext.Teachers.AddRangeAsync(teachers);
                 await this._dbContext.SaveChangesAsync();
             }
 

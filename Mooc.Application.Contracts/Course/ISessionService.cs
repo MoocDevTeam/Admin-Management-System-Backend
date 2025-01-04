@@ -2,14 +2,14 @@ using Mooc.Application.Contracts.Course.Dto;
 
 namespace Mooc.Application.Contracts.Course 
 {
-  public interface ISessionService : ICrudService<ReadSessionDto, ReadSessionDto, long, FilterPagedResultRequestDto, CreateSessionDto, UpdateSessionDto>
+  public interface ISessionService : ICrudService<ReadSessionDto, ReadSessionDto, long, FilterPagedResultRequestDto, CreateOrUpdateSessionDto, CreateOrUpdateSessionDto>
 
 
   /// <summary>
-  /// 根据 CourseInstanceId 获取所有的 Session 信息
-  /// </summary>
-  /// <param name="courseInstanceId">课程实例的 Id</param>
-  /// <returns>包含所有 Session 的 DTO 列表</returns>
+  //// Get all Session information based on CourseInstanceId.
+  /// </summary> 
+  /// <param name=“courseInstanceId”>The Id of the course instance</param>.
+  /// <returns>List of DTOs that contain all Sessions</returns
   {
     Task<IEnumerable<ReadSessionDto>> GetAllSessionsByCourseInstanceId(long courseInstanceId);
   }

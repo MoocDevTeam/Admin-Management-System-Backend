@@ -8,7 +8,7 @@ namespace Mooc.Model.Entity
         public string Description { get; set; } = string.Empty;
         public int Order { get; set; }
 
-        // foreign keys
+        //Foreign keys
         public long CourseInstanceId { get; set;}
         public long CreatedByUserId { get; set; }
         public long? UpdatedByUserId { get; set; }  

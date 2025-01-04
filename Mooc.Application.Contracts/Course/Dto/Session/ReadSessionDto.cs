@@ -2,20 +2,21 @@
 namespace Mooc.Application.Contracts.Course.Dto;
 public class ReadSessionDto : BaseEntityDto
 {
-  // 基础字段
+  // Basic Fields
   public string Title { get; set; } = string.Empty;  
   public string Description { get; set; } = string.Empty;  
-  public int Order { get; set; } 
+  public int Order { get; set; }
 
-  // 外键字段
+  // Foreign Key 
   public long CreatedByUserId { get; set; }  
   public long? UpdatedByUserId { get; set; }  
   public long CourseInstanceId { get; set; }
 
-  // 时间戳字段
-  public DateTime UpdatedAt { get; set; } 
+  // Timestamp 
+  public DateTime CreatedAt { get; set; }
+  public DateTime UpdatedAt { get; set; }
 
-  // 可选的媒体相关信息
-  public int MediaCount { get; set; } // 媒体数量
-  public bool HasMedia { get; set; } // 是否存在媒体内容
+  // Media-related information
+  public int MediaCount { get; set; } 
+  public bool HasMedia { get; set; } 
 }

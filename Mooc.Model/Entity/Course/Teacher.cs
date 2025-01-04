@@ -1,4 +1,4 @@
-﻿namespace Mooc.Model.Entity.Course
+﻿namespace Mooc.Model.Entity
 {
     public class Teacher : BaseEntity
     {

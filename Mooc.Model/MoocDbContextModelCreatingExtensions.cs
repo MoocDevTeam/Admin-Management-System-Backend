@@ -1,9 +1,9 @@
-
-﻿using Mooc.Model.Entity.ExamManagement;
+﻿
+using Mooc.Model.Entity.ExamManagement;
 using Mooc.Shared.Entity.Admin;
 using Mooc.Shared.Entity.ExamManagement;
-using Mooc.Model.Entity.Course;
 using Mooc.Shared.Entity.Course;
+using Mooc.Model.Entity;
 
 
 
@@ -209,43 +209,38 @@ public static class MoocDbContextModelCreatingExtensions
             c.Property(x => x.CreatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
             c.Property(x => x.UpdatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
             c.Property(x => x.CreatedByUserId).IsRequired();
-
-            //Contact Kwon
-
             //c.HasOne(x => x.CreatedByUser)
             //    .WithMany(u => u.CreatedCourseInstances)
             //    .HasForeignKey(x => x.CreatedByUserId)
             //    .OnDelete(DeleteBehavior.Restrict);
-
             c.Property(x => x.UpdatedByUserId).IsRequired();
-
-            //Contact Kwon
             //c.HasOne(x => x.UpdatedByUser)
             //    .WithMany(u => u.UpdatedCourseInstances)
             //    .HasForeignKey(x => x.UpdatedByUserId)
             //    .OnDelete(DeleteBehavior.Cascade);
-            // One to One: CourseInstance->MoocCourse
+
+            //Many to One: CourseInstance->MoocCourse
             c.HasOne(x => x.MoocCourse)
-                .WithOne() //.WithOne(mc => mc.CourseInstance) add 
-                .HasForeignKey<CourseInstance>(x => x.MoocCourseId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(mc => mc.CourseInstances)
+                .HasForeignKey(x => x.MoocCourseId)
+                .OnDelete(DeleteBehavior.Cascade); //CourseInstance will be deleted automatically
             // One to Many: CourseInstance->Sessions
-            //c.HasMany(x => x.Sessions)
-            //.WithOne(s => s.CourseInstance)
-            // .HasForeignKey(s => s.CourseInstanceId)
-            //  .OnDelete(DeleteBehavior.Cascade);
+            c.HasMany(x => x.Sessions)
+                .WithOne(s => s.CourseInstance)
+                .HasForeignKey(s => s.CourseInstanceId)
+                .OnDelete(DeleteBehavior.Cascade);
             //One to Many: CourseInstance->TeacherCourseInstances
             c.HasMany(x => x.TeacherCourseInstances)
                 .WithOne(tci => tci.CourseInstance)
                 .HasForeignKey(tci => tci.CourseInstanceId)
                 .OnDelete(DeleteBehavior.Restrict);
             // One-to-One: CourseInstance -> Enrollment
-            //c.HasOne(x => x.Enrollment)
-            //    .WithOne(e => e.CourseInstance)
-            //    .HasForeignKey<Enrollment>(e => e.CourseInstanceId)
-            //    .OnDelete(DeleteBehavior.Cascade);
+            c.HasOne(x => x.Enrollment)
+                .WithOne()
+                .HasForeignKey<Enrollment>(e => e.CourseInstanceId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // They will be moved to MoocUser Configuration later
+            // They will be moved to User Configuration later
             // One to Many: MoocUser->CreatedCourseInstances
             //b.HasMany(cs => cs.CreatedCourseInstances)
             //            .WithOne(cci => cci.CreatedByUser)
@@ -314,16 +309,16 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(cs => cs.UpdatedAt)
                 .ValueGeneratedOnAddOrUpdate();
 
-            // //Foreign configuration temperarily use <User> until <MoocUser is created>
-            //b.HasOne(x => x.CreatedByUser)
-            ////.WithMany(u => u.CreatedCourses)  // User has many CreatedCourses
-            //.HasForeignKey(x => x.CreatedByUserId)  // Foreign key property
-            //.OnDelete(DeleteBehavior.Restrict);  // Delete behavior
+            //Foreign configuration temperarily use <User> until <MoocUser is created>
+            b.HasOne(x => x.CreatedByUser)
+            .WithMany()  // User has many CreatedCourses
+            .HasForeignKey(x => x.CreatedByUserId)  // Foreign key property
+            .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
 
-            //b.HasOne(x => x.UpdatedByUser)
-            //.WithMany(u => u.UpdatedCourses)  // User has many UpdatedCourses
-            //.HasForeignKey(x => x.UpdatedByUserId)  // Foreign key property
-            //.OnDelete(DeleteBehavior.Restrict);  // Delete behavior
+            b.HasOne(x => x.UpdatedByUser)
+            .WithMany()  // User has many UpdatedCourses
+            .HasForeignKey(x => x.UpdatedByUserId)  // Foreign key property
+            .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
 
             b.HasOne(x => x.Category)  // One Category
             .WithMany(c => c.Courses) // Many Courses
@@ -385,8 +380,9 @@ public static class MoocDbContextModelCreatingExtensions
         modelBuilder.Entity<Enrollment>(b =>
         {
             b.ToTable(TablePrefix + "Enrollment");
-            b.HasKey(x => x.Id);
+            b.HasKey(x => x.Id);          
             b.Property(e => e.Id).ValueGeneratedNever();
+            b.Property(e => e.CourseInstanceId).IsRequired();
             b.Property(e => e.CourseInstanceId).IsRequired();
             b.Property(cs => cs.EnrollmentStatus).HasConversion(
                  v => v.ToString(),
@@ -397,14 +393,23 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(e => e.MaxStudents)
                 .IsRequired()
                 .HasMaxLength(300);
-            b.Property(e => e.CreatedByUserId).IsRequired();
-            b.Property(e => e.UpdatedByUserId).IsRequired();
+            
             b.Property(e => e.CreatedAt)
                 .IsRequired()
                 .HasDefaultValueSql("GETDATE()");
             b.Property(e => e.UpdatedAt)
                .IsRequired()
                .HasDefaultValueSql("GETDATE()");
+
+            b.HasOne(x => x.CreatedByUser)
+            .WithMany()
+            .HasForeignKey(x => x.CreatedByUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasOne(x => x.UpdatedByUser)
+            .WithMany()
+            .HasForeignKey(x => x.UpdatedByUserId)
+            .OnDelete(DeleteBehavior.Restrict);
         });
 
     }
@@ -423,10 +428,14 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasMaxLength(SessionEntityConsts.MaxTitleLength);  // Set the maximum length to 50
 
             b.Property(x => x.Description)
+                .IsRequired()
                 .HasMaxLength(SessionEntityConsts.MaxDescriptionLength);  // Set the maximum length to 255
 
             b.Property(x => x.Order)
                 .IsRequired();  // Mark Order as required (not nullable)
+
+            b.Property(x => x.CourseInstanceId)
+              .IsRequired();  // Mark CourseInstanceId as required (not nullable)
 
             b.Property(x => x.CreatedByUserId)
                 .IsRequired();  // Mark CreatedByUserId as required (not nullable)
@@ -439,9 +448,59 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");  // Set the default value to current timestamp
 
             b.Property(x => x.UpdatedAt)
-                .IsRequired(false)  // Mark UpdatedAt as optional (nullable)
+                .IsRequired()  // Mark UpdatedAt as required
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");  // Set the default value to current timestamp
 
+            //Many to one: Sessions->CreatedByUserId
+            b.HasOne<User>(x => x.CreatedByUser)
+                .WithMany()
+                .HasForeignKey(x => x.CreatedByUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            //Many to one: Sessions->CreatedByUserId
+            b.HasOne<User>(x => x.UpdatedByUser)
+                .WithMany()
+                .HasForeignKey(x => x.UpdatedByUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //Many to one: Sessions->CourseInstanceId
+            b.HasOne( x => x.CourseInstance)
+                .WithMany(s => s.Sessions)
+                .HasForeignKey(s => s.CourseInstanceId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //One to many: Sessions->Media
+            b.HasMany(x => x.Sessionmedia)
+                .WithOne(s => s.Session)
+                .HasForeignKey(s => s.SessionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+        });
+    }
+
+    private static void ConfigureTeacherCourseInstance(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<TeacherCourseInstance>(b =>
+        {
+            b.ToTable("TeacherCourseInstance");
+            b.HasKey(x => x.Id);
+            b.Property(x => x.Id).ValueGeneratedNever();
+            b.Property(x => x.PermissionType).HasConversion(
+                v => v.ToString(),
+                v => (TeacherCourseInstancePermissionType)Enum.Parse(typeof(TeacherCourseInstancePermissionType), v));
+            b.Property(e => e.CreatedByUserId).IsRequired();
+            b.Property(e => e.UpdatedByUserId);
+
+            //Set create or update time by Datebase itself
+            b.Property(e => e.CreatedAt)
+                .IsRequired()
+                .HasDefaultValueSql("GETDATE()");
+            b.Property(e => e.UpdatedAt)
+                .IsRequired(false)
+                .HasDefaultValueSql("GETDATE()");
+
+            b.Property(e => e.UpdatedAt).ValueGeneratedOnUpdate();
+
+            //Foreign Keys
             b.HasOne<User>(x => x.CreatedByUser)
                 .WithMany()
                 .HasForeignKey(x => x.CreatedByUserId)
@@ -451,54 +510,18 @@ public static class MoocDbContextModelCreatingExtensions
                 .WithMany()
                 .HasForeignKey(x => x.UpdatedByUserId)
                 .OnDelete(DeleteBehavior.Cascade);
-        });
-    }
 
-    private static void ConfigureTeacherCourseInstance(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<TeacherCourseInstance>(b =>
-            {
-                b.ToTable("TeacherCourseInstance");
-                b.HasKey(x => x.Id);
-                b.Property(x => x.Id).ValueGeneratedNever();
-                b.Property(x => x.PermissionType).HasConversion(
-                    v => v.ToString(),
-                    v => (TeacherCourseInstancePermissionType)Enum.Parse(typeof(TeacherCourseInstancePermissionType), v));
-                b.Property(e => e.CreatedByUserId).IsRequired();
-                b.Property(e => e.UpdatedByUserId);
-
-                //Set create or update time by Datebase itself
-                b.Property(e => e.CreatedAt)
-                    .IsRequired()
-                    .HasDefaultValueSql("GETDATE()");
-                b.Property(e => e.UpdatedAt)
-                    .IsRequired(false)
-                    .HasDefaultValueSql("GETDATE()");
-
-                b.Property(e => e.UpdatedAt).ValueGeneratedOnUpdate();
-
-                //Foreign Keys
-                b.HasOne<User>(x => x.CreatedByUser)
-                    .WithMany()
-                    .HasForeignKey(x => x.CreatedByUserId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                b.HasOne<User>(x => x.UpdatedByUser)
-                    .WithMany()
-                    .HasForeignKey(x => x.UpdatedByUserId)
-                    .OnDelete(DeleteBehavior.Cascade);
 
                 b.HasOne<Teacher>(x => x.Teacher)
                     .WithMany()
-                    .HasForeignKey(x => x.CreatedByUserId)
+                    .HasForeignKey(x => x.TeacherId)
                     .OnDelete(DeleteBehavior.Cascade);
 
                 b.HasOne<CourseInstance>(x => x.CourseInstance)
-                    .WithMany()
+                    .WithMany(x => x.TeacherCourseInstances)
                     .HasForeignKey(x => x.CourseInstanceId)
                     .OnDelete(DeleteBehavior.Cascade);
-            }
-        );
+            });
     }
 
     private static void ConfigureMedia(ModelBuilder modelBuilder)

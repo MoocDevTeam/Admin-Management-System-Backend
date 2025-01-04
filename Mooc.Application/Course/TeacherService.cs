@@ -79,8 +79,5 @@ namespace Mooc.Application.Course
             SetIdForLong(entity);
             return entity;
         }
-
-
-
     }
 }

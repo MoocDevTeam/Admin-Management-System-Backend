@@ -511,17 +511,17 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasForeignKey(x => x.UpdatedByUserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            b.HasOne<Teacher>(x => x.Teacher)
-                .WithMany()
-                .HasForeignKey(x => x.CreatedByUserId)
-                .OnDelete(DeleteBehavior.Cascade);
 
-            b.HasOne<CourseInstance>(x => x.CourseInstance)
-                .WithMany()
-                .HasForeignKey(x => x.CourseInstanceId)
-                .OnDelete(DeleteBehavior.Cascade);
-        }
-        );
+                b.HasOne<Teacher>(x => x.Teacher)
+                    .WithMany()
+                    .HasForeignKey(x => x.TeacherId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                b.HasOne<CourseInstance>(x => x.CourseInstance)
+                    .WithMany(x => x.TeacherCourseInstances)
+                    .HasForeignKey(x => x.CourseInstanceId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
     }
 
     private static void ConfigureMedia(ModelBuilder modelBuilder)

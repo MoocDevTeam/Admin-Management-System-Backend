@@ -216,6 +216,87 @@ namespace Mooc.Application.Course
         };
 
 
+        private List<Session> sessions = new List<Session>()
+        {
+            new Session(){
+                Id=1,
+                Title = "Introduction to .Net",
+                Description = "Overview of the .Net framework",
+                Order = 1,
+                CourseInstanceId = 1, // relate to CourseInstanceId 1
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt=DateTime.Now,
+                UpdatedAt=DateTime.Now.AddMinutes(1)
+                },
+            new Session(){
+                Id=2,
+                Title = "Setting up the Development Environment",
+                Description = "Step-by-step guide",
+                Order = 2,
+                CourseInstanceId = 1, // relate to CourseInstanceId 1
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt=DateTime.Now,
+                UpdatedAt=DateTime.Now.AddMinutes(1)
+                },
+            new Session(){
+                Id=3,
+                Title = "Basic Syntax and Data Types",
+                Description = "Learn about variables",
+                Order = 3,
+                CourseInstanceId = 1, // relate to CourseInstanceId 1
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt=DateTime.Now,
+                UpdatedAt=DateTime.Now.AddMinutes(1)
+                },
+            new Session(){
+                Id=4,
+                Title = "Object-Oriented Programming in .Net",
+                Description = "Dive into OOP concepts",
+                Order = 4,
+                CourseInstanceId = 1, // relate to CourseInstanceId 1
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt=DateTime.Now,
+                UpdatedAt=DateTime.Now.AddMinutes(1)
+                },
+            new Session(){
+                Id=5,
+                Title = "Advanced C# Features",
+                Description = "Learn about delegates, events, and lambda expressions",
+                Order = 5,
+                CourseInstanceId = 2, // relate to CourseInstanceId 2
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt=DateTime.Now,
+                UpdatedAt=DateTime.Now.AddMinutes(1),
+                },
+            new Session(){
+                Id=6,
+                Title = "Async Programming in C#",
+                Description = "Introduction to async and await",
+                Order = 6,
+                CourseInstanceId = 2, // relate to CourseInstanceId 2
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt=DateTime.Now,
+                UpdatedAt=DateTime.Now.AddMinutes(1),
+            },
+            new Session(){
+                Id=7,
+                Title = "Testing C# Applications",
+                Description = "Learn how to effectively test and debug C# code",
+                Order = 7,
+                CourseInstanceId = 2, // relate to CourseInstanceId 2
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt=DateTime.Now,
+                UpdatedAt=DateTime.Now.AddMinutes(1),
+            }
+        };
+
         public async Task<bool> InitAsync()
         {
 
@@ -246,7 +327,11 @@ namespace Mooc.Application.Course
                 await this._dbContext.CourseInstances.AddRangeAsync(courseInstances);
                 await this._dbContext.SaveChangesAsync();
             }
-
+            if (!_dbContext.Session.Any())
+            {
+                await this._dbContext.Session.AddRangeAsync(sessions);
+                await this._dbContext.SaveChangesAsync();
+            }
 
             return true;
         }

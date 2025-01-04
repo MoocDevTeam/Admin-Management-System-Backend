@@ -192,5 +192,39 @@ namespace Mooc.UnitTest
                 Assert.Null(deletedMenu);
             }
         }
+
+        [Test]
+        public async Task GetMenuTreeAsync_ShouldReturnCorrectTreeStructure()
+        {
+            var options = GetDbContextOptions("InMemoryMenuDB_Tree");
+            using (var context = new MoocDBContext(options))
+            {
+                context.Menus.AddRange(new List<Menu>
+        {
+            new Menu { Id = 1, Title = "Root Menu", ParentId = null },
+            new Menu { Id = 2, Title = "Child Menu 1", ParentId = 1 },
+            new Menu { Id = 3, Title = "Child Menu 2", ParentId = 1 },
+            new Menu { Id = 4, Title = "Sub Child Menu", ParentId = 2 }
+        });
+                context.SaveChanges();
+
+                var service = new MenuService(context, _mapper);
+
+                var result = await service.GetMenuTreeAsync();
+
+                Assert.NotNull(result);
+                Assert.AreEqual(1, result.Count);
+                Assert.AreEqual("Root Menu", result[0].Title);
+
+                var children = result[0].Children.ToList();
+                Assert.AreEqual(2, children.Count);
+                Assert.AreEqual("Child Menu 1", children[0].Title);
+                Assert.AreEqual("Child Menu 2", children[1].Title);
+
+                var subChildren = children[0].Children.ToList();
+                Assert.AreEqual(1, subChildren.Count);
+                Assert.AreEqual("Sub Child Menu", subChildren[0].Title);
+            }
+        }
     }
 }

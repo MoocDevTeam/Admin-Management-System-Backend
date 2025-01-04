@@ -38,8 +38,15 @@ public class CourseProfile : Profile
             .ForMember(dest => dest.CreatedByUser, opt => opt.MapFrom(src => src.CreatedByUser != null ? src.CreatedByUser.UserName : null))
             .ForMember(dest => dest.UpdatedByUser, opt => opt.MapFrom(src => src.UpdatedByUser != null ? src.UpdatedByUser.UserName : null));
 
-
-
+        // Session Mapping
+        // Frontend -> Backend -> Database 
+        CreateMap<CreateOrUpdateSessionDto, Session>()
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
+        //  Database  -> Backend -> Frontend
+        CreateMap<Session, ReadSessionDto>();
+        
+        
         //CreateMap<CreateUserDto, User>();
         //CreateMap<UpdateUserDto, User>();
     }

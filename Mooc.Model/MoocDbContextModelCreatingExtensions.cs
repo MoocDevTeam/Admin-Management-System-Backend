@@ -446,11 +446,12 @@ public static class MoocDbContextModelCreatingExtensions
                 .IsRequired()  // Mark UpdatedAt as required
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");  // Set the default value to current timestamp
 
+            //Many to one: Sessions->CreatedByUserId
             b.HasOne<User>(x => x.CreatedByUser)
                 .WithMany()
                 .HasForeignKey(x => x.CreatedByUserId)
                 .OnDelete(DeleteBehavior.Cascade);
-
+            //Many to one: Sessions->CreatedByUserId
             b.HasOne<User>(x => x.UpdatedByUser)
                 .WithMany()
                 .HasForeignKey(x => x.UpdatedByUserId)
@@ -462,11 +463,11 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasForeignKey(s => s.CourseInstanceId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // //One to many: Sessions->Media
-            // b.HasMany(x => x.Sessionmedia)
-            //     .WithOne(s => s.Session)
-            //     .HasForeignKey(s => s.SessionId)
-            //     .OnDelete(DeleteBehavior.Cascade);
+            //One to many: Sessions->Media
+            b.HasMany(x => x.Sessionmedia)
+                .WithOne(s => s.Session)
+                .HasForeignKey(s => s.SessionId)
+                .OnDelete(DeleteBehavior.Cascade);
 
         });
     }

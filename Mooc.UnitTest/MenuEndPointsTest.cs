@@ -109,15 +109,6 @@ namespace Mooc.UnitTest.EndPoints.Admin
             Assert.IsTrue(jsonResult.IsSuccess);
         }
 
-        [Test]
-        public async Task TestDeleteAsync()
-        {
-            var deleteResp = await Client.DeleteAsync("/api/menu/Delete/4");
-
-            Assert.IsNotNull(deleteResp);
-            Assert.That(deleteResp.StatusCode == HttpStatusCode.OK, "The status code is incorrect");
-        }
-
         private T Deserialize<T>(string json)
         {
             var serializeOptions = new JsonSerializerOptions

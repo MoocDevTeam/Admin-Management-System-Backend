@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Mvc;
+using Mooc.Core.WrapperResult;
+
 namespace MoocWebApi.Controllers.Admin
 {
     [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.BaseService))]
@@ -21,8 +24,7 @@ namespace MoocWebApi.Controllers.Admin
         [HttpGet]
         public async Task<PagedResultDto<MenuDto>> GetByPageAsync([FromQuery] FilterPagedResultRequestDto input)
         {
-            var pagedResult = await _menuService.GetListAsync(input);
-            return pagedResult;
+            return await _menuService.GetListAsync(input);
         }
 
         /// <summary>
@@ -45,6 +47,13 @@ namespace MoocWebApi.Controllers.Admin
         [HttpPost]
         public async Task<bool> Update([FromBody] UpdateMenuDto input)
         {
+            var menu = await _menuService.GetAsync(input.Id);
+            if (menu == null)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return false;
+            }
+
             await _menuService.UpdateAsync(input.Id, input);
             return true;
         }
@@ -57,6 +66,13 @@ namespace MoocWebApi.Controllers.Admin
         [HttpDelete("{id}")]
         public async Task<bool> Delete(long id)
         {
+            var menu = await _menuService.GetAsync(id);
+            if (menu == null)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return false;
+            }
+
             await _menuService.DeleteAsync(id);
             return true;
         }
@@ -69,8 +85,14 @@ namespace MoocWebApi.Controllers.Admin
         [HttpGet("{id}")]
         public async Task<MenuDto> GetById(long id)
         {
-            return await _menuService.GetAsync(id);
-        }
+            var menu = await _menuService.GetAsync(id);
+            if (menu == null)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return null;
+            }
 
+            return menu;
+        }
     }
 }

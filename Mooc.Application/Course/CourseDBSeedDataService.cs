@@ -321,30 +321,26 @@ namespace Mooc.Application.Course
 
             if (!_dbContext.Enrollment.Any())
             {
-                await this._dbContext.MoocCourses.AddRangeAsync(courses);
+                await this._dbContext.Enrollment.AddRangeAsync(enrollments);
                 await this._dbContext.SaveChangesAsync();
             }
-
             
             if (!_dbContext.Session.Any())
             {
                 await this._dbContext.Session.AddRangeAsync(sessions);
-                await this._dbContext.SaveChangesAsync();
-            }
 
             if (!_dbContext.Teachers.Any())
              {
                 await this._dbContext.Teachers.AddRangeAsync(teachers);
                 await this._dbContext.SaveChangesAsync();
             }   
-             
+
             if (!_dbContext.TeacherCourseInstances.Any())
             {
                 await this._dbContext.TeacherCourseInstances.AddRangeAsync(teacherCourseInstances);
                 await this._dbContext.SaveChangesAsync();
             }
-            
-
+   
             return true;
         }
     }

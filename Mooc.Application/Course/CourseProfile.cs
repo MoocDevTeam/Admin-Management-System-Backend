@@ -42,13 +42,14 @@ public class CourseProfile : Profile
             .ForMember(dest => dest.CreatedByUserId, opt => opt.Ignore())
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
             .ForMember(dest => dest.UpdatedByUserId, opt => opt.Ignore());
-
+            
         //Database ---> Frontend
         CreateMap<TeacherCourseInstance, TeacherCourseInstanceReadDto>()
             .ForMember(dest => dest.CreatedByUser, opt => opt.MapFrom(src => src.CreatedByUser != null ? src.CreatedByUser.UserName : null))
             .ForMember(dest => dest.UpdatedByUser, opt => opt.MapFrom(src => src.UpdatedByUser != null ? src.UpdatedByUser.UserName : null));
 
         CreateMap<TeacherCourseInstance, TeacherCourseInstancePermissionDto>();
+        
         // Session Mapping
         // Frontend -> Backend -> Database 
         CreateMap<CreateOrUpdateSessionDto, Session>()

@@ -1,4 +1,5 @@
-﻿using Mooc.Application.Contracts.Admin;
+﻿using Microsoft.AspNetCore.Mvc;
+using Mooc.Application.Contracts.Admin;
 using Mooc.Application.Contracts.Dto;
 using Mooc.Model.Entity;
 using Mooc.Shared;
@@ -153,5 +154,42 @@ namespace Mooc.UnitTest.Controller
             Assert.AreEqual("Menu1", result.Title);
             _menuServiceMock.Verify(service => service.GetAsync(menuId), Times.Once);
         }
+
+        [Test]
+        public async Task GetMenuTreeAsync_ShouldReturnCorrectTreeStructure()
+        {
+            var mockTree = new List<MenuDto>
+    {
+        new MenuDto
+        {
+            Id = 1,
+            Title = "Root Menu",
+            ParentId = null,
+            Children = new List<MenuDto>
+            {
+                new MenuDto { Id = 2, Title = "Child Menu 1", ParentId = 1 },
+                new MenuDto { Id = 3, Title = "Child Menu 2", ParentId = 1 }
+            }
+        }
+    };
+
+            _menuServiceMock.Setup(service => service.GetMenuTreeAsync())
+                .ReturnsAsync(mockTree);
+
+            var result = await _controller.GetMenuTree(); 
+
+            Assert.IsInstanceOf<List<MenuDto>>(result); 
+
+            Assert.NotNull(result);
+            Assert.AreEqual(1, result.Count); 
+            Assert.AreEqual("Root Menu", result[0].Title);
+
+            var children = result[0].Children.ToList();
+            Assert.AreEqual(2, children.Count); 
+            Assert.AreEqual("Child Menu 1", children[0].Title);
+            Assert.AreEqual("Child Menu 2", children[1].Title);
+        }
+
+
     }
 }

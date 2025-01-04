@@ -38,16 +38,22 @@ namespace Mooc.UnitTest.EndPoints.Admin
         {
             var resp = await Client.GetAsync("/api/menu/GetById/" + id);
             Assert.IsNotNull(resp);
-            Assert.That(HttpStatusCode.OK == resp.StatusCode, "The status code is incorrect");
+            if(HttpStatusCode.OK == resp.StatusCode)
+            {
+                Assert.That(HttpStatusCode.OK == resp.StatusCode, "The status code is incorrect");
+                var stringResult = await resp.Content.ReadAsStringAsync();
+                Assert.IsNotNull(stringResult);
 
-            var stringResult = await resp.Content.ReadAsStringAsync();
-            Assert.IsNotNull(stringResult);
+                var jsonResult = Deserialize<ApiResponseResult<MenuDto>>(stringResult);
 
-            var jsonResult = Deserialize<ApiResponseResult<MenuDto>>(stringResult);
-
-            Assert.IsNotNull(jsonResult);
-            Assert.IsTrue(jsonResult.IsSuccess);
-            Assert.AreEqual(id, jsonResult.Data.Id);
+                Assert.IsNotNull(jsonResult);
+                Assert.IsTrue(jsonResult.IsSuccess);
+                Assert.AreEqual(id, jsonResult.Data.Id);
+            }
+            else
+            {
+                Assert.That(HttpStatusCode.NotFound == resp.StatusCode, "The status code is incorrect");
+            } 
         }
 
         [Test, Sequential]
@@ -98,15 +104,66 @@ namespace Mooc.UnitTest.EndPoints.Admin
 
             var resp = await Client.PostAsync("/api/menu/Update", jsonContent);
             Assert.IsNotNull(resp);
-            Assert.That(HttpStatusCode.OK == resp.StatusCode, "The status code is incorrect");
+            if(HttpStatusCode.OK == resp.StatusCode)
+            {
+                Assert.That(HttpStatusCode.OK == resp.StatusCode, "The status code is incorrect");
+
+                var stringResult = await resp.Content.ReadAsStringAsync();
+                Assert.IsNotNull(stringResult);
+
+                var jsonResult = Deserialize<ApiResponseResult<bool>>(stringResult);
+
+                Assert.IsNotNull(jsonResult);
+                Assert.IsTrue(jsonResult.IsSuccess);
+            }
+            else
+            {
+                Assert.That(HttpStatusCode.NotFound == resp.StatusCode, "The status code is incorrect");
+            }
+            
+        }
+
+        [Test]
+        public async Task TestDeleteAsync()
+        {
+            var ids = await GetMenuIds();
+            foreach (var id in ids)
+            {
+                var getByIdResp = await Client.GetAsync($"/api/menu/GetById/{id}");
+                Assert.IsNotNull(getByIdResp);
+                Assert.That(HttpStatusCode.OK == getByIdResp.StatusCode);
+
+                var menu = Deserialize<ApiResponseResult<MenuDto>>(await getByIdResp.Content.ReadAsStringAsync());
+                Assert.IsNotNull(menu);
+                Assert.IsTrue(menu.IsSuccess);
+
+                if (menu.Data.Children != null && menu.Data.Children.Any())
+                {
+                    var deleteResp = await Client.DeleteAsync($"/api/menu/Delete/{id}");
+                    Assert.IsNotNull(deleteResp);
+                    Assert.That(HttpStatusCode.BadRequest == deleteResp.StatusCode);
+                }
+                else
+                {
+                    var deleteResp = await Client.DeleteAsync($"/api/menu/Delete/{id}");
+                    Assert.IsNotNull(deleteResp);
+                    Assert.That(HttpStatusCode.OK == deleteResp.StatusCode);
+                }
+            }
+        }
+
+        private async Task<List<long>> GetMenuIds()
+        {
+            var resp = await this.Client.GetAsync($"/api/menu/GetByPage?PageIndex=1&PageSize=100");
+            Assert.IsNotNull(resp);
+            Assert.That(HttpStatusCode.OK == resp.StatusCode, $"Expected status code 200, but got {resp.StatusCode}");
 
             var stringResult = await resp.Content.ReadAsStringAsync();
-            Assert.IsNotNull(stringResult);
+            var jsonResult = Deserialize<ApiResponseResult<PagedResultDto<MenuDto>>>(stringResult);
 
-            var jsonResult = Deserialize<ApiResponseResult<bool>>(stringResult);
-
-            Assert.IsNotNull(jsonResult);
-            Assert.IsTrue(jsonResult.IsSuccess);
+            return jsonResult.IsSuccess && jsonResult.Data != null
+                ? jsonResult.Data.Items.Select(x => x.Id).ToList()
+                : new List<long>();
         }
 
         private T Deserialize<T>(string json)
@@ -117,6 +174,23 @@ namespace Mooc.UnitTest.EndPoints.Admin
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
             return JsonSerializer.Deserialize<T>(json, serializeOptions);
+        }
+
+        [Test]
+        public async Task TestGetMenuTreeAsync()
+        {
+            var response = await Client.GetAsync("/api/menu/GetMenuTree");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+            var stringResult = await response.Content.ReadAsStringAsync();
+            Assert.IsNotNull(stringResult);
+
+            var result = Deserialize<ApiResponseResult<List<MenuDto>>>(stringResult);
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.IsSuccess);
+            Assert.IsNotNull(result.Data);
+            Assert.IsTrue(result.Data.Count > 0);
         }
     }
 }

@@ -73,6 +73,12 @@ namespace MoocWebApi.Controllers.Admin
                 return false;
             }
 
+            if (menu.Children?.Any() == true)
+            {
+                HttpContext.Response.StatusCode = 400;
+                return false;
+            }
+
             await _menuService.DeleteAsync(id);
             return true;
         }
@@ -94,5 +100,16 @@ namespace MoocWebApi.Controllers.Admin
 
             return menu;
         }
+
+        /// <summary>
+        /// Get the menu tree
+        /// </summary>
+        /// <returns>A list of menus with tree structure</returns>
+        [HttpGet]
+        public async Task<List<MenuDto>> GetMenuTree()
+        {
+            return await _menuService.GetMenuTreeAsync();
+        }
+
     }
 }

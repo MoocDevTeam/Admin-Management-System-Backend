@@ -235,10 +235,10 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasForeignKey(tci => tci.CourseInstanceId)
                 .OnDelete(DeleteBehavior.Restrict);
             // One-to-One: CourseInstance -> Enrollment
-            //c.HasOne(x => x.Enrollment)
-            //    .WithOne(e => e.CourseInstance)
-            //    .HasForeignKey<Enrollment>(e => e.CourseInstanceId)
-            //    .OnDelete(DeleteBehavior.Cascade);
+            c.HasOne(x => x.Enrollment)
+                .WithOne()
+                .HasForeignKey<Enrollment>(e => e.CourseInstanceId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // They will be moved to User Configuration later
             // One to Many: MoocUser->CreatedCourseInstances
@@ -380,8 +380,9 @@ public static class MoocDbContextModelCreatingExtensions
         modelBuilder.Entity<Enrollment>(b =>
         {
             b.ToTable(TablePrefix + "Enrollment");
-            b.HasKey(x => x.Id);
+            b.HasKey(x => x.Id);          
             b.Property(e => e.Id).ValueGeneratedNever();
+            b.Property(e => e.CourseInstanceId).IsRequired();
             b.Property(e => e.CourseInstanceId).IsRequired();
             b.Property(cs => cs.EnrollmentStatus).HasConversion(
                  v => v.ToString(),

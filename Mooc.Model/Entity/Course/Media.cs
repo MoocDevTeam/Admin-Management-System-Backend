@@ -6,9 +6,8 @@ namespace Mooc.Model.Entity
 {
     public class Media : BaseEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; } 
+        [Required]
+        public long UploaderId { get; set; }
 
         public User Uploader { get; set; }
 

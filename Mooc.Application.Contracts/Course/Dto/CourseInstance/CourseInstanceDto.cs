@@ -1,6 +1,19 @@
 ﻿namespace Mooc.Application.Contracts.Course
 {
-    public class MoocCourseInstanceDto : BaseEntityDto
+    public class CourseInstanceDto : BaseEntityDto
     {
+        public long MoocCourseId { get; set; }
+        //public string MoocCourseTitle { get; set; } //user-friendly
+        public int TotalSessions { get; set; }
+        public CourseInstanceStatus Status { get; set; }
+        public CourseInstancePermission Permission { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public long CreatedByUserId { get; set; }
+        public long UpdatedByUserId { get; set; }
+        //public string CreatedUserName { get; set; } //user-friendly
+        //public string UpdatedUserName { get; set; } //user-friendly
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

@@ -18,10 +18,6 @@
 	<ItemGroup>
 		<InternalsVisibleTo Include="Mooc.UnitTest" />
 	</ItemGroup>
-	
-	<ItemGroup>
-	  <Compile Include="..\AssemblyInfo.cs" Link="AssemblyInfo.cs" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="13.0.1" />
@@ -42,12 +38,6 @@
 	  <Content Update="appsettings.Development.json">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Update="AppData\moocdb.db">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
 	</ItemGroup>
 
 </Project>

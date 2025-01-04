@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Mooc.Model.Entity.Course;
 
 namespace Mooc.Model.Entity;
 
@@ -16,5 +15,6 @@ public class MoocCourse : BaseEntity
     public DateTime? UpdatedAt { get; set; }
     public long CategoryId { get; set; }
     public virtual Category Category { get; set; } // Navigation property
+    public virtual ICollection<CourseInstance> CourseInstances { get; set; }
 
 }

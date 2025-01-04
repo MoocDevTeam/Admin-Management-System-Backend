@@ -1,8 +1,4 @@
-
 ﻿using Mooc.Model.Entity.ExamManagement;
-
-﻿using Mooc.Model.Entity.Course;
-
 
 namespace Mooc.Model.DBContext;
 

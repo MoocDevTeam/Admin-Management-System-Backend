@@ -1,5 +1,4 @@
 ﻿using Mooc.Application.Contracts.Course.Dto.Category;
-using Mooc.Model.Entity.Course;
 using Mooc.Application.Contracts.Course.Dto;
 
 namespace Mooc.Application.Course;
@@ -38,10 +37,9 @@ public class CourseProfile : Profile
             .ForMember(dest => dest.CreatedByUser, opt => opt.MapFrom(src => src.CreatedByUser != null ? src.CreatedByUser.UserName : null))
             .ForMember(dest => dest.UpdatedByUser, opt => opt.MapFrom(src => src.UpdatedByUser != null ? src.UpdatedByUser.UserName : null));
 
-
-
-        //CreateMap<CreateUserDto, User>();
-        //CreateMap<UpdateUserDto, User>();
+        CreateMap<CourseInstance, CourseInstanceDto>();
+        CreateMap<CreateCourseInstanceDto, CourseInstance>();
+        CreateMap<UpdateCourseInstanceDto, CourseInstance>();
     }
 }
 

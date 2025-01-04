@@ -423,10 +423,14 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasMaxLength(SessionEntityConsts.MaxTitleLength);  // Set the maximum length to 50
 
             b.Property(x => x.Description)
+                .IsRequired()
                 .HasMaxLength(SessionEntityConsts.MaxDescriptionLength);  // Set the maximum length to 255
 
             b.Property(x => x.Order)
                 .IsRequired();  // Mark Order as required (not nullable)
+
+            b.Property(x => x.CourseInstanceId)
+              .IsRequired();  // Mark CourseInstanceId as required (not nullable)
 
             b.Property(x => x.CreatedByUserId)
                 .IsRequired();  // Mark CreatedByUserId as required (not nullable)
@@ -439,7 +443,7 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");  // Set the default value to current timestamp
 
             b.Property(x => x.UpdatedAt)
-                .IsRequired(false)  // Mark UpdatedAt as optional (nullable)
+                .IsRequired()  // Mark UpdatedAt as required
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");  // Set the default value to current timestamp
 
             b.HasOne<User>(x => x.CreatedByUser)
@@ -451,6 +455,19 @@ public static class MoocDbContextModelCreatingExtensions
                 .WithMany()
                 .HasForeignKey(x => x.UpdatedByUserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            //Many to one: Sessions->CourseInstanceId
+            b.HasOne( x => x.CourseInstance)
+                .WithMany(s => s.Sessions)
+                .HasForeignKey(s => s.CourseInstanceId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // //One to many: Sessions->Media
+            // b.HasMany(x => x.Sessionmedia)
+            //     .WithOne(s => s.Session)
+            //     .HasForeignKey(s => s.SessionId)
+            //     .OnDelete(DeleteBehavior.Cascade);
+
         });
     }
 

@@ -37,38 +37,38 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<CategoryDto>> GetByIdAsync(long id)
+    public async Task<CategoryDto> GetByIdAsync(long id)
     {
         var category = await _categoryService.GetAsync(id);
-        return Ok(category);
+        return category;
     }
 
     [HttpGet("{name}")]
-    public async Task<ActionResult<CategoryDto>> GetByCategoryNameAsync(string name)
+    public async Task<CategoryDto> GetByCategoryNameAsync(string name)
     {
         var category = await _categoryService.GetByCategoryNameAsync(name);
-        return Ok(category);
+        return category;
     }
 
     [HttpGet]
-    public async Task<ActionResult<CategoryDto>> GetAll()
+    public async Task<List<CategoryDto>> GetAll()
     {
         var category = await _categoryService.GetAllAsync();
-        return Ok(category);
+        return category;
     }
 
     [HttpGet]
-    public async Task<ActionResult<CategoryDto>> GetFilteredCategoriesAsync([FromQuery] FilterPagedResultRequestDto input)
+    public async Task<List<CategoryDto>> GetFilteredCategoriesAsync([FromQuery] FilterPagedResultRequestDto input)
     {
         var category = await _categoryService.GetFilteredCategoriesAsync(input);
-        return Ok(category);
+        return category;
     }
 
     [HttpGet("{parentId}")]
-    public async Task<ActionResult<CategoryDto>> GetChildCategoriesAsync(long parentId)
+    public async Task<List<CategoryDto>> GetChildCategoriesAsync(long parentId)
     {
         var category= await _categoryService.GetChildCategoriesAsync(parentId);
-        return Ok(category);
+        return category;
     }
 
 

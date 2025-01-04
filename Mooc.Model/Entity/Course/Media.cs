@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Mooc.Model.Entity.Course
+namespace Mooc.Model.Entity
 {
     public class Media : BaseEntity
     {

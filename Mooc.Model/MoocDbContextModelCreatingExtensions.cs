@@ -225,10 +225,10 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasForeignKey(x => x.MoocCourseId)
                 .OnDelete(DeleteBehavior.Cascade); //CourseInstance will be deleted automatically
             // One to Many: CourseInstance->Sessions
-            //c.HasMany(x => x.Sessions)
-            //.WithOne(s => s.CourseInstance)
-            // .HasForeignKey(s => s.CourseInstanceId)
-            //  .OnDelete(DeleteBehavior.Cascade);
+            c.HasMany(x => x.Sessions)
+                .WithOne(s => s.CourseInstance)
+                .HasForeignKey(s => s.CourseInstanceId)
+                .OnDelete(DeleteBehavior.Cascade);
             //One to Many: CourseInstance->TeacherCourseInstances
             c.HasMany(x => x.TeacherCourseInstances)
                 .WithOne(tci => tci.CourseInstance)
@@ -428,10 +428,14 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasMaxLength(SessionEntityConsts.MaxTitleLength);  // Set the maximum length to 50
 
             b.Property(x => x.Description)
+                .IsRequired()
                 .HasMaxLength(SessionEntityConsts.MaxDescriptionLength);  // Set the maximum length to 255
 
             b.Property(x => x.Order)
                 .IsRequired();  // Mark Order as required (not nullable)
+
+            b.Property(x => x.CourseInstanceId)
+              .IsRequired();  // Mark CourseInstanceId as required (not nullable)
 
             b.Property(x => x.CreatedByUserId)
                 .IsRequired();  // Mark CreatedByUserId as required (not nullable)
@@ -444,18 +448,32 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");  // Set the default value to current timestamp
 
             b.Property(x => x.UpdatedAt)
-                .IsRequired(false)  // Mark UpdatedAt as optional (nullable)
+                .IsRequired()  // Mark UpdatedAt as required
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");  // Set the default value to current timestamp
 
+            //Many to one: Sessions->CreatedByUserId
             b.HasOne<User>(x => x.CreatedByUser)
                 .WithMany()
                 .HasForeignKey(x => x.CreatedByUserId)
                 .OnDelete(DeleteBehavior.Cascade);
-
+            //Many to one: Sessions->CreatedByUserId
             b.HasOne<User>(x => x.UpdatedByUser)
                 .WithMany()
                 .HasForeignKey(x => x.UpdatedByUserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            //Many to one: Sessions->CourseInstanceId
+            b.HasOne( x => x.CourseInstance)
+                .WithMany(s => s.Sessions)
+                .HasForeignKey(s => s.CourseInstanceId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //One to many: Sessions->Media
+            b.HasMany(x => x.Sessionmedia)
+                .WithOne(s => s.Session)
+                .HasForeignKey(s => s.SessionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         });
     }
 

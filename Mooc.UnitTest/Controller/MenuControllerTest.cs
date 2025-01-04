@@ -1,5 +1,6 @@
 ﻿using Mooc.Application.Contracts.Admin;
 using Mooc.Application.Contracts.Dto;
+using Mooc.Model.Entity;
 using Mooc.Shared;
 using Mooc.Shared.Enum;
 using MoocWebApi.Controllers.Admin;
@@ -88,6 +89,8 @@ namespace Mooc.UnitTest.Controller
                 Description = "Updated Description",
                 MenuType = MenuType.Menu
             };
+            _menuServiceMock.Setup(service => service.GetAsync(input.Id))
+        .ReturnsAsync(menu);
 
             _menuServiceMock.Setup(service => service.UpdateAsync(It.IsAny<long>(), It.IsAny<UpdateMenuDto>()))
                 .Returns(Task.FromResult(menu));
@@ -105,6 +108,16 @@ namespace Mooc.UnitTest.Controller
         {
             // Arrange
             var menuId = 1L;
+            var existingMenu = new MenuDto
+            {
+                Id = menuId,
+                Title = "Sample Menu",
+                Description = "Sample Description",
+                MenuType = MenuType.Menu
+            };
+
+            _menuServiceMock.Setup(service => service.GetAsync(menuId))
+                .ReturnsAsync(existingMenu);
 
             _menuServiceMock.Setup(service => service.DeleteAsync(menuId)).Returns(Task.CompletedTask);
 

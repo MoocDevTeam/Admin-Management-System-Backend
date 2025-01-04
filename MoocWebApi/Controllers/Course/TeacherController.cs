@@ -9,7 +9,7 @@ namespace MoocWebApi.Controllers.Course
     [RequestFormLimits(MultipartBodyLengthLimit = 52428800)]
     public class TeacherController : ControllerBase
     {
-        private readonly ITeacherService _teacherService;
+        private readonly ITeacherService _teacherService; 
 
         public TeacherController(ITeacherService teacherService)
         {

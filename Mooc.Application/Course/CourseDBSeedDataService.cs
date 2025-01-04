@@ -3,7 +3,6 @@ using Mooc.Application.Admin;
 using Mooc.Application.Contracts;
 using Mooc.Core.MoocAttribute;
 using Mooc.Core.Utils;
-using Mooc.Model.Entity.Course;
 namespace Mooc.Application.Course
 {
 
@@ -307,24 +306,26 @@ namespace Mooc.Application.Course
                 await this._dbContext.SaveChangesAsync();
             }
 
-            if (!_dbContext.Teachers.Any())
-            {
-                await this._dbContext.Teachers.AddRangeAsync(teachers);
-                await this._dbContext.SaveChangesAsync();
-            }
-            if (!_dbContext.Enrollment.Any())
-            {
-                await this._dbContext.Enrollment.AddRangeAsync(enrollments);
-                await this._dbContext.SaveChangesAsync();
-            }
             if (!_dbContext.MoocCourses.Any())
             {
                 await this._dbContext.MoocCourses.AddRangeAsync(courses);
                 await this._dbContext.SaveChangesAsync();
             }
+
+            if (!_dbContext.Teachers.Any())
+            {
+                await this._dbContext.Teachers.AddRangeAsync(teachers);
+                await this._dbContext.SaveChangesAsync();
+            }
+            
             if (!_dbContext.CourseInstances.Any())
             {
                 await this._dbContext.CourseInstances.AddRangeAsync(courseInstances);
+                await this._dbContext.SaveChangesAsync();
+            }
+            if (!_dbContext.Enrollment.Any())
+            {
+                await this._dbContext.Enrollment.AddRangeAsync(enrollments);
                 await this._dbContext.SaveChangesAsync();
             }
             if (!_dbContext.Session.Any())

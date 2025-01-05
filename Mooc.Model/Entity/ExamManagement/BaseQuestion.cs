@@ -6,11 +6,11 @@ public class BaseQuestion: BaseEntity
 
    /* public long CourseId { get; set; }*/
 
-    public long CreatedByUserId { get; set; }
+    public long? CreatedByUserId { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
-    public long UpdatedByUserId { get; set; }
+    public long? UpdatedByUserId { get; set; }
 
     public DateTime UpdatedAt { get; set; }
 

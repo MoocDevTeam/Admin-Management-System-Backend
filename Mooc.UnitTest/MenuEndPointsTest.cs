@@ -12,7 +12,8 @@ namespace Mooc.UnitTest.EndPoints.Admin
 {
     public class MenuEndPointsTest : BaseTest
     {
-        [Test]
+        [Order(1)]
+        [Test, Sequential]
         public async Task TestGetByPageAsync([Values("Menu1", "Menu2")] string filter)
         {
             var resp = await Client.GetAsync("/api/menu/GetByPage?PageIndex=1&PageSize=12&Filter=" + filter);
@@ -33,7 +34,8 @@ namespace Mooc.UnitTest.EndPoints.Admin
             Assert.IsTrue(jsonResult.IsSuccess);
         }
 
-        [Test]
+        [Order(2)]
+        [Test, Sequential]
         public async Task TestGetByIdAsync([Values(1, 2)] long id)
         {
             var resp = await Client.GetAsync("/api/menu/GetById/" + id);
@@ -56,6 +58,7 @@ namespace Mooc.UnitTest.EndPoints.Admin
             } 
         }
 
+        [Order(3)]
         [Test, Sequential]
         public async Task TestAddAsync(
             [Values("Menu1", "Menu2")] string title,
@@ -85,6 +88,7 @@ namespace Mooc.UnitTest.EndPoints.Admin
             Assert.IsTrue(jsonResult.IsSuccess);
         }
 
+        [Order(4)]
         [Test, Sequential]
         public async Task TestUpdateAsync(
             [Values(1, 2)] long id,
@@ -123,7 +127,8 @@ namespace Mooc.UnitTest.EndPoints.Admin
             
         }
 
-        [Test]
+        [Order(5)]
+        [Test, Sequential]
         public async Task TestDeleteAsync()
         {
             var ids = await GetMenuIds();
@@ -176,7 +181,8 @@ namespace Mooc.UnitTest.EndPoints.Admin
             return JsonSerializer.Deserialize<T>(json, serializeOptions);
         }
 
-        [Test]
+        [Order(6)]
+        [Test, Sequential]
         public async Task TestGetMenuTreeAsync()
         {
             var response = await Client.GetAsync("/api/menu/GetMenuTree");

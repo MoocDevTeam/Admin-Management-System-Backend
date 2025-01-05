@@ -1,20 +1,18 @@
 ﻿using Mooc.Application.Contracts.Admin;
 using Mooc.Application.Contracts.Dto;
 using Mooc.Core.WrapperResult;
-using Mooc.Shared;
-using Mooc.Shared.Enum;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Json;
-using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using JsonSerializer = System.Text.Json.JsonSerializer;
+
 
 namespace Mooc.UnitTest
 {
     public class RoleEndPointsTest : BaseTest
     {
-
         [Test]
         public async Task TestGetByPageAsync([Values("role01", "role02")] string userName)
         {
@@ -80,33 +78,38 @@ namespace Mooc.UnitTest
             Assert.IsTrue(jsonResult.IsSuccess);
         }
 
-
+        [Order(3)]
         [Test, Sequential]
         public async Task TestUpdateAsync(
-          [Values(1, 2)] long id,
-          [Values("UpdatedRole1", "UpdatedRole2")] string roleName,
-          [Values("UpdatedDescription1", "UpdatedDescription2")] string description)
+        [Values(2, 1)] long id,
+        [Values("UpdatedRole1", "UpdatedRole2")] string roleName,
+        [Values("full-power", "limited-power")] string description)
         {
-            UpdateRoleDto role = new UpdateRoleDto
+            UpdateRoleDto role = new UpdateRoleDto()
             {
                 Id = id,
                 RoleName = roleName,
-                Description = description,             
+                Description = description,
             };
 
             var jsonContent = JsonContent.Create(role);
+           
 
             var resp = await Client.PutAsync("/api/role/Update", jsonContent);
+           
             Assert.IsNotNull(resp);
-            Assert.That(HttpStatusCode.OK == resp.StatusCode, "The status code is incorrect");
 
+            Console.WriteLine($"Status Code: {resp?.StatusCode}");
             var stringResult = await resp.Content.ReadAsStringAsync();
+            Console.WriteLine($"Response Content: {stringResult}");
             Assert.IsNotNull(stringResult);
+
+            Assert.That(HttpStatusCode.OK == resp.StatusCode, "The status code is incorrect");
 
             var jsonResult = Deserialize<ApiResponseResult<bool>>(stringResult);
 
-            Assert.IsNotNull(jsonResult);
-            Assert.IsTrue(jsonResult.IsSuccess);
+            Assert.IsNotNull(jsonResult, "Response deserialization failed");
+            Assert.IsTrue(jsonResult.IsSuccess, "API did not succeed");
         }
 
         [Test, Sequential]  

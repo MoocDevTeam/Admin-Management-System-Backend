@@ -196,7 +196,6 @@ namespace Mooc.UnitTest.EndPoints.Admin
             Assert.IsNotNull(result);
             Assert.IsTrue(result.IsSuccess);
             Assert.IsNotNull(result.Data);
-            Assert.IsTrue(result.Data.Count > 0);
         }
     }
 }

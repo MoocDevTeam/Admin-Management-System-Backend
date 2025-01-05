@@ -14,8 +14,8 @@ namespace Mooc.UnitTest
 {
     public class RoleEndPointsTest : BaseTest
     {
-
-        [Test]
+        [Order(1)]
+        [Test, Sequential]
         public async Task TestGetByPageAsync([Values("role01", "role02")] string userName)
         {
 
@@ -26,13 +26,15 @@ namespace Mooc.UnitTest
             var stringResult = await resp.Content.ReadAsStringAsync();
             Assert.IsNotNull(stringResult);
 
-            var serializeOptions = new JsonSerializerOptions
-            {
-                ReferenceHandler = ReferenceHandler.IgnoreCycles,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            //var serializeOptions = new JsonSerializerOptions
+            //{
+            //    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+            //    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 
-            };
-            var jsonResult = JsonSerializer.Deserialize<ApiResponseResult<PagedResultDto<RoleDto>>>(stringResult, serializeOptions);
+            //};
+            //var jsonResult = JsonSerializer.Deserialize<ApiResponseResult<PagedResultDto<RoleDto>>>(stringResult, serializeOptions);
+
+            var jsonResult = Deserialize<ApiResponseResult<PagedResultDto<RoleDto>>>(stringResult);
 
             Assert.IsNotNull(jsonResult);
             Assert.IsTrue(jsonResult.IsSuccess);
@@ -58,6 +60,7 @@ namespace Mooc.UnitTest
             return new List<long>();
         }
 
+        [Order(2)]
         [Test, Sequential]
         public async Task TestAddAsync(
         [Values("role01", "role02")] string roleName,
@@ -80,7 +83,7 @@ namespace Mooc.UnitTest
             Assert.IsTrue(jsonResult.IsSuccess);
         }
 
-
+        [Order(3)]
         [Test, Sequential]
         public async Task TestUpdateAsync(
           [Values(1, 2)] long id,
@@ -109,6 +112,7 @@ namespace Mooc.UnitTest
             Assert.IsTrue(jsonResult.IsSuccess);
         }
 
+        [Order(4)]
         [Test, Sequential]  
         public async Task TestDeleteAsync([Values("role1", "role02")] string roleName)
         {

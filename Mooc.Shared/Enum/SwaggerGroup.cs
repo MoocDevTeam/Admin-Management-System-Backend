@@ -20,7 +20,7 @@ public enum SwaggerGroup
     /// <summary>
     /// Coures service
     /// </summary>
-    CourseService = 4
+    CourseService = 4,
     
     ///<summary>
     /// ExamManagementService

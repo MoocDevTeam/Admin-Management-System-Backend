@@ -15,7 +15,6 @@ namespace Mooc.UnitTest.Service
     {
         private readonly IMapper _mapper;
         private readonly Mock<IWebHostEnvironment> _mockWebHostEnvironment;
-        //private List<User> users;
         private string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MockData", "users.json");
 
         public UserServiceTest()

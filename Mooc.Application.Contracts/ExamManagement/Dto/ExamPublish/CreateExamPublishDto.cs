@@ -4,9 +4,17 @@ public class CreateExamPublishDto : BaseEntityDto
 {
     public long ExamId { get; set; }
 
-    public DateTime PublishedAt { get; set; }
+    public long CreatedByUserId { get; set; }
 
-    public long PublishedByUserId { get; set; }
+    public DateTime CreatedAt { get; set; }
+
+    public long? UpdatedByUserId { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    /*    public DateTime PublishedAt { get; set; }
+
+        public long PublishedByUserId { get; set; }*/
 
     public DateTime? CloseAt { get; set; }
 }

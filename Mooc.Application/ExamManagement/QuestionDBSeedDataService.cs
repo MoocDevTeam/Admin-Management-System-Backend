@@ -1,10 +1,13 @@
 using Mooc.Application.Contracts;
+using Mooc.Core.MoocAttribute;
 using Mooc.Core.Utils;
 using Mooc.Model.Entity.ExamManagement;
 using StackExchange.Redis;
 
 namespace Mooc.Application.ExamManagement
 {
+
+    [DBSeedDataOrder(3)]
     public class QuestionDBSeedDataService : IDBSeedDataService, ITransientDependency
     {
         private readonly MoocDBContext _dbContext;
@@ -28,12 +31,12 @@ namespace Mooc.Application.ExamManagement
 
         private List<JudgementQuestion> judgementQuestions = new List<JudgementQuestion>()
         {
-            new JudgementQuestion(){Id=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now, QuestionBody="test", QuestionTitle="test", Marks=5, QuestionTypeId=2, CorrectAnswer=true},
+            new JudgementQuestion(){Id=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now, QuestionBody="test", QuestionTitle="test", Marks=5, QuestionTypeId=2, CorrectAnswer=true},
         };
 
         private List<ShortAnsQuestion> shortAnsQuestions = new List<ShortAnsQuestion>()
         {
-            new ShortAnsQuestion(){Id=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now, QuestionBody="test", QuestionTitle="test", Marks=5, QuestionTypeId=3, ReferenceAnswer="test"},
+            new ShortAnsQuestion(){Id=3, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now, QuestionBody="test", QuestionTitle="test", Marks=5, QuestionTypeId=3, ReferenceAnswer="test"},
         };
 
         private List<Option> options = new List<Option>()

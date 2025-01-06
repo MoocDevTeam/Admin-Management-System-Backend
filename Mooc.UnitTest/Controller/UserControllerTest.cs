@@ -1,6 +1,7 @@
 ﻿using Mooc.Application.Contracts.Admin;
 using Mooc.Application.Contracts.Dto;
 using Mooc.Shared;
+using Mooc.Shared.Enum;
 using MoocWebApi.Controllers.Admin;
 using Moq;
 
@@ -234,5 +235,32 @@ namespace Mooc.UnitTest.Controller
             Assert.That(listCountResult2.Total, Is.EqualTo(5));
             _userServiceMock.Verify(s => s.DeleteAsync(validId), Times.AtLeastOnce);
         }
+
+        [Test]
+        public async Task GetByUserName_ShouldReturnUserInfoWhenValidUserName()
+        {
+            // Arrange
+            var user = new UserDto()
+            {
+                UserName = "Apple",
+                Password = "",
+                Age = 1,
+                Email = "abc@uow.edu.au",
+                Gender = Gender.Male,
+                Avatar = "123",
+            };
+
+            _userServiceMock.Setup(service => service.GetByUserNameAsync("Apple")).ReturnsAsync(user);
+
+            // Act
+            var result = await _controller.Get("Apple");
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.AreEqual("Apple", result.UserName);
+            Assert.AreEqual("abc@uow.edu.au", result.Email);
+            _userServiceMock.Verify(service => service.GetByUserNameAsync("Apple"), Times.Once);
+        }
+
     }
 }

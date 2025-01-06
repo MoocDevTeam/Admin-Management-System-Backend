@@ -1,5 +1,6 @@
 ﻿// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 using Microsoft.AspNetCore.Authorization;
+using Mooc.Model.Entity;
 
 namespace MoocWebApi.Controllers.Admin
 {
@@ -77,6 +78,24 @@ namespace MoocWebApi.Controllers.Admin
             return true;
         }
 
-     
+        /// <summary>
+        /// Get user information
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+
+        [HttpGet("{userName}")]
+        public async Task<UserDto> Get(string userName)
+        {
+            var user = await _userService.GetByUserNameAsync(userName);
+            if (user == null)
+            {
+                HttpContext.Response.StatusCode = 404;
+                return null;
+            }
+
+            return user;
+        }
+
     }
 }

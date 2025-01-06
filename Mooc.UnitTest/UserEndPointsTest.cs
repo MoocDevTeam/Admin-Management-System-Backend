@@ -45,7 +45,6 @@ namespace Mooc.UnitTest
         {
             List<long> ids = await GetUserIdbyUserName(userName);
 
-
             foreach (var id in ids)
             {
                 var resp = await this.Client.DeleteAsync("/api/user/Delete/" + id);
@@ -60,7 +59,6 @@ namespace Mooc.UnitTest
                 Assert.IsNotNull(jsonResult);
                 Assert.IsTrue(jsonResult.IsSuccess);
             }
-
         }
 
         private async Task<List<long>> GetUserIdbyUserName(string userName)
@@ -80,7 +78,6 @@ namespace Mooc.UnitTest
             {
                 return jsonResult.Data.Items.Select(x => x.Id).ToList();
             }
-
 
             return new List<long>();
         }

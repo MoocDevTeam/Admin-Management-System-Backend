@@ -3,7 +3,7 @@ using Mooc.Model.Entity.ExamManagement;
 namespace Mooc.Model.Entity;
 public class Exam : BaseExam
 {
-/*  public long CourseId { get; set; }*/
+    /*  public long CourseId { get; set; }*/
 
   public string ExamTitle { get; set; }
 

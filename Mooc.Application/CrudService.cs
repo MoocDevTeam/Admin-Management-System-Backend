@@ -89,3 +89,4 @@ public abstract class CrudService<TEntity, TGetOutputDto, TGetListOutputDto, TKe
         await this.McDBContext.SaveChangesAsync();
     }
 }
+

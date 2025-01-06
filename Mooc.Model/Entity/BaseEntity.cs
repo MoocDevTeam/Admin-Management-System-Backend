@@ -14,9 +14,7 @@ public class BaseEntityWithAudit : BaseEntity
 {
     public long CreatedByUserId { get; set; }
     public long UpdatedByUserId { get; set; }
-    //public DateTime? CreatedAt { get; set; } 
+    // public DateTime CreatedAt { get; set; } should be added
     public DateTime UpdatedAt { get; set; }
-
-
 }
 

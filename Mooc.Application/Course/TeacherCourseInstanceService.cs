@@ -41,6 +41,7 @@ namespace Mooc.Application.Course
         }
 
         //update This is designed to change the autherization type for a teacher under a course instance 
+
         public override async Task<TeacherCourseInstanceReadDto> UpdateAsync(long id, TeacherCourseInstanceCreateOrUpdateDto input)
         {
             await ValidateTeacherCourseInstanceId(id);
@@ -73,6 +74,7 @@ namespace Mooc.Application.Course
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="EntityNotFoundException"></exception>
+
         //validate TeacherCourseInstanceId
         protected virtual async Task ValidateTeacherCourseInstanceId(long id)
         {
@@ -83,6 +85,7 @@ namespace Mooc.Application.Course
                 throw new EntityNotFoundException($"No course instance found with id {id}");
             }
         }
+
 
         // Method to validate Teacher existence and prevent duplicate assignment
         private async Task ValidateTeacherId(long teacherId, long courseInstanceId)
@@ -113,6 +116,7 @@ namespace Mooc.Application.Course
             }
         }
 
+
         public async Task<TeacherCourseInstanceReadDto> GetTeacherCourseInstanceById(long id)
         {
             await ValidateTeacherCourseInstanceId(id);
@@ -129,7 +133,6 @@ namespace Mooc.Application.Course
             return entity;
         }
 
-    
     }
 }
  

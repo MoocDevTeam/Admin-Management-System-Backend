@@ -274,7 +274,7 @@ public static class MoocDbContextModelCreatingExtensions
                 .IsRequired()
                 .HasDefaultValueSql("GETDATE()");
             b.Property(e => e.UpdatedAt)
-                .IsRequired(false)
+                .IsRequired()
                 .HasDefaultValueSql("GETDATE()");
 
             b.Property(e => e.UpdatedAt).ValueGeneratedOnUpdate();
@@ -469,11 +469,15 @@ public static class MoocDbContextModelCreatingExtensions
                 .OnDelete(DeleteBehavior.Cascade);
 
             //One to many: Sessions->Media
+            b.HasMany(x => x.Sessionmedia)
+                .WithOne(s => s.Session)
+                .HasForeignKey(s => s.SessionId)
+                .OnDelete(DeleteBehavior.Cascade);
+          
             //b.HasMany(x => x.Sessionmedia)
             //    .WithOne(s => s.Session)
             //    .HasForeignKey(s => s.SessionId)
             //    .OnDelete(DeleteBehavior.Cascade);
-
         });
     }
 
@@ -495,7 +499,7 @@ public static class MoocDbContextModelCreatingExtensions
                 .IsRequired()
                 .HasDefaultValueSql("GETDATE()");
             b.Property(e => e.UpdatedAt)
-                .IsRequired(false)
+                .IsRequired()
                 .HasDefaultValueSql("GETDATE()");
 
             b.Property(e => e.UpdatedAt).ValueGeneratedOnUpdate();
@@ -511,16 +515,15 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasForeignKey(x => x.UpdatedByUserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            b.HasOne<Teacher>(x => x.Teacher)
+                .WithMany()
+                .HasForeignKey(x => x.TeacherId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-                b.HasOne<Teacher>(x => x.Teacher)
-                    .WithMany()
-                    .HasForeignKey(x => x.TeacherId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                b.HasOne<CourseInstance>(x => x.CourseInstance)
-                    .WithMany(x => x.TeacherCourseInstances)
-                    .HasForeignKey(x => x.CourseInstanceId)
-                    .OnDelete(DeleteBehavior.Cascade);
+            b.HasOne<CourseInstance>(x => x.CourseInstance)
+                .WithMany(x => x.TeacherCourseInstances)
+                .HasForeignKey(x => x.CourseInstanceId)
+                .OnDelete(DeleteBehavior.Cascade);
             });
     }
 

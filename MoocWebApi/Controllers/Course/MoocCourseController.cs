@@ -46,5 +46,21 @@ namespace MoocWebApi.Controllers.Course
             var courses = await _courseService.GetAllAsync();
             return courses;
         }
+
+
+        [HttpGet("{courseId}")]
+        public async Task<List<CourseInstanceDto>> GetCourseInstancesByCourseIdAsync(long courseId)
+        {
+            var courseInstances = await _courseService.GetCourseInstancesByCourseIdAsync(courseId);
+            return courseInstances;
+        }
+
+        [HttpGet]
+        public async Task<PagedResultDto<CourseDto>> GetByPageAsync([FromQuery] FilterPagedResultRequestDto input)
+        {
+            var pagedResult = await _courseService.GetListAsync(input);
+            return pagedResult;
+        }
+
     }
 }

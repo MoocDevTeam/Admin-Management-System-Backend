@@ -35,7 +35,7 @@ namespace Mooc.Application.Course
         public override async Task<CourseDto> CreateAsync(CreateCourseDto input)
         {
 
-            var courseDto = await base.CreateAsync(input); 
+            var courseDto = await base.CreateAsync(input);
             return courseDto;
         }
 
@@ -85,6 +85,24 @@ namespace Mooc.Application.Course
             return await this.McDBContext.MoocCourses.AnyAsync(c => c.Title == title);
         }
 
+        public async Task<List<CourseInstanceDto>> GetCourseInstancesByCourseIdAsync(long courseId)
+        {
+            // Assuming you have a DbContext called _dbContext
+            var courseInstances = await this.McDBContext.CourseInstances
+                .Where(ci => ci.MoocCourseId == courseId) // Assuming CourseId is the foreign key
+                .Select(ci => new CourseInstanceDto
+                {
+                    // Map properties from CourseInstance to CourseInstanceDto
+                    Id = ci.Id,
+                    // ... other properties
+                })
+                .ToListAsync();
+            return courseInstances;
+        }
+        public async Task<PagedResultDto<CourseDto>> GetListAsync(FilterPagedResultRequestDto input)
+        {
+            return await base.GetListAsync(input);
+        }
 
     }
 }

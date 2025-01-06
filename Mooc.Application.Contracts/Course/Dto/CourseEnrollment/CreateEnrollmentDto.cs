@@ -2,7 +2,6 @@
 
 public class CreateEnrollmentDto:BaseEntityDto
 {
-    [ForeignKey("CourseInstance")]
     public long CourseInstanceId { get; set; }
 
     public EnrollmentStatus EnrollmentStatus { get; set; }

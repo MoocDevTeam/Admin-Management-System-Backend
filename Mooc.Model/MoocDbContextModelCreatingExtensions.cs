@@ -474,7 +474,7 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasForeignKey(s => s.SessionId)
                 .OnDelete(DeleteBehavior.Cascade);
           
-            //b.HasMany(x => x.Sessionmedia)
+            // b.HasMany(x => x.Sessionmedia)
             //    .WithOne(s => s.Session)
             //    .HasForeignKey(s => s.SessionId)
             //    .OnDelete(DeleteBehavior.Cascade);

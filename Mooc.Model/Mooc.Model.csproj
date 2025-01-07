@@ -23,6 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AWSSDK.S3" Version="3.7.411" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

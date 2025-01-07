@@ -214,8 +214,8 @@ namespace Mooc.Application.Course
         //TeacherCourseInstance Data seeding
         private static List<TeacherCourseInstance> teacherCourseInstances = new List<TeacherCourseInstance>()
         {    
-            new TeacherCourseInstance() { Id = 1, PermissionType = TeacherCourseInstancePermissionType.CanEdit, CourseInstanceId = 1, TeacherId = 1, CreatedAt = DateTime.Now, CreatedByUserId= 1, UpdatedByUserId= 1 },
-            new TeacherCourseInstance() { Id = 2, PermissionType = TeacherCourseInstancePermissionType.NoAutherization, CourseInstanceId = 1, TeacherId = 2, CreatedAt = DateTime.Now, CreatedByUserId= 1, UpdatedByUserId= 1}
+            new TeacherCourseInstance() { Id = 1, PermissionType = TeacherCourseInstancePermissionType.CanEdit, CourseInstanceId = 1, TeacherId = 1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now, CreatedByUserId= 1, UpdatedByUserId= 1 },
+            new TeacherCourseInstance() { Id = 2, PermissionType = TeacherCourseInstancePermissionType.NoAutherization, CourseInstanceId = 1, TeacherId = 2, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now, CreatedByUserId= 1, UpdatedByUserId= 1}
         };
 
         private List<Session> sessions = new List<Session>()

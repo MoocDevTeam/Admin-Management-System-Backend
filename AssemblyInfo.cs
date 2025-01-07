@@ -6,8 +6,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright © Your Company 2024")]
 
 
-[assembly: AssemblyVersion("1.0.0.42")]
-[assembly: AssemblyFileVersion("1.0.0.42")]
+[assembly: AssemblyVersion("1.0.0.43")]
+[assembly: AssemblyFileVersion("1.0.0.43")]
 
 
 

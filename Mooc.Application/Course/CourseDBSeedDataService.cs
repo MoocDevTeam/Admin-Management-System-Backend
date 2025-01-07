@@ -214,10 +214,11 @@ namespace Mooc.Application.Course
         //TeacherCourseInstance Data seeding
         private static List<TeacherCourseInstance> teacherCourseInstances = new List<TeacherCourseInstance>()
         {    
-            new TeacherCourseInstance() { Id = 1, PermissionType = TeacherCourseInstancePermissionType.CanEdit, CourseInstanceId = 1, TeacherId = 1, CreatedAt = DateTime.Now, CreatedByUserId= 1, UpdatedByUserId= 1 },
-            new TeacherCourseInstance() { Id = 2, PermissionType = TeacherCourseInstancePermissionType.NoAutherization, CourseInstanceId = 1, TeacherId = 2, CreatedAt = DateTime.Now, CreatedByUserId= 1, UpdatedByUserId= 1}
+            new TeacherCourseInstance() { Id = 1, PermissionType = TeacherCourseInstancePermissionType.CanEdit, CourseInstanceId = 1, TeacherId = 1, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now, CreatedByUserId= 1, UpdatedByUserId= 1 },
+            new TeacherCourseInstance() { Id = 2, PermissionType = TeacherCourseInstancePermissionType.NoAutherization, CourseInstanceId = 1, TeacherId = 2, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now,CreatedByUserId= 1, UpdatedByUserId= 1}
         };
 
+        //Session Data seeding
         private List<Session> sessions = new List<Session>()
         {
             new Session(){
@@ -299,6 +300,103 @@ namespace Mooc.Application.Course
             }
         };
 
+        //Media Data seeding
+        private List<Media> mediaData = new List<Media>()
+        {
+            // SessionId=1,have two Video files
+            new Media()
+            {
+                Id = 1,
+                SessionId = 1,
+                FileType = MediaFileType.Video,
+                FileName = "Introduction_to_.Net_video1.mp4",
+                FilePath = "/files/sessions/1/Introduction_to_.Net_video1.mp4",
+                ThumbnailPath = "/thumbnails/sessions/1/Introduction_to_.Net_video1.png",
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now.AddMinutes(1),
+                ApprovalStatus = MediaApprovalStatus.Approved
+            },
+            new Media()
+            {
+                Id = 2,
+                SessionId = 1,
+                FileType = MediaFileType.Video,
+                FileName = "Introduction_to_.Net_video2.mp4",
+                FilePath = "/files/sessions/1/Introduction_to_.Net_video2.mp4",
+                ThumbnailPath = "/thumbnails/sessions/1/Introduction_to_.Net_video2.png",
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now.AddMinutes(1),
+                ApprovalStatus = MediaApprovalStatus.Pending
+            },
+
+            // SessionId=2,have two pdf files
+            new Media()
+            {
+                Id = 3,
+                SessionId = 2,
+                FileType = MediaFileType.Pdf,
+                FileName = "Setting_up_the_Development_Environment_doc1.pdf",
+                FilePath = "/files/sessions/2/Setting_up_the_Development_Environment_doc1.pdf",
+                ThumbnailPath = "/thumbnails/sessions/2/Setting_up_the_Development_Environment_doc1.png",
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now.AddMinutes(1),
+                ApprovalStatus = MediaApprovalStatus.Approved
+            },
+            new Media()
+            {
+                Id = 4,
+                SessionId = 2,
+                FileType = MediaFileType.Pdf,
+                FileName = "Setting_up_the_Development_Environment_doc2.pdf",
+                FilePath = "/files/sessions/2/Setting_up_the_Development_Environment_doc2.pdf",
+                ThumbnailPath = "/thumbnails/sessions/2/Setting_up_the_Development_Environment_doc2.png",
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now.AddMinutes(1),
+                ApprovalStatus = MediaApprovalStatus.Pending
+            },
+
+            // SessionId=3, none meida files
+
+            // SessionId=4, one vedio and one pdf file
+            new Media()
+            {
+                Id = 5,
+                SessionId = 4,
+                FileType = MediaFileType.Video,
+                FileName = "Basic_Syntax_and_Data_Types_video.mp4",
+                FilePath = "/files/sessions/4/Basic_Syntax_and_Data_Types_video.mp4",
+                ThumbnailPath = "/thumbnails/sessions/4/Basic_Syntax_and_Data_Types_video.png",
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now.AddMinutes(1),
+                ApprovalStatus = MediaApprovalStatus.Pending
+            },
+            new Media()
+            {
+                Id = 6,
+                SessionId = 4,
+                FileType = MediaFileType.Pdf,
+                FileName = "Basic_Syntax_and_Data_Types_doc.pdf",
+                FilePath = "/files/sessions/4/Basic_Syntax_and_Data_Types_doc.pdf",
+                ThumbnailPath = "/thumbnails/sessions/4/Basic_Syntax_and_Data_Types_doc.png",
+                CreatedByUserId = 1,
+                UpdatedByUserId = 1,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now.AddMinutes(1),
+                ApprovalStatus = MediaApprovalStatus.Pending
+            }
+        };
+
+
         public async Task<bool> InitAsync()
         {
             if (!_dbContext.Category.Any())
@@ -342,7 +440,13 @@ namespace Mooc.Application.Course
                 await this._dbContext.TeacherCourseInstances.AddRangeAsync(teacherCourseInstances);
                 await this._dbContext.SaveChangesAsync();
             }
-   
+
+            if (!_dbContext.Media.Any())
+            {
+                await this._dbContext.Media.AddRangeAsync(mediaData);
+                await this._dbContext.SaveChangesAsync();
+            }
+
             return true;
         }
     }

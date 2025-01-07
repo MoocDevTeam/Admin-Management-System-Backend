@@ -17,4 +17,3 @@ public class BaseEntityWithAudit : BaseEntity
     // public DateTime CreatedAt { get; set; } should be added
     public DateTime UpdatedAt { get; set; }
 }
-

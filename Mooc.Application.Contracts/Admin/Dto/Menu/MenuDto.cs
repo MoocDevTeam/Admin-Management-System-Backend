@@ -12,10 +12,10 @@ namespace Mooc.Application.Contracts.Admin
         public int OrderNum { get; set; } = 0;
         public string? Route { get; set; }
         public string? ComponentPath { get; set; }
-        public virtual ICollection<Menu> Children { get; set; } = new List<Menu>();
+        public virtual ICollection<MenuDto> Children { get; set; } = new List<MenuDto>();
         public long? ParentId { get; set; }
-        public Menu? Parent { get; set; }
 
+        public Menu? Parent { get; set; }
         public virtual ICollection<RoleMenu> RoleMenus { get; set; } = new List<RoleMenu>();
     }
 }

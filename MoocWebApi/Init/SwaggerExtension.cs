@@ -1,5 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
 using Mooc.Application;
+using MoocWebApi.Filters;
 using System.Reflection;
 
 namespace MoocWebApi.Init;
@@ -26,6 +27,7 @@ public static class SwaggerExtension
                     Description = "Mooc WebApi The backend server provides data",
                     Contact = new OpenApiContact { Name = "Mooc Team", Url = new Uri("http://www.google.com") }
                 });
+                optinos.OperationFilter<FileUploadOperationFilter>();
 
             });
 

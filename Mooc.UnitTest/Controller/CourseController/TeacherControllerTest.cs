@@ -1,3 +1,4 @@
+
 ﻿using Moq;
 using NUnit.Framework;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,11 @@ using Mooc.Application.Contracts.Course;
 using MoocWebApi.Controllers.Course;
 using Mooc.Application.Contracts.Course.Dto;
 using Mooc.Application.Contracts.Dto;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
 
 namespace Mooc.UnitTest.Controller.CourseController
 {

@@ -418,66 +418,60 @@ public static class MoocDbContextModelCreatingExtensions
     {
         modelBuilder.Entity<Session>(b =>
         {
-            b.ToTable("Session");  // Set the table name as "Session"
+            b.ToTable("Session");  // Set the table name
+            b.HasKey(e => e.Id);  // primary key
+            b.Property(x => x.Id).ValueGeneratedNever();
 
-            b.HasKey(e => e.Id);  // Set the primary key to be the Id field
-
-            // Configure field properties
+            // Properties
             b.Property(x => x.Title)
-                .IsRequired()  // Mark Title as required (not nullable)
-                .HasMaxLength(SessionEntityConsts.MaxTitleLength);  // Set the maximum length to 50
+                .IsRequired() 
+                .HasMaxLength(SessionEntityConsts.MaxTitleLength); // 50
 
             b.Property(x => x.Description)
                 .IsRequired()
-                .HasMaxLength(SessionEntityConsts.MaxDescriptionLength);  // Set the maximum length to 255
+                .HasMaxLength(SessionEntityConsts.MaxDescriptionLength);
 
             b.Property(x => x.Order)
-                .IsRequired();  // Mark Order as required (not nullable)
+                .IsRequired();
 
             b.Property(x => x.CourseInstanceId)
-              .IsRequired();  // Mark CourseInstanceId as required (not nullable)
+              .IsRequired();
 
             b.Property(x => x.CreatedByUserId)
-                .IsRequired();  // Mark CreatedByUserId as required (not nullable)
+                .IsRequired();  
 
             b.Property(x => x.UpdatedByUserId)
-                .IsRequired(false);  // Mark UpdatedByUserId as optional (nullable)
+                .IsRequired(false);
 
             b.Property(x => x.CreatedAt)
-                .IsRequired()  // Mark CreatedAt as required (not nullable)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");  // Set the default value to current timestamp
+                .IsRequired() 
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             b.Property(x => x.UpdatedAt)
-                .IsRequired()  // Mark UpdatedAt as required
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");  // Set the default value to current timestamp
+                .IsRequired()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            //Many to one: Sessions->CreatedByUserId
+            //Relationships
             b.HasOne<User>(x => x.CreatedByUser)
                 .WithMany()
                 .HasForeignKey(x => x.CreatedByUserId)
                 .OnDelete(DeleteBehavior.Cascade);
-            //Many to one: Sessions->CreatedByUserId
+
             b.HasOne<User>(x => x.UpdatedByUser)
                 .WithMany()
                 .HasForeignKey(x => x.UpdatedByUserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            //Many to one: Sessions->CourseInstanceId
-            b.HasOne( x => x.CourseInstance)
+            b.HasOne<CourseInstance>( x => x.CourseInstance)
                 .WithMany(s => s.Sessions)
                 .HasForeignKey(s => s.CourseInstanceId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            //One to many: Sessions->Media
-            b.HasMany(x => x.Sessionmedia)
+            b.HasMany<Media>(x => x.Sessionmedia)
                 .WithOne(s => s.Session)
                 .HasForeignKey(s => s.SessionId)
                 .OnDelete(DeleteBehavior.Cascade);
-          
-            // b.HasMany(x => x.Sessionmedia)
-            //    .WithOne(s => s.Session)
-            //    .HasForeignKey(s => s.SessionId)
-            //    .OnDelete(DeleteBehavior.Cascade);
+
         });
     }
 
@@ -538,41 +532,46 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(e => e.Id).ValueGeneratedNever();
 
             // Properties
-            b.Property(cs => cs.UploaderId).IsRequired();
-            b.Property(cs => cs.SessionId).IsRequired();
             b.Property(cs => cs.FileType)
                 .IsRequired()
                 .HasConversion(
                     v => v.ToString(),
-                    v => (FileTypeEnum)Enum.Parse(typeof(FileTypeEnum), v)
+                    v => (MediaFileType)Enum.Parse(typeof(MediaFileType), v)
                 );
             b.Property(cs => cs.FileName)
                 .IsRequired()
-                .HasMaxLength(255)
-                .HasColumnType("varchar(255)");
+                .HasMaxLength(MediaEntityConsts.MaxFileNameLength); //255
             b.Property(cs => cs.FilePath)
-                .IsRequired()
-                .HasColumnType("text");
+                .IsRequired();
             b.Property(cs => cs.ThumbnailPath)
-                .IsRequired()
-                .HasColumnType("text");
+                .IsRequired();
             b.Property(cs => cs.CreatedAt)
                 .IsRequired()
                 .HasDefaultValueSql("GETDATE()");
             b.Property(cs => cs.UpdatedAt)
-                .IsRequired(false)
+                .IsRequired()
                 .HasDefaultValueSql("GETDATE()");
             b.Property(cs => cs.ApprovalStatus)
                 .IsRequired()
                 .HasConversion(
                     v => v.ToString(),
-                    v => (ApprovalStatusEnum)Enum.Parse(typeof(ApprovalStatusEnum), v)
+                    v => (MediaApprovalStatus)Enum.Parse(typeof(MediaApprovalStatus), v)
                 );
+            b.Property(cs => cs.SessionId).IsRequired();
+            b.Property(x => x.CreatedByUserId)
+                .IsRequired();
+            b.Property(x => x.UpdatedByUserId)
+                .IsRequired(false);
 
             // Relationships
-            b.HasOne<User>(x => x.Uploader)
+            b.HasOne<User>(x => x.CreatedByUser)
                 .WithMany()
-                .HasForeignKey(x => x.UploaderId)
+                .HasForeignKey(x => x.CreatedByUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        
+            b.HasOne<User>(x => x.UpdatedByUser)
+                .WithMany()
+                .HasForeignKey(x => x.UpdatedByUserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             b.HasOne<Session>(x => x.Session)

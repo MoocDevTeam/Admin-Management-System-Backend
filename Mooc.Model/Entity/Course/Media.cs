@@ -6,51 +6,24 @@ namespace Mooc.Model.Entity
 {
     public class Media : BaseEntity
     {
-        [Required]
-        public long UploaderId { get; set; }
-
-        public User Uploader { get; set; }
-
-        [Required]
-        public long SessionId { get; set; }  
-
-        public Session Session { get; set; }
-
-        [Required]
-        public FileTypeEnum FileType { get; set; }
-
-        [Required]
-        [MaxLength(255)]
-        [Column(TypeName = "varchar(255)")]
+        //Basic fields
+        public MediaFileType FileType { get; set; }
         public string FileName { get; set; }
-
-        [Required]
-        [Column(TypeName = "text")]
         public string FilePath { get; set; }
-
-        [Required]
-        [Column(TypeName = "text")]
         public string ThumbnailPath { get; set; }
+        public MediaApprovalStatus ApprovalStatus { get; set; } = MediaApprovalStatus.Pending;
+        //public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
-        //[Required]
-        //public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        //Foreign key fields
+        public long SessionId { get; set; }
+        public long CreatedByUserId { get; set; }
+        public long? UpdatedByUserId { get; set; }
 
-        public DateTime? UpdatedAt { get; set; }
+        // Navigation user ((many-to-one))
+        public virtual User CreatedByUser { get; set; }
+        public virtual User UpdatedByUser { get; set; }
+        public virtual Session Session { get; set; }
 
-        [Required]
-        public ApprovalStatusEnum ApprovalStatus { get; set; } = ApprovalStatusEnum.Pending;
-    }
-
-    public enum FileTypeEnum
-    {
-        Video,
-        Audio
-    }
-
-    public enum ApprovalStatusEnum
-    {
-        Pending,
-        Approved,
-        Rejected
     }
 }

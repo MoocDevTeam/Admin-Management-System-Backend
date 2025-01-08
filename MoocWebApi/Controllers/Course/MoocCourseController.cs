@@ -4,7 +4,7 @@ using Mooc.Application.Contracts.Course;
 
 namespace MoocWebApi.Controllers.Course
 {
-    [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.BaseService))]
+    [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.CourseService))]
     // [Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]

@@ -374,3 +374,6 @@ MoocWebApi/AppData/*
 # Ignore database file
 MoocWebApi/AppData/moocdb.db
 Mooc.Model/Migrations/MoocDBContextModelSnapshot.cs
+
+# Ignore .env
+.env

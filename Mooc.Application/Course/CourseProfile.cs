@@ -59,7 +59,8 @@ public class CourseProfile : Profile
         CreateMap<Session, ReadSessionDto>();
         
         // CourseInstance Mapping
-        CreateMap<CourseInstance, CourseInstanceDto>();        
+        CreateMap<CourseInstance, CourseInstanceDto>();
+        CreateMap<CreateCourseInstanceDto, CourseInstance>();
         CreateMap<UpdateCourseInstanceDto, CourseInstance>();
     }
 }

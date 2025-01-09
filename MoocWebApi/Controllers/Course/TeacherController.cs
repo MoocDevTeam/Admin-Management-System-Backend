@@ -19,15 +19,14 @@ namespace MoocWebApi.Controllers.Course
         [HttpGet]
         public async Task<PagedResultDto<TeacherReadDto>> GetByPageAsync([FromQuery] FilterPagedResultRequestDto input)
         {
+            // Validate input parameters (PageIndex, PageSize)
+            if (input.PageIndex <= 0 || input.PageSize <= 0)
+            {
+                // Return an empty PagedResultDto if input is invalid
+                return new PagedResultDto<TeacherReadDto> { Items = new List<TeacherReadDto>(), Total = 0 };
+            }
+            // Fetch paged result from service layer
             var pagedResult = await _teacherService.GetListAsync(input);
-            //if (pagedResult.Items.Count > 0)
-            //{
-            //    foreach (var item in pagedResult.Items)
-            //    {
-            //        item.CreatedByUser = "";
-            //        item.UpdatedByUser = "";
-            //    }
-            //}
             return pagedResult;
         }
 

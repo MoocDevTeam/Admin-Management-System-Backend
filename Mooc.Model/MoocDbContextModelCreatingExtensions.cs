@@ -606,21 +606,12 @@ public static class MoocDbContextModelCreatingExtensions
 
             b.HasKey(cq => cq.Id);
             b.Property(cq => cq.Id).ValueGeneratedNever();
-            //b.HasOne<Course>()
-            //    .WithMany()
-            //    .HasForeignKey(cq => cq.CourseId);
-
             b.HasOne(cq => cq.CreatedByUser)
-                //.WithMany(u => u.CreatedChoiceQuestions)
                 .WithMany()
                 .HasForeignKey(o => o.CreatedByUserId);
 
-            b.HasOne<User>()
-                //b.HasMany<User>()
-                //.WithMany(u => u.UpdatedChoiceQuestions)
+            b.HasOne(cq => cq.UpdatedByUser)
                 .WithMany()
-                //.UsingEntity(j =>
-                //    j.ToTable("ChoiceQuestionUpdatedByUsers"));
                 .HasForeignKey(cq => cq.UpdatedByUserId);
 
             b.Property(cq => cq.CreatedAt)
@@ -646,6 +637,9 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasMany<Option>()
                  .WithOne(o => o.ChoiceQuestion)
                  .HasForeignKey(o => o.ChoiceQuestionId);
+            b.HasOne(cq => cq.CourseInstance)
+                   .WithMany()
+                   .HasForeignKey(cq => cq.CourseId);
         });
     }
 
@@ -662,16 +656,11 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasForeignKey(o => o.ChoiceQuestionId);
 
             b.HasOne(o => o.CreatedByUser)
-                //.WithMany(u => u.CreatedChoiceQuestions)
                 .WithMany()
                 .HasForeignKey(o => o.CreatedByUserId);
 
-            b.HasOne<User>()
-                //b.HasMany<User>()
-                //.WithMany(u => u.UpdatedChoiceQuestions)
+            b.HasOne(o => o.UpdatedByUser)
                 .WithMany()
-                //.UsingEntity(j =>
-                //    j.ToTable("OptionUpdatedByUsers"));
                 .HasForeignKey(o => o.UpdatedByUserId);
 
             b.Property(o => o.CreatedAt)
@@ -680,9 +669,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(o => o.UpdatedAt)
                 .IsRequired()
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
-            /*            b.Property(o => o.Field)
-                            .IsRequired()
-                            .HasDefaultValueSql("CURRENT_TIMESTAMP)");*/
+
             b.Property(o => o.OptionOrder)
                 .IsRequired()
                 .HasMaxLength(OptionEntityConsts.MaxOrderLength);
@@ -708,21 +695,13 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasKey(jq => jq.Id);
             b.Property(jq => jq.Id)
                 .ValueGeneratedNever();
-            //b.HasOne<Course>()
-            //    .WithMany()
-            //    .HasForeignKey(jq => jq.CourseId);
 
             b.HasOne(jq => jq.CreatedByUser)
-                //.WithMany(u => u.CreatedChoiceQuestions)
                 .WithMany()
                 .HasForeignKey(jq => jq.CreatedByUserId);
 
-            b.HasOne<User>()
-                //b.HasMany<User>()
-                //.WithMany(u => u.UpdatedChoiceQuestions)
+            b.HasOne(jq => jq.UpdatedByUser)
                 .WithMany()
-                //.UsingEntity(j =>
-                //    j.ToTable("JudgementQuestionUpdatedByUsers"));
                 .HasForeignKey(jq => jq.UpdatedByUserId);
 
             b.Property(jq => jq.CreatedAt)
@@ -745,6 +724,9 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasOne(jq => jq.QuestionType)
                 .WithMany(qt => qt.JudgementQuestions)
                 .HasForeignKey(cq => cq.QuestionTypeId);
+            b.HasOne(jq => jq.CourseInstance)
+             .WithMany()
+             .HasForeignKey(jq => jq.CourseId);
         });
     }
 
@@ -759,23 +741,13 @@ public static class MoocDbContextModelCreatingExtensions
             });
 
             b.HasKey(saq => saq.Id);
-            b.Property(saq => saq.Id)
-                .ValueGeneratedNever();
-            //b.HasOne<Course>()
-            //    .WithMany()
-            //    .HasForeignKey(saq => saq.CourseId);
-
+            b.Property(saq => saq.Id).ValueGeneratedNever();
             b.HasOne(saq => saq.CreatedByUser)
-                 //.WithMany(u => u.CreatedChoiceQuestions)
                  .WithMany()
                  .HasForeignKey(saq => saq.CreatedByUserId);
 
-            b.HasOne<User>()
-                //b.HasMany<User>()
-                //.WithMany(u => u.UpdatedChoiceQuestions)
+            b.HasOne(saq => saq.UpdatedByUser)
                 .WithMany()
-                //.UsingEntity(j =>
-                //    j.ToTable("ShortAnsQuestionUpdatedByUsers"));
                 .HasForeignKey(saq => saq.UpdatedByUserId);
 
             b.Property(saq => saq.CreatedAt)
@@ -798,6 +770,9 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasOne(saq => saq.QuestionType)
                 .WithMany(qt => qt.ShortAnsQuestions)
                 .HasForeignKey(saq => saq.QuestionTypeId);
+            b.HasOne(saq => saq.CourseInstance)
+                 .WithMany()
+                 .HasForeignKey(saq => saq.CourseId);
         });
     }
     private static void ConfigureQuestionType(ModelBuilder modelBuilder)
@@ -821,14 +796,13 @@ public static class MoocDbContextModelCreatingExtensions
             b.ToTable(TablePrefix + "Exam");
             b.HasKey(e => e.Id);
             b.Property(e => e.Id).ValueGeneratedNever();
-            /* b.HasOne<Course>()
-                   .WithMany()
-                   .HasForeignKey(e => e.CourseId); */
+            b.HasOne(e=>e.CourseInstance)
+                .WithMany()
+                .HasForeignKey(e => e.CourseId);
             b.HasOne(e => e.CreatedByUser)
                 .WithMany()
                 .HasForeignKey(e => e.CreatedByUserId);
-            b.HasOne<User>()
-            // HasMany wait future needs
+            b.HasOne(e => e.UpdatedByUser)
                 .WithMany()
                 .HasForeignKey(e => e.UpdatedByUserId);
             b.Property(e => e.CreatedAt)
@@ -870,7 +844,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasOne(eq => eq.Exam)
                 .WithMany(e => e.ExamQuestion)
                 .HasForeignKey(eq => eq.ExamId);
-           // we can choose either have 3 columns (ChoiceQuestionId, JudgementQuestionId, ShortAnsQuestionId) or have 1 column (questionId)
+          
             b.HasOne(m => m.ChoiceQuestion)
                 .WithMany()
                 .HasForeignKey(eq => eq.ChoiceQuestionId);
@@ -880,17 +854,13 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasOne(m => m.ShortAnsQuestion)
                 .WithMany()
                 .HasForeignKey(eq => eq.ShortAnsQuestionId);
-            // 3 columns (ChoiceQuestionId, JudgementQuestionId, ShortAnsQuestionId) like above commented
-/*            b.Property(x => x.QuestionType)
-                .IsRequired();*/
-            // 1 column  (questionId) when use add controller, frontend need to send / backend controller need to accept 1 extra parameter QuestionType
+
             b.HasOne(eq => eq.CreatedByUser)
                 .WithMany()
                 .HasForeignKey(eq => eq.CreatedByUserId);
-            b.HasOne<User>()
-            // HasMany wait future needs
+            b.HasOne(e => e.UpdatedByUser)
                 .WithMany()
-                .HasForeignKey(eq => eq.UpdatedByUserId);
+                .HasForeignKey(e => e.UpdatedByUserId);
             b.Property(eq => eq.Marks)
                 .IsRequired()
                 .HasMaxLength(ExamQuestionEntityConsts.MaxMarksLength);

@@ -3,6 +3,10 @@ using Mooc.Model.Entity.ExamManagement;
 namespace Mooc.Model.Entity;
 public class ExamPublish : BaseExam
 {
+  public long? CreatedByUserId { get; set; }
+
+  public long? UpdatedByUserId { get; set; }
+
   public long ExamId { get; set; }
 
 /*  public DateTime PublishedAt { get; set; }

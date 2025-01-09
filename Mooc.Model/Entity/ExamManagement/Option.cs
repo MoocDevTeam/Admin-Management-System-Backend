@@ -18,12 +18,12 @@ public class Option : BaseEntity
 
     public long? UpdatedByUserId { get; set; }
 
-    public virtual ICollection<User>? UpdatedByUsers { get; set; }
+    public virtual User? UpdatedByUser { get; set; }
 
     public DateTime UpdatedAt { get; set; }
 
     public string? ErrorExplanation { get; set; }
 
-/*    public DateTime Field {  get; set; }*/
+    /*    public DateTime Field {  get; set; }*/
 
 }

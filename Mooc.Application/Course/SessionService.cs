@@ -3,8 +3,7 @@ using Mooc.Application.Contracts.Course.Dto;
 
 namespace Mooc.Application.Course
 {
-  public class SessionService : CrudService<Session, ReadSessionDto, ReadSessionDto, long, FilterPagedResultRequestDto, CreateOrUpdateSessionDto, CreateOrUpdateSessionDto>,
-ISessionService, ITransientDependency
+  public class SessionService : CrudService<Session, ReadSessionDto, ReadSessionDto, long, FilterPagedResultRequestDto, CreateOrUpdateSessionDto, CreateOrUpdateSessionDto>,ISessionService, ITransientDependency
   {
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly IMapper _mapper;
@@ -78,6 +77,12 @@ ISessionService, ITransientDependency
     {
       await ValidateSessionIdAsync(id);
       return await base.UpdateAsync(id, input);
+    }
+
+    //Get by page
+    public async Task<PagedResultDto<ReadSessionDto>> GetListAsync(FilterPagedResultRequestDto input)
+    {
+      return await base.GetListAsync(input);
     }
 
     //GetSessionById

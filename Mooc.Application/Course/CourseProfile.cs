@@ -57,7 +57,18 @@ public class CourseProfile : Profile
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
         //  Database  -> Backend -> Frontend
         CreateMap<Session, ReadSessionDto>();
-        
+
+        //Media Mapping
+        // Frontend -> Backend -> Database 
+        CreateMap<CreateMediaDto, Media>()
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
+        CreateMap<UpdateMediaDto, Media>()
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
+        //  Database  -> Backend -> Frontend
+        CreateMap<Media, ReadMediaDto>();
+
         // CourseInstance Mapping
         CreateMap<CourseInstance, CourseInstanceDto>();
         CreateMap<CreateCourseInstanceDto, CourseInstance>();

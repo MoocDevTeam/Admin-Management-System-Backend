@@ -4,7 +4,6 @@
 public class BaseEntity
 {
     public long Id { get; set; }
-    public DateTime? CreatedAt { get; set; } //should be deleted
 }
 
 /// <summary>
@@ -12,8 +11,8 @@ public class BaseEntity
 /// </summary>
 public class BaseEntityWithAudit : BaseEntity
 {
-    public long CreatedByUserId { get; set; }
-    public long UpdatedByUserId { get; set; }
-    // public DateTime CreatedAt { get; set; } should be added
-    public DateTime UpdatedAt { get; set; }
+    public long? CreatedByUserId { get; set; }
+    public long? UpdatedByUserId { get; set; }
+     public DateTime? CreatedAt { get; set; } 
+    public DateTime? UpdatedAt { get; set; }
 }

@@ -4,6 +4,7 @@ using Mooc.Shared.Entity.Admin;
 using Mooc.Shared.Entity.ExamManagement;
 using Mooc.Shared.Entity.Course;
 using Mooc.Model.Entity;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 
 
@@ -926,6 +927,35 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(ep => ep.CloseAt)
                .HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
+    }
+
+    /// <summary>
+    /// configuration for audit properties
+    /// </summary>
+    /// <typeparam name="T">your model<Teacher></typeparam>
+    /// <param name="b">The delegate parameter passed to Entity<Teacher></param>
+    public static void ConfigureAudit<T>(this EntityTypeBuilder<T> b)
+        where T : class
+    {
+        if (b.Metadata.ClrType.IsSubclassOf(typeof(BaseEntityWithAudit)))
+        {
+            b.Property(nameof(BaseEntityWithAudit.CreatedByUserId)).
+                IsRequired(true).
+                HasColumnName(nameof(BaseEntityWithAudit.CreatedByUserId));
+
+            b.Property(nameof(BaseEntityWithAudit.CreatedAt)).
+                IsRequired(true).
+                HasColumnName(nameof(BaseEntityWithAudit.CreatedAt));
+
+
+            b.Property(nameof(BaseEntityWithAudit.UpdatedByUserId)).
+               IsRequired(false).
+               HasColumnName(nameof(BaseEntityWithAudit.UpdatedByUserId));
+
+            b.Property(nameof(BaseEntityWithAudit.UpdatedAt)).
+                IsRequired(false).
+                HasColumnName(nameof(BaseEntityWithAudit.UpdatedAt));
+        }
     }
 
 

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Mooc.Application.Contracts.Course.Dto;
+using Mooc.Shared.Enum;
 
 namespace Mooc.Application.Course
 {
@@ -50,7 +51,7 @@ namespace Mooc.Application.Course
       }
     }
 
-    //Adds media-related information (MediaCount and HasMedia) to the given session DTO
+    //Adds media info to the given session 
     private async Task AddMediaInfoToSessionDto(ReadSessionDto sessionMeidaDto, long sessionId)
     {
       // Query the number of Media associated with the session
@@ -58,10 +59,38 @@ namespace Mooc.Application.Course
           .Where(m => m.SessionId == sessionId)
           .CountAsync();
 
-      bool hasMedia = mediaCount > 0;
+      var pendingCount = await this.McDBContext.Media
+          .Where(m => m.SessionId == sessionId && m.ApprovalStatus == MediaApprovalStatus.Pending)
+          .CountAsync();
 
+      var approvedCount = await this.McDBContext.Media
+          .Where(m => m.SessionId == sessionId && m.ApprovalStatus == MediaApprovalStatus.Approved)
+          .CountAsync();
+
+      var rejectedCount = await this.McDBContext.Media
+          .Where(m => m.SessionId == sessionId && m.ApprovalStatus == MediaApprovalStatus.Rejected)
+          .CountAsync();
+
+      var mediaDetails = await this.McDBContext.Media
+          .Where(m => m.SessionId == sessionId)
+          .Select(m => new ReadMediaDto
+          {
+            Id = m.Id,
+            FileName = m.FileName,
+            FilePath = m.FilePath,
+            ThumbnailPath = m.ThumbnailPath,
+            ApprovalStatus = m.ApprovalStatus,
+            FileType = m.FileType,
+            SessionId = sessionId
+          })
+          .ToListAsync();
+
+      // Set the properties on the sessionDto
       sessionMeidaDto.MediaCount = mediaCount;
-      sessionMeidaDto.HasMedia = hasMedia;
+      sessionMeidaDto.PendingCount = pendingCount;
+      sessionMeidaDto.ApprovedCount = approvedCount;
+      sessionMeidaDto.RejectedCount = rejectedCount;
+      sessionMeidaDto.MediaFiles = mediaDetails;
     }
 
     //Create session
@@ -141,7 +170,6 @@ namespace Mooc.Application.Course
 
       return sessionsForCourseInstance;
     }
-
 
     // // Counts the existing sessions for the current CourseInstance and assigns an Order to the new session.
     // var order = await McDBContext.Session.CountAsync(x => x.CourseInstanceId == input.CourseInstanceId) + 1;

@@ -43,6 +43,19 @@ namespace MoocWebApi.Controllers.Course
         }
 
         /// <summary>
+        /// Get paginated session records
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <remarks>URL: GET api/Session/GetByPageAsync</remarks>
+        [HttpGet]
+        public async Task<PagedResultDto<ReadSessionDto>> GetByPageAsync([FromQuery] FilterPagedResultRequestDto input)
+        {
+            var pagedResult = await this._sessionService.GetListAsync(input);
+            return pagedResult;
+        }
+
+        /// <summary>
         /// Retrieves a session by its ID.
         /// </summary>
         /// <param name="id">The ID of the session to retrieve.</param>

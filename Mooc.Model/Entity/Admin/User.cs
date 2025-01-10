@@ -1,6 +1,6 @@
 namespace Mooc.Model.Entity;
 
-public class User : BaseEntity
+public class User : BaseEntityWithAudit
 {
     public string UserName { get; set; }
 

@@ -136,7 +136,16 @@ namespace MoocWebApi
                         });
                 });
 
+
+
                 var app = builder.Build();
+
+                if (app.Environment.IsDevelopment())
+                {
+                    // This middleware shows a *detailed* error page for any unhandled exceptions
+                    app.UseDeveloperExceptionPage();
+                }
+
 
                 app.UseCors(defaultPolicy);
                 app.UseMiddleware<ExceptionHandlingMiddleware>();

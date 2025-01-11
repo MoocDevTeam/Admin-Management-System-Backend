@@ -1,3 +1,5 @@
+using Mooc.Model.Entity;
+
 namespace Mooc.Application.Contracts.Course;
 
 public class CourseDto : BaseEntityDto
@@ -11,6 +13,10 @@ public class CourseDto : BaseEntityDto
     public long? CreatedByUserId { get; set; }
     public long? UpdatedByUserId { get; set; }
     public long? CategoryId { get; set; }
+
+    public string CategoryName { get; set; }
+    public virtual Category Category { get; set; }
+    public List<CourseInstanceDto> CourseInstances { get; set; }
 
 
 }

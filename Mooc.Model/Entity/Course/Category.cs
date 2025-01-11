@@ -1,4 +1,6 @@
-﻿namespace Mooc.Model.Entity;
+﻿using System.Text.Json.Serialization;
+
+namespace Mooc.Model.Entity;
 
 public class Category : BaseEntityWithAudit
 {
@@ -23,7 +25,8 @@ public class Category : BaseEntityWithAudit
     public virtual Category ParentCategory { get; set; }
 
     // Navigation for Courses (one-to-many)
-    public ICollection<MoocCourse> Courses { get; set; }= new List<MoocCourse>();
+    [JsonIgnore]
+    public ICollection<MoocCourse> Courses { get; set; } = new List<MoocCourse>();
 
 
 }

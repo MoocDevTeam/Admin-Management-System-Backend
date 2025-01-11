@@ -2,6 +2,7 @@
 {
     public class CourseInstance : BaseEntityWithAudit
     {
+        public string Description { get; set; }
         public long MoocCourseId { get; set; }
         public int TotalSessions { get; set; }
         public CourseInstanceStatus Status { get; set; }

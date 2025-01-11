@@ -34,8 +34,8 @@ namespace Mooc.Application.Course
 
         private List<CourseInstance> courseInstances = new List<CourseInstance>()
         {
-            new CourseInstance(){Id=1, MoocCourseId=1, TotalSessions=10, Status=CourseInstanceStatus.Open, Permission=CourseInstancePermission.Private, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(1), CreatedByUserId=1 ,UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
-            new CourseInstance(){Id=2, MoocCourseId=2, TotalSessions=20, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=1, Description="No.23 Fullstack", MoocCourseId=1, TotalSessions=10, Status=CourseInstanceStatus.Open, Permission=CourseInstancePermission.Private, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(1), CreatedByUserId=1 ,UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=2, Description="No.24 Fullstack", MoocCourseId=2, TotalSessions=20, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
         };
 
 
@@ -213,7 +213,7 @@ namespace Mooc.Application.Course
 
         //TeacherCourseInstance Data seeding
         private static List<TeacherCourseInstance> teacherCourseInstances = new List<TeacherCourseInstance>()
-        {    
+        {
             new TeacherCourseInstance() { Id = 1, PermissionType = TeacherCourseInstancePermissionType.CanEdit, CourseInstanceId = 1, TeacherId = 1, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now, CreatedByUserId= 1, UpdatedByUserId= 1 },
             new TeacherCourseInstance() { Id = 2, PermissionType = TeacherCourseInstancePermissionType.NoAutherization, CourseInstanceId = 1, TeacherId = 2, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now,CreatedByUserId= 1, UpdatedByUserId= 1}
         };
@@ -422,7 +422,7 @@ namespace Mooc.Application.Course
                 await this._dbContext.Enrollment.AddRangeAsync(enrollments);
                 await this._dbContext.SaveChangesAsync();
             }
-            
+
             if (!_dbContext.Session.Any())
             {
                 await this._dbContext.Session.AddRangeAsync(sessions);
@@ -430,10 +430,10 @@ namespace Mooc.Application.Course
             }
 
             if (!_dbContext.Teachers.Any())
-             {
+            {
                 await this._dbContext.Teachers.AddRangeAsync(teachers);
                 await this._dbContext.SaveChangesAsync();
-            }   
+            }
 
             if (!_dbContext.TeacherCourseInstances.Any())
             {

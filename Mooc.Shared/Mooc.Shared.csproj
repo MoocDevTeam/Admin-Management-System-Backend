@@ -15,4 +15,8 @@
 		<Folder Include="Entity\Mooc\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="AWSSDK.S3" Version="3.7.411" />
+	</ItemGroup>
+
 </Project>

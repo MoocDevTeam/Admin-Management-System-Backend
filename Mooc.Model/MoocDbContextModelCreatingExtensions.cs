@@ -109,10 +109,11 @@ public static class MoocDbContextModelCreatingExtensions
             b.ToTable(TablePrefix + "UserRole");
             b.HasKey(x => x.Id);
             b.Property(x => x.Id).ValueGeneratedNever();
-            b.HasKey(ur => new { ur.UserId, ur.RoleId });
+            // b.HasKey(ur => new { ur.UserId, ur.RoleId });
             b.HasOne(ur => ur.User)
                   .WithMany(u => u.UserRoles)
-                  .HasForeignKey(ur => ur.UserId);
+                  .HasForeignKey(ur => ur.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
             b.HasOne(ur => ur.Role)
                   .WithMany(r => r.UserRoles)
                   .HasForeignKey(ur => ur.RoleId);

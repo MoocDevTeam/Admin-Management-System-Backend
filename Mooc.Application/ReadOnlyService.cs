@@ -69,7 +69,7 @@ public abstract class ReadOnlyService<TEntity, TGetOutputDto, TGetListOutputDto,
         return GetQueryable();
     }
 
-    public async Task<TGetOutputDto> GetAsync(TKey id)
+    public virtual async Task<TGetOutputDto> GetAsync(TKey id)
     {
         var entity = await GetEntityByIdAsync(id);
         return MapToGetOutputDto(entity);

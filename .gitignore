@@ -361,13 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-<<<<<<< HEAD
-Mooc.Model/Migrations/20250103141613_intialMigration.Designer.cs
-Mooc.Model/Migrations/20250103141613_intialMigration.cs
-Mooc.Model/Migrations/20250101132041_initalMigration.Designer.cs
-Mooc.Model/Migrations/20250101132041_initalMigration.cs
-MoocWebApi/AppData/moocdb.db
-=======
 
 # Ignore contents of Migrations folder but keep the folder itself
 Mooc.Model/Migrations/*
@@ -384,4 +377,3 @@ Mooc.Model/Migrations/MoocDBContextModelSnapshot.cs
 
 # Ignore .env
 .env
->>>>>>> db06a9c58144521daceb5b768a86f42895778d8b

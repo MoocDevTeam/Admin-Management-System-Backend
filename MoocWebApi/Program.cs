@@ -1,18 +1,29 @@
+using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.WebEncoders;
+using Microsoft.IdentityModel.Tokens;
 using Mooc.Application;
+using Mooc.Application.Contracts;
+using Mooc.Application.Contracts.Course;
+using Mooc.Application.Course;
 using Mooc.Core;
+using Mooc.Core.MoocAttribute;
 using Mooc.Model.DBContext;
 using MoocWebApi.Filters;
 using MoocWebApi.Init;
 using MoocWebApi.Middlewares;
 using NLog;
 using NLog.Web;
+using System.Reflection;
 using System.Text.Json;
+using MoocWebApi.Config;
+using Microsoft.OpenApi.Models;
+using DotNetEnv;
 
 namespace MoocWebApi
 {
@@ -32,8 +43,6 @@ namespace MoocWebApi
                     // Handle requests up to 50 MB
                     options.Limits.MaxRequestBodySize = 52428800;
                 });
-
-
                 //autofac
                 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
                 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
@@ -52,7 +61,9 @@ namespace MoocWebApi
 
                 //Add Mooc Application services
                 builder.Services.AddApplication();
-                
+
+                builder.Services.AddAutoMapper(typeof(Program));
+
                 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
                 builder.Services.AddDbContext<MoocDBContext>(option =>
@@ -62,19 +73,60 @@ namespace MoocWebApi
                     option.UseSqlite(connectString);
                 });
 
-                builder.Services.AddControllers(options =>
+                //Config AWS S3 Service
+                DotNetEnv.Env.Load();
+                var awsConfig = new AwsS3Config
                 {
-                    options.Filters.Add<ValidateModelFilter>();
-                    options.Filters.Add<UnifiedResultFilter>();
-                    //Handle requests up to 50 MB
-                    options.Filters.Add(new RequestFormLimitsAttribute() { BufferBodyLengthLimit = 52428800 });
-                }).ConfigureApiBehaviorOptions(options =>
-                {
-                    options.SuppressModelStateInvalidFilter = true;
-                }).AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                });
+                    AccessKeyId = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID"),
+                    SecretAccessKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY"),
+                    BucketName = Environment.GetEnvironmentVariable("AWS_BUCKET_NAME"),
+                    Region = Environment.GetEnvironmentVariable("AWS_REGION")
+                };
+                builder.Services.AddSingleton(awsConfig);
+                builder.Services.AddScoped<IFileUploadService, FileUploadService>();//use autofac DI later when having a deeper understanding of other ID methods.
+
+                //Add JWT Authentication
+                builder
+                    .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.SaveToken = true;
+
+                        options.TokenValidationParameters =
+                            new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                            {
+                                ValidateIssuer = true,
+                                ValidateAudience = true,
+                                ValidateLifetime = true,
+                                ValidIssuer = builder.Configuration["JwtSetting:Issuer"],
+                                ValidAudience = builder.Configuration["JwtSetting:Audience"],
+                                IssuerSigningKey = new SymmetricSecurityKey(
+                                    Encoding.UTF8.GetBytes(
+                                        builder.Configuration["JwtSetting:SecurityKey"]
+                                    )
+                                ),
+                            };
+                    });
+
+                builder
+                    .Services.AddControllers(options =>
+                    {
+                        options.Filters.Add<ValidateModelFilter>();
+                        options.Filters.Add<UnifiedResultFilter>();
+                        //Handle requests up to 50 MB
+                        options.Filters.Add(
+                            new RequestFormLimitsAttribute() { BufferBodyLengthLimit = 52428800 }
+                        );
+                    })
+                    .ConfigureApiBehaviorOptions(options =>
+                    {
+                        options.SuppressModelStateInvalidFilter = true;
+                    })
+                    .AddJsonOptions(options =>
+                    {
+                        options.JsonSerializerOptions.PropertyNamingPolicy =
+                            JsonNamingPolicy.CamelCase;
+                    });
 
                 // NLog: Setup NLog for Dependency injection
                 builder.Logging.ClearProviders();
@@ -99,6 +151,8 @@ namespace MoocWebApi
                         });
                 });
 
+                //
+
                 var app = builder.Build();
 
                 app.UseCors(defaultPolicy);
@@ -118,9 +172,20 @@ namespace MoocWebApi
                 using (var socpe = app.Services.CreateScope())
                 {
                     var dbSeedDataSevices = socpe.ServiceProvider.GetRequiredService<IEnumerable<IDBSeedDataService>>();
+
+                    SortedDictionary<int, IDBSeedDataService> sdSeedData = new SortedDictionary<int, IDBSeedDataService>();
+
                     foreach (var dbSeedDataSevice in dbSeedDataSevices)
                     {
-                        dbSeedDataSevice.InitAsync().GetAwaiter().GetResult();
+                        var orderAttri = dbSeedDataSevice.GetType().GetCustomAttribute<DBSeedDataOrderAttribute>();
+                        if (orderAttri!=null)
+                        {
+                            sdSeedData.Add(orderAttri.Order, dbSeedDataSevice);
+                        }
+                    }
+                    foreach (var item in sdSeedData)
+                    {
+                        item.Value.InitAsync().GetAwaiter().GetResult();
                     }
                 }
 

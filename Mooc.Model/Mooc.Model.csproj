@@ -14,11 +14,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Entity\Admin\Role.cs~RF26ad0a90.TMP" />
+	  <None Remove="Entity\Admin\RoleMenu.cs~RF2683ab51.TMP" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Compile Include="..\AssemblyInfo.cs" Link="AssemblyInfo.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AWSSDK.S3" Version="3.7.411" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		  <PrivateAssets>all</PrivateAssets>
+		</PackageReference>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
@@ -29,6 +39,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="Migrations\" />
 		<Folder Include="Option\" />
 	</ItemGroup>
 

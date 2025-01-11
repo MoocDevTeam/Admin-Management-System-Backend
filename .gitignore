@@ -374,3 +374,9 @@ MoocWebApi/AppData/*
 # Ignore database file
 MoocWebApi/AppData/moocdb.db
 Mooc.Model/Migrations/MoocDBContextModelSnapshot.cs
+.idea/.idea.MoocWebApi/.idea/vcs.xml
+.idea/.idea.MoocWebApi/.idea/indexLayout.xml
+.idea/.idea.MoocWebApi/.idea/encodings.xml
+.idea/config/applicationhost.config
+.idea/.idea.MoocWebApi/.idea/.name
+.idea/.idea.MoocWebApi/.idea/.gitignore

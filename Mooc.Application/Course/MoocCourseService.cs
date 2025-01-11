@@ -69,6 +69,32 @@ namespace Mooc.Application.Course
             return courseOutput;
         }
 
+        public async override Task<CourseDto> GetAsync(long id)
+        {
+            // 1. Fetch the course with related data
+            var course = await this.McDBContext.MoocCourses
+                .Include(c => c.Category)
+                .Include(c => c.CourseInstances)
+                    .ThenInclude(ci => ci.TeacherCourseInstances)
+                        .ThenInclude(tci => tci.Teacher)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (course == null)
+            {
+                // Handle course not found (maybe throw an exception)
+                return null;
+            }
+
+            // 2. Map to DTO and populate additional properties
+            var courseDto = this._mapper.Map<CourseDto>(course);
+            courseDto.CategoryName = course.Category?.CategoryName;
+
+            return courseDto;
+        }
+
+
+
+
 
 
 

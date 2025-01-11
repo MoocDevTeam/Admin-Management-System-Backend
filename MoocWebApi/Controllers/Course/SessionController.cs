@@ -23,7 +23,7 @@ namespace MoocWebApi.Controllers.Course
         /// <returns>Returns true if the session was successfully added; otherwise, false.</returns>
         /// <remarks>URL: POST api/Session/Add</remarks>
         [HttpPost]
-        public async Task<bool> Add([FromBody] CreateOrUpdateSessionDto input)
+        public async Task<bool> Add([FromBody] CreateSessionDto input)
         {
             var newSession = await _sessionService.CreateAsync(input);
             return newSession.Id > 0;
@@ -36,7 +36,7 @@ namespace MoocWebApi.Controllers.Course
         /// <returns>Returns true if the session was successfully updated; otherwise, false.</returns>
         /// <remarks>URL: POST api/Session/Update</remarks>
         [HttpPost]
-        public async Task<bool> Update([FromBody] CreateOrUpdateSessionDto input)
+        public async Task<bool> Update([FromBody] UpdateSessionDto input)
         {
             var updatedSession = await _sessionService.UpdateAsync(input.Id, input);
             return updatedSession.Id > 0;
@@ -71,14 +71,14 @@ namespace MoocWebApi.Controllers.Course
         /// <summary>
         /// Retrieves a session by its title.
         /// </summary>
-        /// <param name="sessionTitle">The title of the session to retrieve.</param>
-        /// <returns>Returns the details of the session with the specified title.</returns>
+        /// <param name="sessionTitle">The title or partial title of the session to search for.</param>
+        /// <returns>A list of ReadSessionDto containing session details and media information.</returns>
         /// <remarks>URL: GET api/Session/{sessionTitle}</remarks>
         [HttpGet("{sessionTitle}")]
-        public async Task<ReadSessionDto> GetSessionByTitle(string sessionTitle)
+        public async Task<IEnumerable<ReadSessionDto>> GetSessionByTitle(string sessionTitle)
         {
-            var singleSessionDetails = await _sessionService.GetSessionByTitle(sessionTitle);
-            return singleSessionDetails;
+            var singleDetailList = await _sessionService.GetSessionByTitle(sessionTitle);
+            return singleDetailList;
         }
 
         /// <summary>

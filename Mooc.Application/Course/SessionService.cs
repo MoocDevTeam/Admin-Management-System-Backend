@@ -4,7 +4,7 @@ using Mooc.Shared.Enum;
 
 namespace Mooc.Application.Course
 {
-  public class SessionService : CrudService<Session, ReadSessionDto, ReadSessionDto, long, FilterPagedResultRequestDto, CreateOrUpdateSessionDto, CreateOrUpdateSessionDto>,ISessionService, ITransientDependency
+  public class SessionService : CrudService<Session, ReadSessionDto, ReadSessionDto, long, FilterPagedResultRequestDto, CreateSessionDto, UpdateSessionDto>,ISessionService, ITransientDependency
   {
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly IMapper _mapper;
@@ -19,7 +19,7 @@ namespace Mooc.Application.Course
     }
 
     //Override MapToEntity
-    protected override Session MapToEntity(CreateOrUpdateSessionDto input)
+    protected override Session MapToEntity(CreateSessionDto input)
     {
       var entity = base.MapToEntity(input);
       entity.CreatedByUserId = 1;//---> need a method (getCurrentUserId)
@@ -31,21 +31,21 @@ namespace Mooc.Application.Course
       return entity;
     }
 
-    // Verify that the CourseInstanceId exists
+    // Verify that the CourseInstanceId exist
     private async Task ValidateCourseInstanceAsync(long courseInstanceId)
     {
       var courseInstanceExists = await McDBContext.CourseInstances.AnyAsync(x => x.Id == courseInstanceId);
       if (!courseInstanceExists)
       {
-        throw new EntityNotFoundException($"CourseInstance with ID {courseInstanceId} not found.");
+        throw new EntityNotFoundException($"CourseInstance with ID {courseInstanceId} not found. Please check the input.");
       }
     }
 
-    //Validate seesion with SessionId
+    //Verify that the SessionId exist
     protected virtual async Task ValidateSessionIdAsync(long sessionId)
     {
-      var user = await this.McDBContext.Session.FirstOrDefaultAsync(x => x.Id == sessionId);
-      if (user == null)
+      var sessionExist = await McDBContext.Session.AnyAsync(x => x.Id == sessionId);
+      if (!sessionExist)
       {
         throw new EntityNotFoundException($"Session with ID '{sessionId}' does not exist. Please check the input.");
       }
@@ -55,23 +55,23 @@ namespace Mooc.Application.Course
     private async Task AddMediaInfoToSessionDto(ReadSessionDto sessionMeidaDto, long sessionId)
     {
       // Query the number of Media associated with the session
-      var mediaCount = await this.McDBContext.Media
+      var mediaCount = await McDBContext.Media
           .Where(m => m.SessionId == sessionId)
           .CountAsync();
 
-      var pendingCount = await this.McDBContext.Media
+      var pendingCount = await McDBContext.Media
           .Where(m => m.SessionId == sessionId && m.ApprovalStatus == MediaApprovalStatus.Pending)
           .CountAsync();
 
-      var approvedCount = await this.McDBContext.Media
+      var approvedCount = await McDBContext.Media
           .Where(m => m.SessionId == sessionId && m.ApprovalStatus == MediaApprovalStatus.Approved)
           .CountAsync();
 
-      var rejectedCount = await this.McDBContext.Media
+      var rejectedCount = await McDBContext.Media
           .Where(m => m.SessionId == sessionId && m.ApprovalStatus == MediaApprovalStatus.Rejected)
           .CountAsync();
 
-      var mediaDetails = await this.McDBContext.Media
+      var mediaDetails = await McDBContext.Media
           .Where(m => m.SessionId == sessionId)
           .Select(m => new ReadMediaDto
           {
@@ -94,7 +94,7 @@ namespace Mooc.Application.Course
     }
 
     //Create session
-    public override async Task<ReadSessionDto> CreateAsync(CreateOrUpdateSessionDto input)
+    public override async Task<ReadSessionDto> CreateAsync(CreateSessionDto input)
     {
       await ValidateCourseInstanceAsync(input.CourseInstanceId);
       var createSessionDto = await base.CreateAsync(input); 
@@ -102,9 +102,15 @@ namespace Mooc.Application.Course
     }
 
     //Update session
-    public override async Task<ReadSessionDto> UpdateAsync(long id, CreateOrUpdateSessionDto input)
+    public override async Task<ReadSessionDto> UpdateAsync(long id, UpdateSessionDto input)
     {
       await ValidateSessionIdAsync(id);
+      var entity = await GetEntityByIdAsync(id);
+      if (input.CourseInstanceId.HasValue) 
+      {
+        await ValidateCourseInstanceAsync(input.CourseInstanceId.Value);
+        entity.CourseInstanceId = input.CourseInstanceId.Value;
+      }
       return await base.UpdateAsync(id, input);
     }
 
@@ -114,34 +120,41 @@ namespace Mooc.Application.Course
       return await base.GetListAsync(input);
     }
 
-    //GetSessionById
+    //Get Session by Id
     public override async Task<ReadSessionDto> GetAsync(long id)
     {
       await ValidateSessionIdAsync(id);
-      var sigleSessionDetails = await base.GetAsync(id);
-      await AddMediaInfoToSessionDto(sigleSessionDetails, id);
-      return sigleSessionDetails;
+      var sigleSessionDto = await base.GetAsync(id);
+      await AddMediaInfoToSessionDto(sigleSessionDto, id);
+      return sigleSessionDto;
     }
 
     /// <summary>
-    /// Retrieves a session by its title and includes the number of associated media and media presence information.
+    /// Retrieves sessions by title and includes associated media information such as media count and presence status.
     /// </summary>
-    /// <param name="sessionName">The tit of the session to retrieve.</param>
-    /// <returns>A ReadSessionDto containing the session details, including media count and presence indicator.</returns>
-    /// <exception cref="EntityNotFoundException">Thrown if no session with the specified name is found.</exception>
-    public async Task<ReadSessionDto> GetSessionByTitle(string sessionTitle)
+    /// <param name="sessionTitle">The title or partial title of the session to search for.</param>
+    /// <returns>A list of ReadSessionDto containing session details and media information.</returns>
+    /// <exception cref="EntityNotFoundException">Thrown if no sessions are found with the specified title.</exception>
+    public async Task<IEnumerable<ReadSessionDto>> GetSessionByTitle(string sessionTitle)
     {
-      // Verify if the session with the given name exists in the database.
-      var session = await this.McDBContext.Session
-          .FirstOrDefaultAsync(x => x.Title == sessionTitle);
-      if (session == null)
-      {
-        throw new EntityNotFoundException($"Session with name '{sessionTitle}' does not exist.");
-      }
-      var singleSessionDetails = MapToGetOutputDto(session);
-      await AddMediaInfoToSessionDto(singleSessionDetails, session.Id);
+      var sessionList = await McDBContext.Session
+          .Where(s => s.Title.Contains(sessionTitle)).ToListAsync();
 
-      return singleSessionDetails;
+      if (!sessionList.Any())
+      {
+        throw new EntityNotFoundException("No sessions found with the specified title.");
+      }
+
+      var sessionDetailsList = new List<ReadSessionDto>();
+
+      foreach (var session in sessionList)
+      {
+        var sessionDto = MapToGetOutputDto(session); 
+        await AddMediaInfoToSessionDto(sessionDto, session.Id); 
+        sessionDetailsList.Add(sessionDto);  
+      }
+
+      return sessionDetailsList;  
     }
 
     /// <summary>
@@ -154,7 +167,7 @@ namespace Mooc.Application.Course
       await ValidateCourseInstanceAsync(courseInstanceId);
 
       // Fetch all sessions related to the course instance
-      var sessions = await this.McDBContext.Session
+      var sessions = await McDBContext.Session
           .Where(s => s.CourseInstanceId == courseInstanceId)
           .ToListAsync();
 
@@ -171,14 +184,22 @@ namespace Mooc.Application.Course
       return sessionsForCourseInstance;
     }
 
-    // // Counts the existing sessions for the current CourseInstance and assigns an Order to the new session.
-    // var order = await McDBContext.Session.CountAsync(x => x.CourseInstanceId == input.CourseInstanceId) + 1;
+    // Delete
+    public async Task DeleteAsync(long id)
+    {
+      await ValidateSessionIdAsync(id);
+      await base.DeleteAsync(id);
+    }
 
-    // //get current order number
-    // private async Task<int> getCurrentOrderNumber(long courseInstanceId)
-    // {
-    //   return await McDBContext.Session.CountAsync(x => x.Id == courseInstanceId);
-    // }
 
-  }
+  // // Counts the existing sessions for the current CourseInstance and assigns an Order to the new session.
+  // var order = await McDBContext.Session.CountAsync(x => x.CourseInstanceId == input.CourseInstanceId) + 1;
+
+  // //get current order number
+  // private async Task<int> getCurrentOrderNumber(long courseInstanceId)
+  // {
+  //   return await McDBContext.Session.CountAsync(x => x.Id == courseInstanceId);
+  // }
+
+}
 }

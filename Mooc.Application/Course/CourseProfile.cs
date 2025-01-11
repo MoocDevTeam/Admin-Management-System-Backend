@@ -52,7 +52,10 @@ public class CourseProfile : Profile
         
         // Session Mapping
         // Frontend -> Backend -> Database 
-        CreateMap<CreateOrUpdateSessionDto, Session>()
+        CreateMap<CreateSessionDto, Session>()
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
+        CreateMap<UpdateSessionDto, Session>()
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
         //  Database  -> Backend -> Frontend

@@ -19,19 +19,6 @@ namespace Mooc.Application.Course
       this._mapper = mapper;
     }
 
-    // Verify the file extension and set the file type
-    private void ValidateFileExtensionAndSetType(string filePath, Media entity)
-    {
-      var fileExtension = Path.GetExtension(filePath)?.ToLower();
-
-      if (fileExtension != ".pdf" && fileExtension != ".mp4")
-      {
-        throw new InvalidOperationException("Invalid file type. Only PDF and MP4 files are allowed.");
-      }
-
-      entity.FileType = fileExtension == ".pdf" ? MediaFileType.Pdf : MediaFileType.Video;
-    }
-
     // Override MapToEntity
     protected override Media MapToEntity(CreateMediaDto input)
     {
@@ -46,63 +33,87 @@ namespace Mooc.Application.Course
       return entity;
     }
 
-    // Verify that the SessionId exists
+    // Set the fileType by file path
+    private void ValidateFileExtensionAndSetType(string filePath, Media entity)
+    {
+      var fileExtension = Path.GetExtension(filePath)?.ToLower();
+
+      if (fileExtension != ".pdf" && fileExtension != ".mp4")
+      {
+        throw new InvalidOperationException("Invalid file type. Only PDF and MP4 files are allowed.");
+      }
+
+      entity.FileType = fileExtension == ".pdf" ? MediaFileType.Pdf : MediaFileType.Video;
+    }
+
+    // Verify that the SessionId exist
     private async Task ValidateSessionAsync(long seesionId)
     {
       var sessionExists = await McDBContext.Session.AnyAsync(x => x.Id == seesionId);
       if (!sessionExists)
       {
-        throw new EntityNotFoundException($"Session with ID {seesionId} not found.");
+        throw new EntityNotFoundException($"Session with ID {seesionId} not found. Please check the input");
+      }
+    }
+
+    //Verify that the MediaId exist
+    protected virtual async Task ValidateMediaIdAsync(long mediaId)
+    {
+      var mediaExist = await McDBContext.Media.AnyAsync(x => x.Id == mediaId);
+      if (!mediaExist)
+      {
+        throw new EntityNotFoundException($"Media with ID '{mediaExist}' does not exist. Please check the input.");
       }
     }
 
     // Create Media
     public override async Task<ReadMediaDto> CreateAsync(CreateMediaDto input)
     {
-      await ValidateSessionAsync(input.SessionId);
-      var createSMediaDto = await base.CreateAsync(input);
-      return createSMediaDto;
+      await ValidateSessionAsync(input.SessionId); 
+      var createMediaDto = await base.CreateAsync(input);
+      return createMediaDto;
     }
 
     // Update Media
     public override async Task<ReadMediaDto> UpdateAsync(long id, UpdateMediaDto input)
     {
+      ValidateMediaIdAsync(id);
       var entity = await GetEntityByIdAsync(id);
-      // Update the entity's SessionId if it was entered, if not leave it as is.
       if (input.SessionId.HasValue)
       {
+        await ValidateSessionAsync(input.SessionId.Value);
         entity.SessionId = input.SessionId.Value; 
       }
-      entity.ApprovalStatus = MediaApprovalStatus.Pending;
-      ValidateFileExtensionAndSetType(input.FilePath, entity);
-
       return await base.UpdateAsync(id, input);
     }
 
-    // get by page
+    // Get by page
     public async Task<PagedResultDto<ReadMediaDto>> GetListAsync(FilterPagedResultRequestDto input)
     {
       return await base.GetListAsync(input);
     }
 
-    // get by mediaId
+    // Get Media by Id
     public async Task<ReadMediaDto> GetAsync(long id)
     {
+      await ValidateMediaIdAsync(id);
       return await base.GetAsync(id);
     }
 
-    // get by filename
+    // Get Media by filename
     public async Task<IEnumerable<ReadMediaDto>> GetMediaByName(string mediaName)
     {
       var mediaList = await McDBContext.Media
-                                        .Where(m => m.FileName.Contains(mediaName))  
-                                        .ToListAsync();
+        .Where(m => m.FileName.Contains(mediaName)).ToListAsync();
 
+      if (!mediaList.Any())
+      {
+        throw new EntityNotFoundException("No sessions found with the specified title.");
+      }
       return mediaList.Select(m => MapToGetOutputDto(m));
-      throw new NotImplementedException();
     }
 
-    // get by sessionId
+    // Get by sessionId
     public async Task<IEnumerable<ReadMediaDto>> GetMeidaBySessionId(long seesionId)
     {
       await ValidateSessionAsync(seesionId);
@@ -119,9 +130,10 @@ namespace Mooc.Application.Course
       return mediaForSession;
     }
 
-    //delete
+    //Delete
     public async Task DeleteAsync(long id)
     {
+      await ValidateMediaIdAsync(id);
       await base.DeleteAsync(id);
     }
   }

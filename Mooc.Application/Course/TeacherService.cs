@@ -71,13 +71,13 @@ namespace Mooc.Application.Course
         }
 
         //Override MapToEntity
-        protected override Teacher MapToEntity(CreateOrUpdateTeacherDto input)
-        {
-            var entity = base.MapToEntity(input);
-            entity.CreatedByUserId = 1;//---> need a method (getCurrentUserId)get your jwt read your token to get the specific id and store 
-            entity.UpdatedByUserId = 1;
-            SetIdForLong(entity);
-            return entity;
-        }
+        //protected override Teacher MapToEntity(CreateOrUpdateTeacherDto input)
+        //{
+        //    var entity = base.MapToEntity(input);
+        //    entity.CreatedByUserId = 1;//---> need a method (getCurrentUserId)get your jwt read your token to get the specific id and store 
+        //    entity.UpdatedByUserId = 1;
+        //    SetIdForLong(entity);
+        //    return entity;
+        //}
     }
 }

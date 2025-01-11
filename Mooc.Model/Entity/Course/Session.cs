@@ -1,6 +1,6 @@
 namespace Mooc.Model.Entity
 {
-    public class Session : BaseEntity
+    public class Session : BaseEntityWithAudit
     {
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
@@ -8,11 +8,11 @@ namespace Mooc.Model.Entity
 
         //Foreign keys
         public long CourseInstanceId { get; set;}
-        public long CreatedByUserId { get; set; }
-        public long? UpdatedByUserId { get; set; }  
+        //public long CreatedByUserId { get; set; }
+        //public long? UpdatedByUserId { get; set; }  
        
         //public DateTime CreatedAt { get; set; }  
-        public DateTime UpdatedAt { get; set; }
+        //public DateTime UpdatedAt { get; set; }
 
         // Navigation user 
         public virtual User CreatedByUser { get; set; }

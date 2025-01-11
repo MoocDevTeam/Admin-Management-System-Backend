@@ -269,18 +269,22 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(cs => cs.Office).IsRequired().HasMaxLength(TeacherEntityConsts.MaxOfficeLength);
             b.Property(cs => cs.Introduction).HasMaxLength(TeacherEntityConsts.MaxIntroductionLength);
             b.Property(cs => cs.Expertise).IsRequired().HasMaxLength(TeacherEntityConsts.MaxExpertiseLength);
+            b.ConfigureAudit();
 
-            //Set create or update time by Datebase itself
-            b.Property(e => e.CreatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
-            b.Property(e => e.UpdatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
+            ////Set create or update time by Datebase itself
+            //b.Property(e => e.CreatedAt)
+            //    .IsRequired()
+            //    .HasDefaultValueSql("GETDATE()");
+            //b.Property(e => e.UpdatedAt)
+            //    .IsRequired()
+            //    .HasDefaultValueSql("GETDATE()");
 
-            b.Property(e => e.UpdatedAt).ValueGeneratedOnUpdate();
+            //b.Property(e => e.UpdatedAt).ValueGeneratedOnUpdate();
+            b.HasOne<User>(x => x.User)
+            .WithMany()
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-            //Foreign configuration temperarily use <User> until <MoocUser is created>
             b.HasOne<User>(x => x.CreatedByUser)
             .WithMany()
             .HasForeignKey(x => x.CreatedByUserId)
@@ -488,14 +492,15 @@ public static class MoocDbContextModelCreatingExtensions
                 v => (TeacherCourseInstancePermissionType)Enum.Parse(typeof(TeacherCourseInstancePermissionType), v));
             b.Property(e => e.CreatedByUserId).IsRequired();
             b.Property(e => e.UpdatedByUserId);
+            b.ConfigureAudit();
 
             //Set create or update time by Datebase itself
-            b.Property(e => e.CreatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
-            b.Property(e => e.UpdatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
+            //b.Property(e => e.CreatedAt)
+            //    .IsRequired()
+            //    .HasDefaultValueSql("GETDATE()");
+            //b.Property(e => e.UpdatedAt)
+            //    .IsRequired()
+            //    .HasDefaultValueSql("GETDATE()");
 
             b.Property(e => e.UpdatedAt).ValueGeneratedOnUpdate();
 

@@ -142,5 +142,15 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
         return userOutput;
     }
 
-    
+    public async Task<bool> DeleteAsync(long id)
+    {
+        var user = await this.McDBContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+        if(user == null)
+        {
+            throw new EntityNotFoundException(nameof(User), id.ToString());
+        }
+        this.McDBContext.Users.Remove(user);
+        await this.McDBContext.SaveChangesAsync();
+        return true;
+    }
 }

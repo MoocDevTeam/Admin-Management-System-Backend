@@ -1,6 +1,6 @@
-﻿namespace Mooc.Model.Entity.Course
+﻿namespace Mooc.Model.Entity
 {
-    public class Teacher : BaseEntity
+    public class Teacher : BaseEntityWithAudit
     {
         public string Title { get; set; }
         public string Department { get; set; }
@@ -11,18 +11,12 @@
         public string Expertise { get; set; }
         public string Office { get; set; }
         public DateTime HiredDate { get; set; }
-
-        // foreign keys
-        public long CreatedByUserId { get; set; }
-        public long? UpdatedByUserId { get; set; }
-
-        // timestamp
-        //public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+        public long UserId { get; set; }
 
         // Nav use MoocUser class later
         public virtual User CreatedByUser { get; set; }
         public virtual User UpdatedByUser { get; set; }
+        public virtual User User { get; set; }
 
         // Nav to a collction of CourseInstance assigned to this teacher
         //Need to modify when MoocCourseInstance is renamed!!!

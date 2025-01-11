@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mooc.Model.Entity
 {
-    public class Media : BaseEntity
+    public class Media : BaseEntityWithAudit
     {
         //Basic fields
         public MediaFileType FileType { get; set; }
@@ -13,12 +13,12 @@ namespace Mooc.Model.Entity
         public string ThumbnailPath { get; set; }
         public MediaApprovalStatus ApprovalStatus { get; set; } = MediaApprovalStatus.Pending;
         //public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        //public DateTime UpdatedAt { get; set; }
 
         //Foreign key fields
         public long SessionId { get; set; }
-        public long CreatedByUserId { get; set; }
-        public long? UpdatedByUserId { get; set; }
+        //public long CreatedByUserId { get; set; }
+        //public long? UpdatedByUserId { get; set; }
 
         // Navigation user ((many-to-one))
         public virtual User CreatedByUser { get; set; }

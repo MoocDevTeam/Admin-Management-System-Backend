@@ -57,7 +57,9 @@ namespace Mooc.Application.Course
 
         public async Task<CourseDto> GetByCourseNameAsync(string courseName)
         {
-            var course = await this.McDBContext.MoocCourses.FirstOrDefaultAsync(x =>
+            var course = await this.McDBContext.MoocCourses
+            .Include(c => c.CourseInstances)
+            .FirstOrDefaultAsync(x =>
                 x.Title.ToLower() == courseName.ToLower());
 
             if (course == null)

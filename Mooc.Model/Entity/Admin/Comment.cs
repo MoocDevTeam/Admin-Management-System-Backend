@@ -7,7 +7,7 @@ public class Comment : BaseEntityWithAudit
     /// <summary>
     /// The ID of the course this comment is associated with.
     /// </summary>
-    public long CourseId { get; set; }
+    public long MoocCourseId { get; set; }
 
     /// <summary>
     /// The ID of the category this comment belongs to.
@@ -50,7 +50,7 @@ public class Comment : BaseEntityWithAudit
     /// <summary>
     /// The associated course object.
     /// </summary>
-    public MoocCourse Course { get; set; }
+    public MoocCourse MoocCourse { get; set; }
 
     /// <summary>
     /// The associated category object.

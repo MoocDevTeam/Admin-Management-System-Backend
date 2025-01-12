@@ -45,7 +45,7 @@ namespace Mooc.UnitTest.Service
 
         [Test]
 
-        public async Task CreateAsync_WhenNewUserIsCreated_ShouldReturnAUserDto()
+        public async Task CreateAsync_WithValidRoleIds_ShouldReturnAUserDto_AndAssignRolesToUser()
         {
             //arrange
             var users = LoadUsersFromJson(path);
@@ -94,6 +94,7 @@ namespace Mooc.UnitTest.Service
                     .FirstOrDefaultAsync(u => u.UserName == newUser.UserName);
                 Assert.NotNull(createdUser);
                 Assert.AreEqual(createdUser.UserRoles.Count, 3);
+                Assert.IsTrue(createdUser.UserRoles.Any(ur => ur.RoleId == 1));
                 CollectionAssert.AreEquivalent(newUser.RoleIds, createdUser.UserRoles.Select(ur => ur.RoleId));
 
 
@@ -153,6 +154,61 @@ namespace Mooc.UnitTest.Service
                 //Assert
                 Assert.NotNull(updatedResult);
                 Assert.That( updatedResult.UserName, Is.EqualTo(updatedUser.UserName));
+            }
+        }
+
+        [Test]
+        public async Task UpdateAsync_WithValidRoleIds_ShouldUpdateUserRoles()
+        {
+            //arrange 
+            var users = LoadUsersFromJson(path);
+            var roles = new List<Role>
+            {
+                new Role { Id = 1, RoleName = "Admin", Description = "zzz" },
+                new Role { Id = 2, RoleName = "User", Description = "zzz" },
+                new Role { Id = 3, RoleName = "Manager", Description = "zzz" },
+                new Role { Id = 4, RoleName = "Guest", Description = "zzz" }
+            };
+            var options = new DbContextOptionsBuilder<MoocDBContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options;
+            var updatedUser = new UpdateUserDto()
+            {
+                Id = 2, // Id=2 exists in users.json
+                UserName = "UpdatedUser",
+                Password = "NewSecurePassword",
+                Age = 28,
+                Email = "updateduser@uow.edu.au",
+                Gender = Gender.Male,
+                Avatar = "new_avatar.png",
+                RoleIds = new List<long> { 2, 4 }
+            };
+
+            //act
+            UserDto updatedResult;
+            using (var context = new MoocDBContext(options))
+            {
+                context.Users.AddRange(users);
+                context.Roles.AddRange(roles);
+                context.SaveChanges();
+
+                var service = new UserService(context, _mapper, _mockWebHostEnvironment.Object);
+                updatedResult = await service.UpdateAsync(2, updatedUser);
+            }
+
+            //assert
+            Assert.NotNull(updatedResult);
+            Assert.That(updatedResult.UserName, Is.EqualTo(updatedUser.UserName));
+
+            using (var context = new MoocDBContext(options))
+            {
+                var findUpdatedUser = await context.Users.Include(u => u.UserRoles).FirstOrDefaultAsync(u => u.Id == 2);
+                Assert.NotNull(findUpdatedUser);
+                Assert.AreEqual(2, findUpdatedUser.UserRoles.Count);
+                Assert.IsTrue(findUpdatedUser.UserRoles.Any(ur => ur.RoleId == 2));
+                Assert.IsTrue(findUpdatedUser.UserRoles.Any(ur => ur.RoleId == 4));
+                // Ensure previous roles are removed if not included in RoleIds
+                Assert.IsFalse(findUpdatedUser.UserRoles.Any(ur => ur.RoleId == 1 || ur.RoleId == 3));
             }
         }
     }

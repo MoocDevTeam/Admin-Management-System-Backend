@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Amazon.S3.Model;
+using Microsoft.AspNetCore.Hosting;
+using Mooc.Application.Contracts.Course.Dto.Category;
 
 namespace Mooc.Application.Course;
 
@@ -6,10 +8,25 @@ public class EnrollmentService : CrudService<Enrollment, EnrollmentDto, Enrollme
     IEnrollmentService, ITransientDependency
 
 {
-    private readonly IWebHostEnvironment _webHostEnvironment;
    
     public EnrollmentService(MoocDBContext dbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment) : base(dbContext, mapper)
     {
-        this._webHostEnvironment = webHostEnvironment;
+        
     }
+
+    protected virtual async Task ValidateEnrollmentIdAsync(long id)
+    {
+        var exit = await base.GetQueryable().AnyAsync(x => x.Id == id);
+        if (!exit)
+        {
+            throw new EntityNotFoundException($"Category with Id {id} is not found");
+        }
+    }
+
+    public override async Task<EnrollmentDto> UpdateAsync(long id, UpdateEnrollmentDto input)
+    {
+        await ValidateEnrollmentIdAsync(input.Id);     
+        return await base.UpdateAsync(input.Id, input);
+    }
+
 }

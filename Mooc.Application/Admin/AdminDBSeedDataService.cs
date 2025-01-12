@@ -43,13 +43,6 @@ namespace Mooc.Application.Admin
             new Carousel(){Id=2, Title="Sale Banner", ImageUrl="/images/sale.jpg", RedirectUrl="/sale", IsActive=true, UpdatedAt=DateTime.Now, Position=2, StartDate=DateTime.Now.AddDays(-1), EndDate=DateTime.Now.AddDays(10), CreatedByUserId=2, UpdatedByUserId=2 }
         };
 
-        private List<Comment> comments = new List<Comment>()
-        {
-            new Comment(){Id=1, CourseId=101, CreatedByUserId=3, Content="Great course!", IsActive=true, IsFlagged=false, ParentCommentId=null, CreatedAt=DateTime.Now },
-            new Comment(){Id=2, CourseId=101, CreatedByUserId=2, Content="I agree, very helpful!", IsActive=true, IsFlagged=false, ParentCommentId=1, CreatedAt=DateTime.Now.AddMinutes(1) },
-            new Comment(){Id=3, CourseId=102, CreatedByUserId=3, Content="Needs more examples.", IsActive=true, IsFlagged=false, ParentCommentId=null, CreatedAt=DateTime.Now.AddMinutes(2) }
-        };
-
         private List<Menu> menus = new List<Menu>()
         {
             new Menu(){Id=1, Title="Rights Management", Description="Rights Management", MenuType= MenuType.Dir, OrderNum=0, Permission=PermissionConsts.PermissionManagement},
@@ -78,12 +71,6 @@ namespace Mooc.Application.Admin
             if (!this._dbContext.Carousels.Any())
             {
                 await this._dbContext.Carousels.AddRangeAsync(carousels);
-                await this._dbContext.SaveChangesAsync();
-            }
-
-            if (!this._dbContext.Comments.Any())
-            {
-                await this._dbContext.Comments.AddRangeAsync(comments);
                 await this._dbContext.SaveChangesAsync();
             }
 

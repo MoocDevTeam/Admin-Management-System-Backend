@@ -1,8 +1,7 @@
 ﻿namespace Mooc.Model.Entity;
 
 public class Enrollment : BaseEntityWithAudit
-{
-    [ForeignKey("CourseInstance")]
+{    
     public long CourseInstanceId { get; set; }
 
     public EnrollmentStatus EnrollmentStatus { get; set; }
@@ -18,7 +17,7 @@ public class Enrollment : BaseEntityWithAudit
     //[ForeignKey("UpdatedByUser")]
     //public long UpdatedByUserId { get; set; }
 
-    public CourseInstance CourseInstance { get; set; }
+    //public virtual CourseInstance CourseInstance { get; set; }
 
     public virtual User CreatedByUser { get; set; }
     public virtual User UpdatedByUser { get; set; }

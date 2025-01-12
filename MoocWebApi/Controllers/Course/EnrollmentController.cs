@@ -21,7 +21,7 @@ public class EnrollmentController : ControllerBase
     /// <remarks>URL: POST api/Enrollment/GetById/{id}</remarks>
   
     [HttpGet("{id}")]
-    public async Task<EnrollmentDto> GetbyIdAsync(long id)
+    public async Task<EnrollmentDto> GetbyId(long id)
     {            
         var enrollment = await _enrollmentService.GetAsync(id);    
         return enrollment;

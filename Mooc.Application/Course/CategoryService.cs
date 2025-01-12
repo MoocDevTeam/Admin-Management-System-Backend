@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using Mooc.Application.Contracts.Course.Dto.Category;
+using Mooc.Application.Contracts.Course.Dto;
 using StackExchange.Redis;
 
 namespace Mooc.Application.Course;
@@ -8,9 +8,9 @@ public class CategoryService : CrudService<Category, CategoryDto, CategoryDto, l
     ICategoryService, ITransientDependency
 
 {
-
-    public CategoryService(MoocDBContext dbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment) : base(dbContext, mapper)
+    public CategoryService(MoocDBContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
+        
     }
 
     public async Task<PagedResultDto<CategoryDto>> GetListAsync(FilterPagedResultRequestDto input)

@@ -1,6 +1,8 @@
-﻿namespace Mooc.Application.Contracts.Course;
+﻿using Mooc.Model.Entity;
 
-public class CreateCategoryDto:BaseEntityDto
+namespace Mooc.Application.Contracts.Course.Dto;
+
+public class CreateCategoryDto: BaseEntityDto
 {
     public string CategoryName { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;

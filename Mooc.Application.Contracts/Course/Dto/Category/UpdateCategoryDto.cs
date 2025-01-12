@@ -1,8 +1,8 @@
 ﻿using Mooc.Model.Entity;
 
-namespace Mooc.Application.Contracts.Course.Dto.Category;
+namespace Mooc.Application.Contracts.Course.Dto;
 
-public class UpdateCategoryDto : BaseEntityWithAudit
+public class UpdateCategoryDto : BaseEntityDto
 {
     public string CategoryName { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;

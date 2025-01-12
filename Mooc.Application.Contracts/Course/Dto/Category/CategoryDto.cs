@@ -1,8 +1,8 @@
 ﻿using Mooc.Model.Entity;
 
-namespace Mooc.Application.Contracts.Course;
+namespace Mooc.Application.Contracts.Course.Dto;
 
-public class CategoryDto:BaseEntity
+public class CategoryDto: BaseEntityDto
 {
     public string CategoryName { get; set; }= string.Empty;
     public string Description { get; set; } = string.Empty;

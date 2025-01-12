@@ -1,4 +1,4 @@
-﻿using Mooc.Application.Contracts.Course.Dto.Category;
+﻿using Mooc.Application.Contracts.Course;
 
 namespace Mooc.Application.Contracts.Course;
 

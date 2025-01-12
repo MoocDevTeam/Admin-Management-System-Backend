@@ -1,7 +1,5 @@
 ﻿using Mooc.Application.Contracts;
 using Mooc.Core.MoocAttribute;
-using Mooc.Core.Utils;
-using Mooc.Shared.Enum;
 
 namespace Mooc.Application.Admin
 {

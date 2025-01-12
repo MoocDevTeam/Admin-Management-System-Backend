@@ -1,7 +1,5 @@
-﻿using AutoMapper.Internal.Mappers;
-using Microsoft.AspNetCore.Hosting;
-using Mooc.Application.Contracts;
-using Mooc.Application.Contracts.Dto;
+﻿using Microsoft.AspNetCore.Hosting;
+
 namespace Mooc.Application.Course;
 
 public class EnrollmentService : CrudService<Enrollment, EnrollmentDto, EnrollmentDto, long, FilterPagedResultRequestDto, CreateEnrollmentDto, UpdateEnrollmentDto>,
@@ -9,6 +7,7 @@ public class EnrollmentService : CrudService<Enrollment, EnrollmentDto, Enrollme
 
 {
     private readonly IWebHostEnvironment _webHostEnvironment;
+   
     public EnrollmentService(MoocDBContext dbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment) : base(dbContext, mapper)
     {
         this._webHostEnvironment = webHostEnvironment;

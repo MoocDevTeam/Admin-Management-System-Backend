@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Mooc.Model.Entity;
-using Mooc.Model.Entity.Course;
+
 
 namespace Mooc.Application.Contracts.Course
 {

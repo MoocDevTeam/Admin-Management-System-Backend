@@ -10,19 +10,20 @@ namespace Mooc.Application.Contracts.Course
 {
     public class CreateCourseDto : BaseEntityDto
     {
-        [JsonIgnore] // hide Id
-        public override long Id { get; set; }
-        public string Title { get; set; } = string.Empty;
-        public string CourseCode { get; set; } = string.Empty;
+        // [JsonIgnore]
+        // public long id { get; set; }
+        public string Title { get; set; }
+        public string CourseCode { get; set; }
         public string? CoverImage { get; set; }
-        public string Description { get; set; } = string.Empty;
-        public long? CreatedByUserId { get; set; }
-        public long? UpdatedByUserId { get; set; }
-        public long? CategoryId { get; set; }
+        public string Description { get; set; } = "Description";
+        public long CategoryId { get; set; } = 1;
         [JsonIgnore]
-        public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
+        public long? CreatedByUserId { get; set; } = 1;
         [JsonIgnore]
-        public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
-
+        public long? UpdatedByUserId { get; set; } = 1;
+        [JsonIgnore]
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
+        [JsonIgnore]
+        public DateTime? UpdatedAt { get; set; } = DateTime.Now;
     }
 }

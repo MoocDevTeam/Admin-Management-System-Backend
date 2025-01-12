@@ -1,16 +1,18 @@
 namespace Mooc.Model.Entity.ExamManagement;
 
-public  class JudgementQuestion: BaseQuestion
+public  class JudgementQuestion: BaseEntityWithAudit
 {
-    public long? CreatedByUserId { get; set; }
-
-    public long? UpdatedByUserId { get; set; }
-
     public long? CourseId { get; set; }
 
     public long QuestionTypeId { get; set; }
 
     public bool CorrectAnswer { get; set; }
+
+    public string? QuestionBody { get; set; }
+
+    public string? QuestionTitle { get; set; }
+
+    public int Marks { get; set; }
 
     // Navigation property
     public QuestionType? QuestionType { get; set; }

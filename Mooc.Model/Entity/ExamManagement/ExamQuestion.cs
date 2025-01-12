@@ -1,12 +1,8 @@
 using Mooc.Model.Entity.ExamManagement;
 
 namespace Mooc.Model.Entity;
-public class ExamQuestion : BaseExam
-{
-  public long? CreatedByUserId { get; set; }
-
-  public long? UpdatedByUserId { get; set; }
-  
+public class ExamQuestion : BaseEntityWithAudit
+{ 
   public long? ExamId { get; set; }
 
   public Exam? Exam { get; set; }

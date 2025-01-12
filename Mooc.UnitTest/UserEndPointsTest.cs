@@ -95,15 +95,22 @@ namespace Mooc.UnitTest
         [Values("test01", "test02")] string Avatar
         )
         {
-                CreateUserDto user = new CreateUserDto();
-                user.UserName = userName;
-                user.Password = password;
-                user.Age = Age;
-                user.Email = email;
-                user.Gender = gender;
-                user.Avatar = Avatar;
+            string uniqueUserName = $"{userName}_{Guid.NewGuid()}";
+            string uniqueEmail = $"{Guid.NewGuid()}_{email}";
+            CreateUserDto user = new CreateUserDto
+            {
+                UserName = uniqueUserName,
+                Password = password,
+                Age = Age,
+                Email = uniqueEmail,
+                
+                Gender = gender,
+                Avatar = Avatar,
+                // Include RoleIds if required by the API
+                RoleIds = new List<long> { 1 } // Example role ID; ensure it exists in your test DB
+            };
 
-                var jsonContent = JsonContent.Create(user);
+            var jsonContent = JsonContent.Create(user);
 
                 var resp = await this.Client.PostAsync("/api/user/Add", jsonContent);
                 Assert.IsNotNull(resp);

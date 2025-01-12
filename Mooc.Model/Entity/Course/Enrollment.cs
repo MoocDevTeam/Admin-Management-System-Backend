@@ -1,6 +1,6 @@
 ﻿namespace Mooc.Model.Entity;
 
-public class Enrollment : BaseEntity
+public class Enrollment : BaseEntityWithAudit
 {
     [ForeignKey("CourseInstance")]
     public long CourseInstanceId { get; set; }
@@ -10,13 +10,13 @@ public class Enrollment : BaseEntity
     public DateTime EnrollEndDate { get; set; }
     public int MaxStudents { get; set; }
 
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    //public DateTime CreatedAt { get; set; }
+    //public DateTime UpdatedAt { get; set; }
 
-    [ForeignKey("CreatedByUser")]
-    public long CreatedByUserId { get; set; }
-    [ForeignKey("UpdatedByUser")]
-    public long UpdatedByUserId { get; set; }
+    //[ForeignKey("CreatedByUser")]
+    //public long CreatedByUserId { get; set; }
+    //[ForeignKey("UpdatedByUser")]
+    //public long UpdatedByUserId { get; set; }
 
     //public CourseInstance CourseInstance { get; set; }
 

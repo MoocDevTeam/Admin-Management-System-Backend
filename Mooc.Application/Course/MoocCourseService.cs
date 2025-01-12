@@ -58,14 +58,19 @@ namespace Mooc.Application.Course
         public async Task<CourseDto> GetByCourseNameAsync(string courseName)
         {
             var course = await this.McDBContext.MoocCourses
-            .Include(c => c.CourseInstances)
-            .FirstOrDefaultAsync(x =>
+                .Include(c => c.Category)
+                .Include(c => c.CourseInstances)
+                .ThenInclude(ci => ci.TeacherCourseInstances)
+                        .ThenInclude(tci => tci.Teacher)
+                .FirstOrDefaultAsync(x =>
                 x.Title.ToLower() == courseName.ToLower());
 
             if (course == null)
                 return null;
 
             var courseOutput = this.Mapper.Map<CourseDto>(course);
+            courseOutput.CategoryName = course.Category?.CategoryName;
+
             return courseOutput;
         }
 
@@ -78,6 +83,7 @@ namespace Mooc.Application.Course
                     .ThenInclude(ci => ci.TeacherCourseInstances)
                         .ThenInclude(tci => tci.Teacher)
                 .FirstOrDefaultAsync(c => c.Id == id);
+
 
             if (course == null)
             {

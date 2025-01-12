@@ -29,7 +29,15 @@ namespace Mooc.Application.Course
         {
             new MoocCourse() { Id = 1, Title = "React", CourseCode = "100", CoverImage = "xxx.png", Description = "React", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
             new MoocCourse() { Id = 2, Title = ".Net", CourseCode = "101", CoverImage = "xxx.png", Description = ".Net", CreatedByUserId = 1, UpdatedByUserId = 1, CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
-            new MoocCourse() { Id = 3, Title = "Nodejs", CourseCode = "102", CoverImage = "xxx.png", Description = "Nodejs", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 3, Title = "Nodejs", CourseCode = "102", CoverImage = "xxx.png", Description = "Nodejs", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=2, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 4, Title = "Java", CourseCode = "103", CoverImage = "xxx.png", Description = "Java", CreatedByUserId = 1, UpdatedByUserId = 2,CategoryId=2, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 5, Title = "C++", CourseCode = "104", CoverImage = "xxx.png", Description = "C++", CreatedByUserId = 1, UpdatedByUserId = 2, CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 6, Title = "Python", CourseCode = "105", CoverImage = "xxx.png", Description = "Python", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 7, Title = "Business Analyse", CourseCode = "106", CoverImage = "xxx.png", Description = "Business Analyse", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 8, Title = "DevOps", CourseCode = "107", CoverImage = "xxx.png", Description = "DevOps", CreatedByUserId = 1, UpdatedByUserId = 2, CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 9, Title = "Data Science", CourseCode = "108", CoverImage = "xxx.png", Description = "Data Science", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 10, Title = "Programming Bootcamp", CourseCode = "109", CoverImage = "xxx.png", Description = "Programming Bootcamp", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+
         };
 
         private List<CourseInstance> courseInstances = new List<CourseInstance>()

@@ -14,7 +14,8 @@ public class CourseProfile : Profile
 
         CreateMap<CourseDto, MoocCourse>();
         CreateMap<MoocCourse, CourseDto>()
-        .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName));
+        .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName))
+         .ForMember(dest => dest.CourseInstances, opt => opt.MapFrom(src => src.CourseInstances));
         CreateMap<CreateCourseDto, MoocCourse>();
         CreateMap<MoocCourse, CreateCourseDto>();
         CreateMap<UpdateCourseDto, MoocCourse>();
@@ -57,12 +58,20 @@ public class CourseProfile : Profile
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
         //  Database  -> Backend -> Frontend
-        CreateMap<Session, ReadSessionDto>();
+        CreateMap<Session, ReadSessionDto>()
+             .ForMember(dest => dest.Media, opt => opt.MapFrom(src => src.Sessionmedia))
+            .ForMember(dest => dest.MediaCount, opt => opt.MapFrom(src => src.Sessionmedia.Count))
+            .ForMember(dest => dest.HasMedia, opt => opt.MapFrom(src => src.Sessionmedia.Any()));
 
         // CourseInstance Mapping
-        CreateMap<CourseInstance, CourseInstanceDto>();
+        CreateMap<CourseInstance, CourseInstanceDto>()
+         .ForMember(dest => dest.Teachers, opt => opt.MapFrom(src => src.TeacherCourseInstances.Select(tci => tci.Teacher)))
+        .ForMember(dest => dest.Sessions, opt => opt.MapFrom(src => src.Sessions))
+         .ForMember(dest => dest.Enrollment, opt => opt.MapFrom(src => src.Enrollment));
         CreateMap<CreateCourseInstanceDto, CourseInstance>();
         CreateMap<UpdateCourseInstanceDto, CourseInstance>();
+
+        CreateMap<Media, MediaDto>();
     }
 }
 

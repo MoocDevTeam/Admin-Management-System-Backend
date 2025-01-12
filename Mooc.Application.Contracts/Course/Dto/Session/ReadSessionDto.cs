@@ -18,5 +18,6 @@ public class ReadSessionDto : BaseEntityDto
 
   // Media-related information
   public int MediaCount { get; set; } 
-  public bool HasMedia { get; set; } 
+  public bool HasMedia { get; set; }
+    public List<MediaDto> Media { get; set; }
 }

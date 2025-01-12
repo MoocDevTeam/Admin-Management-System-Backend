@@ -41,7 +41,7 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
 
         if (input.RoleIds != null && input.RoleIds.Count > 0)
         {
-            user.UserRoles = input.RoleIds.Select(roleId => new UserRole { RoleId = roleId, UserId = user.Id }).ToList();
+            user.UserRoles = input.RoleIds.Select(roleId => new UserRole { RoleId = roleId, User = user }).ToList();
         }
 
         await this.McDBContext.Users.AddAsync(user);
@@ -142,6 +142,12 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
         return userOutput;
     }
 
+    /// <summary>
+    /// delete user with cascade delete of user roles
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="EntityNotFoundException"></exception>
     public async Task<bool> DeleteAsync(long id)
     {
         var user = await this.McDBContext.Users.FirstOrDefaultAsync(u => u.Id == id);

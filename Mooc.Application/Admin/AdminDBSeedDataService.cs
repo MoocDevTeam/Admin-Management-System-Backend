@@ -38,9 +38,9 @@ namespace Mooc.Application.Admin
 
         private List<UserRole> userRoles = new List<UserRole>()
         {
-            new UserRole(){Id=1, UserId=1, RoleId=1, CreatedAt=DateTime.Now},
-            new UserRole(){Id=2, UserId=2, RoleId=2, CreatedAt=DateTime.Now},
-            new UserRole(){Id=3, UserId=3, RoleId=3, CreatedAt=DateTime.Now},
+            new UserRole(){Id=1, UserId=1, RoleId=1},
+            new UserRole(){Id=2, UserId=2, RoleId=2},
+            new UserRole(){Id=3, UserId=3, RoleId=3},
 
         };
 

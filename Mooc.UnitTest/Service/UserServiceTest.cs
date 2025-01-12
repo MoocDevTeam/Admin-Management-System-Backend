@@ -211,5 +211,46 @@ namespace Mooc.UnitTest.Service
                 Assert.IsFalse(findUpdatedUser.UserRoles.Any(ur => ur.RoleId == 1 || ur.RoleId == 3));
             }
         }
+
+        [Test]
+        public async Task CreateAsync_WithInvalidRoleIds_ShouldThrowInValidOperationException()
+        {
+            var users = LoadUsersFromJson(path);
+            var roles = new List<Role>
+            {
+                new Role { Id = 1, RoleName = "Admin", Description = "zzz" },
+                new Role { Id = 2, RoleName = "User", Description = "zzz" }
+            };
+            var options = new DbContextOptionsBuilder<MoocDBContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options;
+            var newUser = new CreateUserDto()
+            {
+                Id = 7,
+                UserName = "InvalidRoleUser",
+                Password = "Password123",
+                Age = 22,
+                Email = "invalidrole@uow.edu.au",
+                Gender = Gender.Female,
+                Avatar = "avatar_invalid.png",
+                RoleIds = new List<long> { 1, 99 } // 99 does not existin the database
+            };
+
+            using (var context = new MoocDBContext(options))
+            {
+                context.Users.AddRange(users);
+                context.Roles.AddRange(roles);
+                context.SaveChanges();
+
+                var service = new UserService(context, _mapper, _mockWebHostEnvironment.Object);
+
+                //act & assert
+                var exception = Assert.ThrowsAsync<InvalidOperationException>
+                    (
+                    async () => await service.CreateAsync(newUser));
+                Assert.That(exception.Message, Does.Contain("the following role ids are invalid:99"));
+
+            }
+        }
     }
 }

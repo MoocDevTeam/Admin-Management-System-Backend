@@ -45,7 +45,7 @@ namespace MoocWebApi.Controllers.Admin
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPost]
         public async Task<bool> Update( [FromBody] UpdateRoleDto input)
         {
             await _roleService.UpdateAsync(input.Id, input);

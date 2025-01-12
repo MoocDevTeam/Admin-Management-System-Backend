@@ -35,7 +35,7 @@ namespace Mooc.Application.Course
         public override async Task<CourseDto> CreateAsync(CreateCourseDto input)
         {
 
-            var courseDto = await base.CreateAsync(input);
+            var courseDto = await base.CreateAsync(input); 
             return courseDto;
         }
 

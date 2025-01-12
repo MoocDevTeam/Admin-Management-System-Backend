@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Mooc.Application.Contracts.Course.Dto.Category;
+using StackExchange.Redis;
 
 namespace Mooc.Application.Course;
 
@@ -7,21 +8,16 @@ public class CategoryService : CrudService<Category, CategoryDto, CategoryDto, l
     ICategoryService, ITransientDependency
 
 {
-    private readonly IWebHostEnvironment _webHostEnvironment;
 
     public CategoryService(MoocDBContext dbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment) : base(dbContext, mapper)
     {
-        this._webHostEnvironment = webHostEnvironment;
     }
 
-    public async Task<List<CategoryDto>> GetAllAsync()
+    public async Task<PagedResultDto<CategoryDto>> GetListAsync(FilterPagedResultRequestDto input)
     {
-        var category = await base.GetQueryable().ToListAsync();
-        if (category.Count == 0)
-            return new List<CategoryDto>();
-        return MapToGetListOutputDtos(category);
-
+        return await base.GetListAsync(input);
     }
+
     public async Task<CategoryDto> GetByCategoryNameAsync(string categoryName)
     {
         var category = await base.GetDbSet().FirstOrDefaultAsync(x => x.CategoryName == categoryName);
@@ -30,35 +26,40 @@ public class CategoryService : CrudService<Category, CategoryDto, CategoryDto, l
         return MapToGetOutputDto(category);
     }
 
-    public async Task<List<CategoryDto>> GetChildCategoriesAsync(long parentId)
+    public async Task<List<CategoryDto>> GetChildrenCategoriesAsync(long id)
     {
-        var category = await base.GetDbSet()
-            .Where(c => c.ParentId == parentId)
+        var categories = await base.GetDbSet()
+            .Where(c => c.ParentId == id)
             .ToListAsync();
-        if (category.Count == 0)
+
+        if (!categories.Any())
             return new List<CategoryDto>();
-        return MapToGetListOutputDtos(category);
-    }
 
-    public async Task<List<CategoryDto>> GetFilteredCategoriesAsync(FilterPagedResultRequestDto input)
-    {
-        var query=CreateFilteredQuery(input);
-        if(!string.IsNullOrEmpty(input.Filter))
+        var categoryDtos = await Task.WhenAll(categories.Select(async category =>
         {
-            query = query.Where(x =>
-            x.CategoryName.Contains(input.Filter) || x.Id.ToString() == input.Filter);
-        }
-        var category=await query.ToListAsync();
-        return MapToGetListOutputDtos(category);
-
+            var dto = MapToGetOutputDto(category);
+            dto.ChildrenCategories = await GetChildrenCategoriesAsync(category.Id);
+            return dto;
+        })).ConfigureAwait(false);
+        return categoryDtos.ToList();
     }
+
 
     protected virtual async Task ValidateCategoryNameAsync(string categoryName)
     {
-        var category = await base.GetQueryable().FirstOrDefaultAsync(c => c.CategoryName == categoryName);
-        if (category != null)
+        var exit= await base.GetQueryable().AnyAsync(c => c.CategoryName == categoryName);
+        if (exit)
         {
             throw new EntityAlreadyExistsException($"{categoryName} already exists");
+        }
+    }
+
+    protected virtual async Task ValidateCategoryIdAsync(long id)
+    {
+        var exit = await base.GetQueryable().AnyAsync(x => x.Id == id);
+        if (!exit)
+        {
+            throw new EntityNotFoundException($"Category with Id {id} is not found");
         }
     }
 
@@ -70,8 +71,9 @@ public class CategoryService : CrudService<Category, CategoryDto, CategoryDto, l
 
     public override async Task<CategoryDto> UpdateAsync(long id, UpdateCategoryDto input)
     {
+        await ValidateCategoryIdAsync(input.Id);
         await ValidateCategoryNameAsync(input.CategoryName);
-        return await base.UpdateAsync(id,input);
+        return await base.UpdateAsync(input.Id,input);
     }
 
 

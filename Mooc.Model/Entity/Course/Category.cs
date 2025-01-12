@@ -21,6 +21,7 @@ public class Category : BaseEntityWithAudit
 
     //Nav Category
     public virtual Category ParentCategory { get; set; }
+    public virtual ICollection<Category> ChildrenCategories { get; set; }
 
     // Navigation for Courses (one-to-many)
     public ICollection<MoocCourse> Courses { get; set; }= new List<MoocCourse>();

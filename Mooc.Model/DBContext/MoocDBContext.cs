@@ -1,8 +1,4 @@
-
 ﻿using Mooc.Model.Entity.ExamManagement;
-
-﻿using Mooc.Model.Entity.Course;
-
 
 namespace Mooc.Model.DBContext;
 
@@ -23,8 +19,8 @@ public class MoocDBContext : DbContext
     public DbSet<Session> Session { get; set; }
     public DbSet<Media> Media { get; set; }
     public DbSet<CourseInstance> CourseInstances { get; set; }
-    public DbSet<Teacher> MoocTeachers { get; set; }
-    public DbSet<Enrollment> MoocEnrollment { get; set; }
+    public DbSet<Teacher> Teachers { get; set; }
+    public DbSet<Enrollment> Enrollment { get; set; }
     public DbSet<TeacherCourseInstance> TeacherCourseInstances { get; set; }
     public DbSet<Category> Category { get; set; }
 

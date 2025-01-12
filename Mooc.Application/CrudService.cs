@@ -1,6 +1,7 @@
 ﻿using AutoMapper.Internal.Mappers;
 using Microsoft.EntityFrameworkCore;
 using Mooc.Application.Contracts;
+using Mooc.Core.Security;
 using Mooc.Core.Utils;
 
 namespace Mooc.Application;
@@ -10,6 +11,9 @@ public abstract class CrudService<TEntity, TGetOutputDto, TGetListOutputDto, TKe
       ICrudService<TGetOutputDto, TGetListOutputDto, TKey, TGetListInput, TCreateInput, TUpdateInput>
       where TEntity : BaseEntity
 {
+
+    public ICurrentUser CurrentUser { get; set; }
+
     public CrudService(MoocDBContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
 
@@ -32,6 +36,7 @@ public abstract class CrudService<TEntity, TGetOutputDto, TGetListOutputDto, TKe
     {
         var entity = this.Mapper.Map<TCreateInput, TEntity>(createInput);
         SetIdForLong(entity);
+        SetCreatedAudit(entity);
         return entity;
     }
 
@@ -46,6 +51,33 @@ public abstract class CrudService<TEntity, TGetOutputDto, TGetListOutputDto, TKe
             baseEntity.Id = SnowflakeIdGeneratorUtil.NextId();
         }
     }
+
+    /// <summary>
+    /// Set created datetime & created user
+    /// </summary>
+    /// <param name="entity">added object</param>
+    protected virtual void SetCreatedAudit(TEntity entity)
+    {
+        if (entity is BaseEntityWithAudit baseEntityWithAudit && !baseEntityWithAudit.CreatedByUserId.HasValue)
+        {
+            baseEntityWithAudit.CreatedByUserId = CurrentUser.Id;
+            baseEntityWithAudit.CreatedAt = DateTime.Now;
+        }
+    }
+
+    /// <summary>
+    /// Set updated datetime & updated user
+    /// </summary>
+    /// <param name="entity">added object</param>
+    protected virtual void SetUpdatedAudit(TEntity entity)
+    {
+        if (entity is BaseEntityWithAudit baseEntityWithAudit && !baseEntityWithAudit.UpdatedByUserId.HasValue)
+        {
+            baseEntityWithAudit.UpdatedByUserId = CurrentUser.Id;
+            baseEntityWithAudit.UpdatedAt = DateTime.Now;
+        }
+    }
+
 
     /// <summary>
     /// Sets Id value for the entity if <typeparamref name="TKey"/> is <see cref="long"/>.
@@ -64,12 +96,14 @@ public abstract class CrudService<TEntity, TGetOutputDto, TGetListOutputDto, TKe
     protected virtual void MapToEntity(TUpdateInput updateInput, TEntity entity)
     {
         this.Mapper.Map(updateInput, entity);
+        SetUpdatedAudit(entity);
     }
     public virtual async Task<TGetOutputDto> UpdateAsync(TKey id, TUpdateInput input)
     {
         var entity = await GetEntityByIdAsync(id);
 
         MapToEntity(input, entity);
+       
         var dbSet = GetDbSet();
         if (dbSet.Local.All(e => e != entity))
         {
@@ -89,3 +123,4 @@ public abstract class CrudService<TEntity, TGetOutputDto, TGetListOutputDto, TKe
         await this.McDBContext.SaveChangesAsync();
     }
 }
+

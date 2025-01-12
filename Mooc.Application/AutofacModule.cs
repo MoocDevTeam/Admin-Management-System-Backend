@@ -46,14 +46,14 @@ public class AutofacModule : Autofac.Module
         var assemblys = assemblyList.ToArray();
         builder.RegisterAssemblyTypes(assemblys).Where(x => x.IsAssignableTo<ITransientDependency>()).
             AsImplementedInterfaces().
-            InstancePerDependency();
+            InstancePerDependency().PropertiesAutowired();
 
         builder.RegisterAssemblyTypes(assemblys).Where(x => x.IsAssignableTo<IScopedDependency>()).
            AsImplementedInterfaces().
-           InstancePerLifetimeScope();
+           InstancePerLifetimeScope().PropertiesAutowired(); 
 
         builder.RegisterAssemblyTypes(assemblys).Where(x => x.IsAssignableTo<ISingletonDependency>()).
            AsImplementedInterfaces().
-           SingleInstance();
+           SingleInstance().PropertiesAutowired(); 
     }
 }

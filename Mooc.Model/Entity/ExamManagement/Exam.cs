@@ -1,10 +1,10 @@
 using Mooc.Model.Entity.ExamManagement;
 
 namespace Mooc.Model.Entity;
-public class Exam : BaseExam
+public class Exam : BaseEntityWithAudit
 {
-    /*  public long CourseId { get; set; }*/
-
+  public long? CourseId { get; set; }
+  
   public string ExamTitle { get; set; }
 
   public int? Remark { get; set; }
@@ -20,11 +20,11 @@ public class Exam : BaseExam
   // Navigation property:
   public User? CreatedByUser { get; set; }
 
-  public virtual ICollection<User>? UpdatedByUsers { get; set; }
+  public virtual User? UpdatedByUser { get; set; }
 
   public virtual ICollection<ExamQuestion>? ExamQuestion { get; set; }
 
   public ExamPublish? ExamPublish { get; set; }
 
-    /*  public Course Course { get; set; }*/
+  public CourseInstance? CourseInstance { get; set; }
 }

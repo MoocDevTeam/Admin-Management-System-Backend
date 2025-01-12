@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Mooc.Application.Admin;
 using Mooc.Application.Contracts.Admin;
+using Mooc.Core.ExceptionHandling;
 using Mooc.Model.DBContext;
 using Mooc.Model.Entity;
 using Mooc.Shared;
@@ -288,6 +289,58 @@ namespace Mooc.UnitTest.Service
                 var ex = Assert.ThrowsAsync<InvalidOperationException>(async() => await service.UpdateAsync(3, updatedUser));
                 Assert.That(ex.Message, Does.Contain("the following role ids are invalid:100"));
             }
+        }
+
+        [Test]
+        public async Task DeleteAsync_WhenUserExists_ShouldDeleteUser()
+        {
+            var users = LoadUsersFromJson(path);
+            var options = new DbContextOptionsBuilder<MoocDBContext>()
+                .UseInMemoryDatabase("InMemoryDB_Delete_Valid")
+                .Options;
+
+            long deleteUserId = 1; //  user with Id=1 exists in the JSON
+
+            // Act
+            bool isDeleted;
+            using (var context = new MoocDBContext(options))
+            {
+                context.Users.AddRange(users);
+                context.SaveChanges();
+
+                var service = new UserService(context, _mapper, _mockWebHostEnvironment.Object);
+                isDeleted = await service.DeleteAsync(deleteUserId);
+            }
+
+            // Assert
+            Assert.IsTrue(isDeleted, "Expected the user to be successfully deleted.");
+
+            using (var context = new MoocDBContext(options))
+            {
+               var deletedUser = await context.Users.FindAsync(deleteUserId);
+                Assert.IsNull(deletedUser, "Expected the user to be deleted from the database.");
+            }
+        }
+
+        [Test]
+        public async Task DeleteAsync_WhenUserDoesNotExist_ShouldThrowException()
+        {
+            var users = LoadUsersFromJson(path);
+            var options = new DbContextOptionsBuilder<MoocDBContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options;
+
+            long deleteUserId = 99;
+            
+            using(var context = new MoocDBContext(options))
+            {
+                context.Users.AddRange(users);
+                context.SaveChanges();
+                var service = new UserService(context, _mapper, _mockWebHostEnvironment.Object);
+
+                Assert.ThrowsAsync<EntityNotFoundException>(async () => await service.DeleteAsync(deleteUserId));
+            }
+
         }
     }
 }

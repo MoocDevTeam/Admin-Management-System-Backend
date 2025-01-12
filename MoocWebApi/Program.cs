@@ -21,6 +21,9 @@ using NLog;
 using NLog.Web;
 using System.Reflection;
 using System.Text.Json;
+using MoocWebApi.Config;
+using Microsoft.OpenApi.Models;
+using DotNetEnv;
 
 namespace MoocWebApi
 {
@@ -69,6 +72,18 @@ namespace MoocWebApi
                     //option.UseSqlServer(connectString);
                     option.UseSqlite(connectString);
                 });
+
+                //Config AWS S3 Service
+                DotNetEnv.Env.Load();
+                var awsConfig = new AwsS3Config
+                {
+                    AccessKeyId = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID"),
+                    SecretAccessKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY"),
+                    BucketName = Environment.GetEnvironmentVariable("AWS_BUCKET_NAME"),
+                    Region = Environment.GetEnvironmentVariable("AWS_REGION")
+                };
+                builder.Services.AddSingleton(awsConfig);
+                builder.Services.AddScoped<IFileUploadService, FileUploadService>();//use autofac DI later when having a deeper understanding of other ID methods.
 
                 //Add JWT Authentication
                 builder
@@ -136,7 +151,7 @@ namespace MoocWebApi
                         });
                 });
 
-
+                //
 
                 var app = builder.Build();
 

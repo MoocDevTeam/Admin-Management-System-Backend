@@ -7,21 +7,16 @@ public class Carousel : BaseEntityWithAudit
     /// <summary>
     /// The title of the carousel item.
     /// </summary>
-    [Required]
-    [MaxLength(200)]
     public string Title { get; set; }
 
     /// <summary>
     /// The URL of the image displayed in the carousel.
     /// </summary>
-    [Required]
-    [Url]
     public string ImageUrl { get; set; }
 
     /// <summary>
     /// The URL to redirect to when the carousel item is clicked.
     /// </summary>
-    [Url]
     public string RedirectUrl { get; set; }
 
     /// <summary>
@@ -32,7 +27,6 @@ public class Carousel : BaseEntityWithAudit
     /// <summary>
     /// The position of the carousel item in the display order.
     /// </summary>
-    [Range(1, 5)]
     public int Position { get; set; }
 
     /// <summary>

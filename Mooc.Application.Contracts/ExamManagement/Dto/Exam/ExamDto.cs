@@ -2,6 +2,8 @@
 
 public class ExamDto : BaseEntityDto
 {
+    public long CourseId { get; set; }
+
     public long CreatedByUserId { get; set; }
 
     public DateTime CreatedAt { get; set; }

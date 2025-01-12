@@ -19,29 +19,32 @@ namespace Mooc.Application.ExamManagement
 
         private List<QuestionType> questionTypes = new List<QuestionType>()
         {
-            new QuestionType(){Id=1, QuestionTypeName="Choice", },
-            new QuestionType(){Id=2, QuestionTypeName="Judgement", },
-            new QuestionType(){Id=3, QuestionTypeName="Short Answer", },
+            new QuestionType(){Id=1, QuestionTypeName="Choice", CreatedAt=DateTime.Now, },
+            new QuestionType(){Id=2, QuestionTypeName="Judgement", CreatedAt=DateTime.Now, },
+            new QuestionType(){Id=3, QuestionTypeName="Short Answer", CreatedAt=DateTime.Now, },
         };
 
         private List<ChoiceQuestion> choiceQuestions = new List<ChoiceQuestion>()
         {
-            new ChoiceQuestion(){Id=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now, QuestionBody="test", QuestionTitle="test", Marks=5, QuestionTypeId=1, CorrectAnswer="A"},
+            new ChoiceQuestion(){Id=1, CourseId=1, CreatedByUserId=1, UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now, QuestionBody="test", QuestionTitle="test", Marks=5, QuestionTypeId=1, CorrectAnswer="A"},
         };
 
         private List<JudgementQuestion> judgementQuestions = new List<JudgementQuestion>()
         {
-            new JudgementQuestion(){Id=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now, QuestionBody="test", QuestionTitle="test", Marks=5, QuestionTypeId=2, CorrectAnswer=true},
+            new JudgementQuestion(){Id=2, CourseId=1, CreatedByUserId=1, UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now, QuestionBody="test", QuestionTitle="test", Marks=5, QuestionTypeId=2, CorrectAnswer=true},
         };
 
         private List<ShortAnsQuestion> shortAnsQuestions = new List<ShortAnsQuestion>()
         {
-            new ShortAnsQuestion(){Id=3, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now, QuestionBody="test", QuestionTitle="test", Marks=5, QuestionTypeId=3, ReferenceAnswer="test"},
+            new ShortAnsQuestion(){Id=3, CourseId=2, CreatedByUserId=1, UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now, QuestionBody="test", QuestionTitle="test", Marks=5, QuestionTypeId=3, ReferenceAnswer="test"},
         };
 
         private List<Option> options = new List<Option>()
         {
-            new Option(){Id=1, ChoiceQuestionId=1, OptionOrder=1, OptionValue="first option", CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now, ErrorExplanation="testing"},
+            new Option(){Id=1, ChoiceQuestionId=1, OptionOrder=1, OptionValue="first option", CreatedByUserId=1, UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now, ErrorExplanation="testing"},
+            new Option(){Id=2, ChoiceQuestionId=1, OptionOrder=2, OptionValue="second option", CreatedByUserId=1, UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now, ErrorExplanation="testing"},
+            new Option(){Id=3, ChoiceQuestionId=1, OptionOrder=3, OptionValue="third option", CreatedByUserId=1, UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now, ErrorExplanation="testing"},
+            new Option(){Id=4, ChoiceQuestionId=1, OptionOrder=4, OptionValue="fourth option", CreatedByUserId=1, UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now, ErrorExplanation="testing"},
         };
 
         public async Task<bool> InitAsync()

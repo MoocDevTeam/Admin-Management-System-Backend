@@ -1,10 +1,12 @@
 namespace Mooc.Model.Entity.ExamManagement;
 
-public class ChoiceQuestion : BaseQuestion
+public class ChoiceQuestion : BaseEntityWithAudit
 {
-    public long? CreatedByUserId { get; set; }
+    public string? QuestionBody { get; set; }
 
-    public long? UpdatedByUserId { get; set; }
+    public string? QuestionTitle { get; set; }
+
+    public int Marks { get; set; }
 
     public long? CourseId { get; set; }
 

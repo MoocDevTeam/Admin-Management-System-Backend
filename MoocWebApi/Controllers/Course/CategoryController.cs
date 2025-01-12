@@ -1,4 +1,4 @@
-﻿using Mooc.Application.Contracts.Course.Dto.Category;
+﻿using Mooc.Application.Contracts.Course.Dto;
 
 namespace MoocWebApi.Controllers.Course;
 
@@ -100,13 +100,13 @@ public class CategoryController : ControllerBase
     }
 
     /// <summary>
-    /// Get Category Children List by filter
+    /// Get Category Children List
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
     /// <remarks>URL: POST api/Category/GetChildrenCategories/{id}</remarks>
     /// 
-    [HttpGet("{parentId}")]
+    [HttpGet]
     public async Task<List<CategoryDto>> GetChildrenCategories(long id)
     {
         var category = await _categoryService.GetChildrenCategoriesAsync(id);

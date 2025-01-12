@@ -23,6 +23,7 @@ namespace Mooc.Application.Course
         {
             new Category(){Id=1, CategoryName="Category1",Description="",IconUrl="xxx@demo.com",CreatedByUserId=1,CreatedAt= DateTime.Now },
             new Category(){Id=2, CategoryName="Category2",Description="", ParentId=1,IconUrl="xxx@demo.com",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=3, CategoryName="Category3",Description="", ParentId=1,IconUrl="xxx@demo.com",CreatedByUserId=1,CreatedAt= DateTime.Now },
         };
 
         private static List<MoocCourse> courses = new List<MoocCourse>()
@@ -41,8 +42,8 @@ namespace Mooc.Application.Course
 
         private List<Enrollment> enrollments = new List<Enrollment>()
         {
-            new Enrollment(){Id=1, CourseInstanceId=1, MaxStudents=200, EnrollmentStatus=EnrollmentStatus.Open,  EnrollStartDate=DateTime.Now, EnrollEndDate =DateTime.Now.AddMonths(1), CreatedByUserId =1 ,UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
-            new Enrollment(){Id=2, CourseInstanceId=2, MaxStudents=50,  EnrollmentStatus=EnrollmentStatus.Close, EnrollStartDate=DateTime.Now, EnrollEndDate =DateTime.Now.AddMonths(2), CreatedByUserId =2, UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new Enrollment(){Id=1, CourseInstanceId=1, MaxStudents=200, EnrollmentStatus=EnrollmentStatus.Open,  EnrollStartDate=DateTime.Now, EnrollEndDate =DateTime.Now.AddMonths(1),CreatedByUserId=1 ,UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now},
+            new Enrollment(){Id=2, CourseInstanceId=2, MaxStudents=50,  EnrollmentStatus=EnrollmentStatus.Close, EnrollStartDate=DateTime.Now, EnrollEndDate =DateTime.Now.AddMonths(2),CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now},
         };
 
 
@@ -422,7 +423,7 @@ namespace Mooc.Application.Course
                 await this._dbContext.Enrollment.AddRangeAsync(enrollments);
                 await this._dbContext.SaveChangesAsync();
             }
-            
+
             if (!_dbContext.Session.Any())
             {
                 await this._dbContext.Session.AddRangeAsync(sessions);

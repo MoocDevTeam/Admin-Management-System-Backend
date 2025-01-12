@@ -1,6 +1,6 @@
 ﻿using Amazon.S3.Model;
 using Microsoft.AspNetCore.Hosting;
-using Mooc.Application.Contracts.Course.Dto.Category;
+using Mooc.Application.Contracts.Course.Dto;
 
 namespace Mooc.Application.Course;
 
@@ -9,7 +9,7 @@ public class EnrollmentService : CrudService<Enrollment, EnrollmentDto, Enrollme
 
 {
    
-    public EnrollmentService(MoocDBContext dbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment) : base(dbContext, mapper)
+    public EnrollmentService(MoocDBContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
         
     }

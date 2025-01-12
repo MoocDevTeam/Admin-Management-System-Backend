@@ -4,7 +4,7 @@ public class Category : BaseEntityWithAudit
 {
     public string CategoryName { get; set; }
     public string Description { get; set; }
-    public string IconUrl { get; set; }
+    public string? IconUrl { get; set; }
     public long? ParentId { get; set; }
 
     // foreign keys

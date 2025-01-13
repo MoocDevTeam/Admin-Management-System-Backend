@@ -70,6 +70,7 @@ public static class MoocDbContextModelCreatingExtensions
            ).HasMaxLength(MenuEntityConsts.MaxMenuTypeLength);
             b.HasMany(cs => cs.RoleMenus);
             b.HasOne(cs => cs.Parent).WithMany(cs => cs.Children).HasForeignKey(cs => cs.ParentId);
+            b.ConfigureAudit();
         });
     }
     private static void ConfigureRole(ModelBuilder modelBuilder)

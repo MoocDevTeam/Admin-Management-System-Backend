@@ -1,8 +1,8 @@
 using Mooc.Model.Entity.ExamManagement;
 
 namespace Mooc.Model.Entity;
-public class ExamQuestion : BaseExam
-{
+public class ExamQuestion : BaseEntityWithAudit
+{ 
   public long? ExamId { get; set; }
 
   public Exam? Exam { get; set; }
@@ -24,7 +24,7 @@ public class ExamQuestion : BaseExam
 
   public User? CreatedByUser { get; set; }
 
-  public virtual ICollection<User>? UpdatedByUsers { get; set; }
+  public virtual User? UpdatedByUser { get; set; }
 
 
     /* we can choose either have 3 columns(ChoiceQuestionId, JudgementQuestionId, ShortAnsQuestionId) or have 1 column(questionId)*/

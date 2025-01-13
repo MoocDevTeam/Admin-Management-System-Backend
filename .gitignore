@@ -372,7 +372,7 @@ MoocWebApi/AppData/*
 !MoocWebApi/AppData/.gitkeep
 
 # Ignore database file
-MoocWebApi/AppData/moocdb.db
+MoocWebApi/AppData/*
 Mooc.Model/Migrations/MoocDBContextModelSnapshot.cs
 
 # Ignore .env

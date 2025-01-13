@@ -43,24 +43,17 @@ namespace Mooc.Application.Admin
             new Carousel(){Id=2, Title="Sale Banner", ImageUrl="/images/sale.jpg", RedirectUrl="/sale", IsActive=true, UpdatedAt=DateTime.Now, Position=2, StartDate=DateTime.Now.AddDays(-1), EndDate=DateTime.Now.AddDays(10), CreatedByUserId=2, UpdatedByUserId=2 }
         };
 
-        private List<Comment> comments = new List<Comment>()
-        {
-            new Comment(){Id=1, CourseId=101, CreatedByUserId=3, Content="Great course!", IsActive=true, IsFlagged=false, ParentCommentId=null, CreatedAt=DateTime.Now },
-            new Comment(){Id=2, CourseId=101, CreatedByUserId=2, Content="I agree, very helpful!", IsActive=true, IsFlagged=false, ParentCommentId=1, CreatedAt=DateTime.Now.AddMinutes(1) },
-            new Comment(){Id=3, CourseId=102, CreatedByUserId=3, Content="Needs more examples.", IsActive=true, IsFlagged=false, ParentCommentId=null, CreatedAt=DateTime.Now.AddMinutes(2) }
-        };
-
         private List<Menu> menus = new List<Menu>()
         {
-            new Menu(){Id=1, Title="Rights Management", Description="Rights Management", MenuType= MenuType.Dir, OrderNum=0, Permission=PermissionConsts.PermissionManagement},
-            new Menu(){Id=2, Title="User", Description="User", ParentId=1, MenuType=MenuType.Menu, OrderNum=1, Route="/user", ComponentPath="./pages/user/index.jsx", Permission=PermissionConsts.User.Default},
-            new Menu(){Id=3, Title="Add", Description="Add",ParentId=2, MenuType= MenuType.Btn, OrderNum=1, Permission=PermissionConsts.User.Add},
-            new Menu(){Id=4, Title="Update", Description="Update",ParentId=2, MenuType= MenuType.Btn, OrderNum=2, Permission=PermissionConsts.User.Update},
-            new Menu(){Id=5, Title="Delete", Description="Delete",ParentId=2, MenuType= MenuType.Btn, OrderNum=3, Permission=PermissionConsts.User.Delete},
-            new Menu(){Id=6, Title="Role", Description="Role",ParentId=1,MenuType= MenuType.Menu, OrderNum=2,Route="/role", ComponentPath="./pages/role/index.jsx", Permission=PermissionConsts.Role.Default },
-            new Menu(){Id=7, Title="Add",Description="Add",ParentId=6, MenuType=MenuType.Btn, OrderNum=1, Permission=PermissionConsts.Role.Add},
-            new Menu(){Id=8, Title="Update",Description="Update",ParentId=6, MenuType=MenuType.Btn, OrderNum=2, Permission=PermissionConsts.Role.Update},
-            new Menu(){Id=9, Title="Delete",Description="Delete",ParentId=6, MenuType=MenuType.Btn, OrderNum=3, Permission=PermissionConsts.Role.Delete},
+            new Menu(){Id=1, Title="Rights Management", Description="Rights Management", MenuType= MenuType.Dir, OrderNum=0, Permission=PermissionConsts.PermissionManagement, CreatedByUserId=1,CreatedAt= DateTime.Now},
+            new Menu(){Id=2, Title="User", Description="User", ParentId=1, MenuType=MenuType.Menu, OrderNum=1, Route="/user", ComponentPath="./pages/user/index.jsx", Permission=PermissionConsts.User.Default, CreatedByUserId=1,CreatedAt= DateTime.Now},
+            new Menu(){Id=3, Title="Add", Description="Add",ParentId=2, MenuType= MenuType.Btn, OrderNum=1, Permission=PermissionConsts.User.Add, CreatedByUserId=1,CreatedAt= DateTime.Now},
+            new Menu(){Id=4, Title="Update", Description="Update",ParentId=2, MenuType= MenuType.Btn, OrderNum=2, Permission=PermissionConsts.User.Update, CreatedByUserId=1,CreatedAt= DateTime.Now},
+            new Menu(){Id=5, Title="Delete", Description="Delete",ParentId=2, MenuType= MenuType.Btn, OrderNum=3, Permission=PermissionConsts.User.Delete, CreatedByUserId=1,CreatedAt= DateTime.Now},
+            new Menu(){Id=6, Title="Role", Description="Role",ParentId=1,MenuType= MenuType.Menu, OrderNum=2,Route="/role", ComponentPath="./pages/role/index.jsx", Permission=PermissionConsts.Role.Default,CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Menu(){Id=7, Title="Add",Description="Add",ParentId=6, MenuType=MenuType.Btn, OrderNum=1, Permission=PermissionConsts.Role.Add, CreatedByUserId=1,CreatedAt= DateTime.Now},
+            new Menu(){Id=8, Title="Update",Description="Update",ParentId=6, MenuType=MenuType.Btn, OrderNum=2, Permission=PermissionConsts.Role.Update, CreatedByUserId=1,CreatedAt= DateTime.Now},
+            new Menu(){Id=9, Title="Delete",Description="Delete",ParentId=6, MenuType=MenuType.Btn, OrderNum=3, Permission=PermissionConsts.Role.Delete, CreatedByUserId=1,CreatedAt= DateTime.Now},
         };
 
         public async Task<bool> InitAsync()
@@ -78,12 +71,6 @@ namespace Mooc.Application.Admin
             if (!this._dbContext.Carousels.Any())
             {
                 await this._dbContext.Carousels.AddRangeAsync(carousels);
-                await this._dbContext.SaveChangesAsync();
-            }
-
-            if (!this._dbContext.Comments.Any())
-            {
-                await this._dbContext.Comments.AddRangeAsync(comments);
                 await this._dbContext.SaveChangesAsync();
             }
 

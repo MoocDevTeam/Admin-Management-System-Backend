@@ -10,6 +10,10 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace Mooc.Application.Course
 {
+    /// <summary>
+    /// Service class for managing MoocCourse entities.
+    /// Inherits from CrudService to provide basic CRUD operations.
+    /// </summary>
 
     public class MoocCourseService : CrudService<MoocCourse, CourseDto, CourseDto, long, FilterPagedResultRequestDto, CreateCourseDto, UpdateCourseDto>,
     IMoocCourseService, ITransientDependency
@@ -23,6 +27,8 @@ namespace Mooc.Application.Course
             this._mapper = mapper;
         }
 
+        /// Creates a filtered query based on the provided input.
+        /// Filters by Title or CourseCode if a filter is provided.
         protected override IQueryable<MoocCourse> CreateFilteredQuery(FilterPagedResultRequestDto input)
         {
             if (!string.IsNullOrEmpty(input.Filter))
@@ -32,6 +38,7 @@ namespace Mooc.Application.Course
             return base.CreateFilteredQuery(input);
         }
 
+        /// Creates a new course.
         public override async Task<CourseDto> CreateAsync(CreateCourseDto input)
         {
 
@@ -39,13 +46,16 @@ namespace Mooc.Application.Course
             return courseDto;
         }
 
-
+        /// Updates an existing course.
         public override async Task<CourseDto> UpdateAsync(long id, UpdateCourseDto input)
         {
             await ValidateCourseNameAsync(input.CourseCode, id);
             return await base.UpdateAsync(id, input);
         }
 
+
+        /// Validates that the course name is unique.
+        /// Throws an exception if a course with the same name already exists.
         protected virtual async Task ValidateCourseNameAsync(string courseName, long? expectedId = null)
         {
             var course = await this.GetQueryable().FirstOrDefaultAsync(c => c.Title == courseName);
@@ -55,6 +65,7 @@ namespace Mooc.Application.Course
             }
         }
 
+        /// Fetches a course by its name, including related data (Category, CourseInstances, TeacherCourseInstances, Teacher).
         public async Task<CourseDto> GetByCourseNameAsync(string courseName)
         {
             var course = await this.McDBContext.MoocCourses
@@ -74,6 +85,7 @@ namespace Mooc.Application.Course
             return courseOutput;
         }
 
+        /// Gets a course by its ID, including related data (Category, CourseInstances, TeacherCourseInstances, Teacher).
         public async override Task<CourseDto> GetAsync(long id)
         {
             // 1. Fetch the course with related data
@@ -98,12 +110,7 @@ namespace Mooc.Application.Course
             return courseDto;
         }
 
-
-
-
-
-
-
+        /// Gets all courses, including related Category.
         public async Task<List<CourseDto>> GetAllAsync()
         {
             var courses = await this.McDBContext.MoocCourses
@@ -121,11 +128,15 @@ namespace Mooc.Application.Course
             return courseOutput;
         }
 
+        /// Checks if a course with the given title exists.
         public async Task<bool> CourseExist(string title)
         {
             // return _context.Stock.AnyAsync(s => s.Id == id);
             return await this.McDBContext.MoocCourses.AnyAsync(c => c.Title == title);
         }
+
+
+        /// Gets all course instances for a given course ID.
         public async Task<List<CourseInstanceDto>> GetCourseInstancesByCourseIdAsync(long courseId)
         {
             // Assuming you have a DbContext called _dbContext
@@ -140,6 +151,8 @@ namespace Mooc.Application.Course
                 .ToListAsync();
             return courseInstances;
         }
+
+        /// Gets a paged list of courses.
         public async Task<PagedResultDto<CourseDto>> GetListAsync(FilterPagedResultRequestDto input)
         {
             return await base.GetListAsync(input);

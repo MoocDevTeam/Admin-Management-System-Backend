@@ -70,6 +70,7 @@ public static class MoocDbContextModelCreatingExtensions
            ).HasMaxLength(MenuEntityConsts.MaxMenuTypeLength);
             b.HasMany(cs => cs.RoleMenus);
             b.HasOne(cs => cs.Parent).WithMany(cs => cs.Children).HasForeignKey(cs => cs.ParentId);
+            b.ConfigureAudit();
         });
     }
     private static void ConfigureRole(ModelBuilder modelBuilder)
@@ -126,18 +127,33 @@ public static class MoocDbContextModelCreatingExtensions
     {
         modelBuilder.Entity<Carousel>(b =>
         {
-            b.ToTable("Carousel");
+
             b.HasKey(x => x.Id);
-            b.Property(x => x.Title).IsRequired().HasMaxLength(CarouselEntityConsts.MaxTitleLength);
+            b.Property(x => x.Title)
+                .IsRequired()
+                .HasMaxLength(CarouselEntityConsts.MaxTitleLength);
             b.Property(x => x.ImageUrl).IsRequired();
-            b.Property(x => x.RedirectUrl).HasMaxLength(CarouselEntityConsts.MaxRedirectUrlLength);
-            b.Property(x => x.IsActive).IsRequired().HasDefaultValue(CarouselEntityConsts.DefaultIsActive);
+            b.Property(x => x.RedirectUrl)
+                .HasMaxLength(CarouselEntityConsts.MaxRedirectUrlLength);
+            b.Property(x => x.IsActive)
+                .IsRequired()
+                .HasDefaultValue(CarouselEntityConsts.DefaultIsActive);
             b.Property(x => x.UpdatedAt).IsRequired();
             b.Property(x => x.StartDate).IsRequired();
             b.Property(x => x.EndDate).IsRequired();
-            b.Property(x => x.Position).IsRequired();
-            b.HasOne<User>().WithMany().HasForeignKey(x => x.CreatedByUserId);
-            b.HasOne<User>().WithMany().HasForeignKey(x => x.UpdatedByUserId);
+            b.ToTable("Carousel", t =>
+            {
+                t.HasCheckConstraint("CK_Carousel_Position_Range", "[Position] BETWEEN 1 AND 6");
+            });
+            b.Property(x => x.Position)
+                .IsRequired();
+            b.HasIndex(x => x.Position).IsUnique();
+            b.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(x => x.CreatedByUserId);
+            b.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(x => x.UpdatedByUserId);
         });
     }
 
@@ -146,27 +162,36 @@ public static class MoocDbContextModelCreatingExtensions
         modelBuilder.Entity<Comment>(b =>
         {
             b.ToTable("Comment");
-            b.HasKey(x => x.Id);
-            b.Property(x => x.Content).IsRequired().HasMaxLength(CommentEntityConsts.MaxContentLength);
-            b.Property(x => x.IsActive).IsRequired().HasDefaultValue(CommentEntityConsts.DefaultIsActive);
-            b.Property(x => x.IsFlagged).IsRequired().HasDefaultValue(CommentEntityConsts.DefaultIsFlagged);
-            b.HasOne<User>().WithMany().HasForeignKey(x => x.CreatedByUserId);
-            b.HasOne<Comment>().WithMany().HasForeignKey(x => x.ParentCommentId);
-
-
-            //Need to communicate with Young to fix
-
-            //// Explicit relationship to MoocCourse for CreatedCourses
-            //b.HasMany(u => u.CreatedCourses)
-            //    .WithOne(c => c.CreatedByUser)
-            //    .HasForeignKey(c => c.CreatedByUserId)  // Foreign key property
-            //    .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
-
-            //// Explicit relationship to MoocCourse for UpdatedCourses
-            //b.HasMany(u => u.UpdatedCourses)
-            //    .WithOne(c => c.UpdatedByUser)
-            //    .HasForeignKey(c => c.UpdatedByUserId)  // Foreign key property
-            //    .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
+            b.HasKey(c => c.Id);
+            b.Property(c => c.Content)
+                .IsRequired()
+                .HasMaxLength(1000);
+            b.Property(c => c.IsActive)
+                .IsRequired()
+                .HasDefaultValue(true);
+            b.Property(c => c.IsFlagged)
+                .IsRequired()
+                .HasDefaultValue(false);
+            b.HasOne(c => c.MoocCourse)
+                .WithMany()
+                .HasForeignKey(c => c.MoocCourseId)
+                .OnDelete(DeleteBehavior.Restrict);
+            b.HasOne(c => c.Category)
+                .WithMany()
+                .HasForeignKey(c => c.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+            b.HasOne(c => c.Session)
+                .WithMany()
+                .HasForeignKey(c => c.SessionId)
+                .OnDelete(DeleteBehavior.Restrict);
+            b.HasOne(c => c.Teacher)
+                .WithMany()
+                .HasForeignKey(c => c.TeacherId)
+                .OnDelete(DeleteBehavior.Restrict);
+            b.HasOne(c => c.ParentComment)
+                .WithMany(c => c.Replies)
+                .HasForeignKey(c => c.ParentCommentId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 

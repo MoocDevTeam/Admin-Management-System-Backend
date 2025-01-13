@@ -1,4 +1,4 @@
-﻿using Mooc.Application.Contracts.Course.Dto.Category;
+﻿using Mooc.Application.Contracts.Course.Dto;
 
 namespace MoocWebApi.Controllers.Course;
 
@@ -15,6 +15,13 @@ public class CategoryController : ControllerBase
         _categoryService = categoryService;
     }
 
+    /// <summary>
+    /// Add Category
+    /// </summary>
+    /// <param name="input">Details of the new Category.</param>
+    /// <returns></returns>
+    /// <remarks>URL: POST api/Category/Add</remarks>
+
     [HttpPost]
     public async Task<bool> Add([FromBody] CreateCategoryDto input)
     {
@@ -22,6 +29,12 @@ public class CategoryController : ControllerBase
         return categoryDto.Id > 0;
     }
 
+    /// <summary>
+    /// Delete Category
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <remarks>URL: POST api/Category/Delete/{id}</remarks>
     [HttpDelete("{id}")]
     public async Task<bool> Delete(long id)
     {
@@ -29,45 +42,74 @@ public class CategoryController : ControllerBase
         return true;
     }
 
+
+    /// <summary>
+    /// Update Category
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    /// <remarks>URL: POST api/Category/Update</remarks>
+
     [HttpPost]
-    public async Task<bool> Update([FromRoute] long id, [FromBody]UpdateCategoryDto input)
+    public async Task<bool> Update([FromBody] UpdateCategoryDto input)
     {
-        await _categoryService.UpdateAsync(id, input);
+        await _categoryService.UpdateAsync(input.Id, input);
         return true;
     }
 
+    /// <summary>
+    /// Get Category by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <remarks>URL: POST api/Category/GetById/{id}</remarks>
+
     [HttpGet("{id}")]
-    public async Task<CategoryDto> GetByIdAsync(long id)
+    public async Task<CategoryDto> GetById(long id)
     {
         var category = await _categoryService.GetAsync(id);
         return category;
     }
 
+    /// <summary>
+    /// Get Category by name
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    /// <remarks>URL: POST api/Category/GetById/Name</remarks>
+
     [HttpGet("{name}")]
-    public async Task<CategoryDto> GetByCategoryNameAsync(string name)
+    public async Task<CategoryDto> GetCategoryByName(string name)
     {
         var category = await _categoryService.GetByCategoryNameAsync(name);
         return category;
     }
 
+    /// <summary>
+    /// Get Category List by filter
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    /// <remarks>URL: POST api/Category/GetList</remarks>
+
     [HttpGet]
-    public async Task<List<CategoryDto>> GetAll()
+    public async Task<PagedResultDto<CategoryDto>> GetList(FilterPagedResultRequestDto input)
     {
-        var category = await _categoryService.GetAllAsync();
+        var category = await _categoryService.GetListAsync(input);
         return category;
     }
 
+    /// <summary>
+    /// Get Category Children List
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <remarks>URL: POST api/Category/GetChildrenCategories/{id}</remarks>
+    /// 
     [HttpGet]
-    public async Task<List<CategoryDto>> GetFilteredCategoriesAsync([FromQuery] FilterPagedResultRequestDto input)
+    public async Task<List<CategoryDto>> GetChildrenCategories(long id)
     {
-        var category = await _categoryService.GetFilteredCategoriesAsync(input);
-        return category;
-    }
-
-    [HttpGet("{parentId}")]
-    public async Task<List<CategoryDto>> GetChildCategoriesAsync(long parentId)
-    {
-        var category= await _categoryService.GetChildCategoriesAsync(parentId);
+        var category = await _categoryService.GetChildrenCategoriesAsync(id);
         return category;
     }
 

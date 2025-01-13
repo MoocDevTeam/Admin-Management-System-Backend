@@ -2,6 +2,7 @@
 {
     public class CourseInstanceDto : BaseEntityDto
     {
+        public string Description { get; set; }
         public long MoocCourseId { get; set; }
         //public string MoocCourseTitle { get; set; } //user-friendly
         public int TotalSessions { get; set; }

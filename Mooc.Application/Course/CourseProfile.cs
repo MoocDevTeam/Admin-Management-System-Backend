@@ -1,5 +1,4 @@
-﻿using Mooc.Application.Contracts.Course.Dto.Category;
-using Mooc.Application.Contracts.Course.Dto;
+﻿using Mooc.Application.Contracts.Course.Dto;
 
 namespace Mooc.Application.Course;
 
@@ -13,7 +12,8 @@ public class CourseProfile : Profile
         CreateMap<UpdateEnrollmentDto, Enrollment>();
 
         CreateMap<CourseDto, MoocCourse>();
-        CreateMap<MoocCourse, CourseDto>();
+        CreateMap<MoocCourse, CourseDto>()
+        .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName));
         CreateMap<CreateCourseDto, MoocCourse>();
         CreateMap<MoocCourse, CreateCourseDto>();
         CreateMap<UpdateCourseDto, MoocCourse>();
@@ -42,14 +42,14 @@ public class CourseProfile : Profile
             .ForMember(dest => dest.CreatedByUserId, opt => opt.Ignore())
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
             .ForMember(dest => dest.UpdatedByUserId, opt => opt.Ignore());
-            
+
         //Database ---> Frontend
         CreateMap<TeacherCourseInstance, TeacherCourseInstanceReadDto>()
             .ForMember(dest => dest.CreatedByUser, opt => opt.MapFrom(src => src.CreatedByUser != null ? src.CreatedByUser.UserName : null))
             .ForMember(dest => dest.UpdatedByUser, opt => opt.MapFrom(src => src.UpdatedByUser != null ? src.UpdatedByUser.UserName : null));
 
         CreateMap<TeacherCourseInstance, TeacherCourseInstancePermissionDto>();
-        
+
         // Session Mapping
         // Frontend -> Backend -> Database 
         CreateMap<CreateOrUpdateSessionDto, Session>()
@@ -57,7 +57,7 @@ public class CourseProfile : Profile
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
         //  Database  -> Backend -> Frontend
         CreateMap<Session, ReadSessionDto>();
-        
+
         // CourseInstance Mapping
         CreateMap<CourseInstance, CourseInstanceDto>();
         CreateMap<CreateCourseInstanceDto, CourseInstance>();

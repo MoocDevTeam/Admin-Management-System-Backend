@@ -86,14 +86,14 @@ namespace Mooc.UnitTest
         [Order(1)]
         [Test, Sequential]
         public async Task TestAddAsync(
-        [Values("test01", "test02")] string userName,
-        [Values("123456", "123456")] string password,
-        [Values(30, 40)] int Age,
-        [Values("abc@gmail.com", "bcd@gmail.com")] string email,
-        [Values("0421658272", "0421658273")] string phone,
-        [Values("brisbane", "Goldcoast")] string address,
-        [Values(Gender.Female, Gender.Male)] Gender gender,
-        [Values("test01", "test02")] string Avatar
+        [Values("test01")] string userName,
+        [Values("123456")] string password,
+        [Values(30)] int Age,
+        [Values("abc@gmail.com")] string email,
+        [Values("0421658272")] string phone,
+        [Values("brisbane")] string address,
+        [Values(Gender.Female)] Gender gender,
+        [Values("test01")] string Avatar
         )
         {
             string uniqueUserName = $"{userName}_{Guid.NewGuid()}";
@@ -104,7 +104,7 @@ namespace Mooc.UnitTest
                 Password = password,
                 Age = Age,
                 Email = uniqueEmail,
-                
+                        
                 Gender = gender,
                 Avatar = Avatar,
                 // Include RoleIds if required by the API

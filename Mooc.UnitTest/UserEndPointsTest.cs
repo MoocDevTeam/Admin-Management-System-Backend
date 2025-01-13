@@ -13,7 +13,7 @@ namespace Mooc.UnitTest
 {
     public class UserEndPointsTest : BaseTest
     {
-
+        [Order(3)]
         [Test]
         public async Task TestGetByPageAsync([Values("test01", "test02")] string userName)
         {
@@ -38,6 +38,7 @@ namespace Mooc.UnitTest
 
         }
 
+        [Order(2)]
         [Test, Sequential]
         public async Task TestDeleteAsync(
             [Values("test01", "test02")] string userName
@@ -82,7 +83,7 @@ namespace Mooc.UnitTest
             return new List<long>();
         }
 
-
+        [Order(1)]
         [Test, Sequential]
         public async Task TestAddAsync(
         [Values("test01", "test02")] string userName,

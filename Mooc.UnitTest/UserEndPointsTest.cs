@@ -86,21 +86,22 @@ namespace Mooc.UnitTest
         [Order(1)]
         [Test, Sequential]
         public async Task TestAddAsync(
-        [Values("test01")] string userName,
-        [Values("123456")] string password,
-        [Values(30)] int Age,
-        [Values("abc@gmail.com")] string email,
-        [Values("0421658272")] string phone,
-        [Values("brisbane")] string address,
-        [Values(Gender.Female)] Gender gender,
-        [Values("test01")] string Avatar
+        [Values("test01", "test02")] string userName,
+        [Values("123456", "123455")] string password,
+        [Values(30, 40)] int Age,
+        [Values("abc@gmail.com", "qqq@gmail.com")] string email,
+        [Values("0421658272", "0421658255")] string phone,
+        [Values("brisbane", "Adelaide")] string address,
+        [Values(Gender.Female, Gender.Male)] Gender gender,
+        [Values("test01", "test02")] string Avatar
         )
         {
-
+            long uniqueId = DateTime.UtcNow.Ticks;
             string uniqueUserName = $"{userName}_{Guid.NewGuid()}";
             string uniqueEmail = $"{Guid.NewGuid()}_{email}";
             CreateUserDto user = new CreateUserDto
             {
+                Id = uniqueId,
                 UserName = uniqueUserName,
                 Password = password,
                 Age = Age,

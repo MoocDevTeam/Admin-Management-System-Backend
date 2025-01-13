@@ -54,14 +54,25 @@ public class CourseProfile : Profile
 
         // Session Mapping
         // Frontend -> Backend -> Database 
-        CreateMap<CreateOrUpdateSessionDto, Session>()
+        CreateMap<CreateSessionDto, Session>()
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
+        CreateMap<UpdateSessionDto, Session>()
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
         //  Database  -> Backend -> Frontend
-        CreateMap<Session, ReadSessionDto>()
-             .ForMember(dest => dest.Media, opt => opt.MapFrom(src => src.Sessionmedia))
-            .ForMember(dest => dest.MediaCount, opt => opt.MapFrom(src => src.Sessionmedia.Count))
-            .ForMember(dest => dest.HasMedia, opt => opt.MapFrom(src => src.Sessionmedia.Any()));
+        CreateMap<Session, ReadSessionDto>();
+
+        //Media Mapping
+        // Frontend -> Backend -> Database 
+        CreateMap<CreateMediaDto, Media>()
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
+        CreateMap<UpdateMediaDto, Media>()
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
+        //  Database  -> Backend -> Frontend
+        CreateMap<Media, ReadMediaDto>();
 
         // CourseInstance Mapping
         CreateMap<CourseInstance, CourseInstanceDto>()

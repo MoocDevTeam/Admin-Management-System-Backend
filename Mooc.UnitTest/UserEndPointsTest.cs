@@ -96,6 +96,7 @@ namespace Mooc.UnitTest
         [Values("test01")] string Avatar
         )
         {
+
             string uniqueUserName = $"{userName}_{Guid.NewGuid()}";
             string uniqueEmail = $"{Guid.NewGuid()}_{email}";
             CreateUserDto user = new CreateUserDto

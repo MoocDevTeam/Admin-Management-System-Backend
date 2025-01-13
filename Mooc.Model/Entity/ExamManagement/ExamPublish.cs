@@ -1,7 +1,7 @@
 using Mooc.Model.Entity.ExamManagement;
 
 namespace Mooc.Model.Entity;
-public class ExamPublish : BaseExam
+public class ExamPublish : BaseEntityWithAudit
 {
   public long ExamId { get; set; }
 

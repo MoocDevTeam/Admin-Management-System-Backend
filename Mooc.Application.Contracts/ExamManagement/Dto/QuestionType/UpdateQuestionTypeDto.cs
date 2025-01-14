@@ -1,4 +1,4 @@
-namespace Mooc.Application.Contracts.ExamManagement.Dto.QuestionType;
+namespace Mooc.Application.Contracts.ExamManagement;
 
 public class UpdateQuestionTypeDto : BaseEntityDto
 {

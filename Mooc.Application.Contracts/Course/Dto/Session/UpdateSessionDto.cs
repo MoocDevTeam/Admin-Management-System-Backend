@@ -1,5 +1,6 @@
 namespace Mooc.Application.Contracts.Course.Dto;
-public class CreateOrUpdateSessionDto : BaseEntityDto {
+public class UpdateSessionDto : BaseEntityDto
+{
   //Base Fields
   [Required(ErrorMessage = "Title is required")]
   [StringLength(50, ErrorMessage = "Title must be less than 50 characters")]
@@ -8,7 +9,6 @@ public class CreateOrUpdateSessionDto : BaseEntityDto {
   [StringLength(255, ErrorMessage = "Description must be less than 255 characters")]
   public string Description { get; set; } = string.Empty;
 
-  // Foreign Key Fields
-  [Required(ErrorMessage = "CourseInstanceId is required")]
-  public long CourseInstanceId { get; set; }
+  // Nullable, allows CourseInstanceId not to be supplied if it is not modified.
+  public long? CourseInstanceId { get; set; }
 }

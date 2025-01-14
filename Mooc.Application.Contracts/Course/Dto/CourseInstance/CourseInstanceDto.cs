@@ -16,5 +16,8 @@
         //public string UpdatedUserName { get; set; } //user-friendly
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public List<TeacherReadDto> Teachers { get; set; }
+        public List<ReadSessionDto> Sessions { get; set; }
+        public EnrollmentDto Enrollment { get; set; }
     }
 }

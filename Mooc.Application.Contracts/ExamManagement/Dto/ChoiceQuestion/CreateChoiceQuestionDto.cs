@@ -1,7 +1,14 @@
+using System.Text.Json.Serialization;
+
 namespace Mooc.Application.Contracts.ExamManagement;
 
 public class CreateChoiceQuestionDto : BaseEntityDto
 {
+    [JsonIgnore]
+    public override long Id { get; set; }
+
+    public long CourseId { get; set; }
+
     public long CreatedByUserId { get; set; }
 
     public DateTime CreatedAt { get; set; }

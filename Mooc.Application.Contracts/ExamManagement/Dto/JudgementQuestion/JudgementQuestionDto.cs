@@ -2,6 +2,8 @@ namespace Mooc.Application.Contracts.ExamManagement;
 
 public class JudgementQuestionDto : BaseEntityDto
 {
+    public long CourseId { get; set; }
+
     public long CreatedByUserId { get; set; }
 
     public DateTime CreatedAt { get; set; }

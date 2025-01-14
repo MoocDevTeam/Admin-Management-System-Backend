@@ -15,4 +15,5 @@ public class Comment : BaseEntity
     public bool IsFlagged { get; set; }
 
     public long? ParentCommentId { get; set; }
+    public DateTime? CreatedAt { get; set; }
 }

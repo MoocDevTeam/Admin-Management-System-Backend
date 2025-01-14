@@ -7,6 +7,7 @@ using Mooc.Application.Contracts.Course;
 
 using Mooc.Core.Utils;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mooc.Application.Course
 {
@@ -35,7 +36,7 @@ namespace Mooc.Application.Course
         public override async Task<CourseDto> CreateAsync(CreateCourseDto input)
         {
 
-            var courseDto = await base.CreateAsync(input); 
+            var courseDto = await base.CreateAsync(input);
             return courseDto;
         }
 
@@ -55,28 +56,108 @@ namespace Mooc.Application.Course
             }
         }
 
-        public async Task<CourseDto> GetByCourseNameAsync(string courseName)
+        //v2
+        public async Task<CourseDto?> GetByCourseNameAsync(string courseName)
         {
-            var course = await this.McDBContext.MoocCourses.FirstOrDefaultAsync(x => x.Title == courseName);
-            if (course == null)
-                return null;
+            var course = await this.McDBContext.MoocCourses
+                .Include(c => c.Category)
+                .Include(c => c.CourseInstances)
+                    .ThenInclude(ci => ci.TeacherCourseInstances)
+                        .ThenInclude(tci => tci.Teacher)
+                .Include(c => c.CourseInstances)
+                    .ThenInclude(ci => ci.Sessions)
+                        .ThenInclude(s => s.Sessionmedia)
+                .Include(c => c.CourseInstances)
+                    .ThenInclude(ci => ci.Enrollment)
+                .FirstOrDefaultAsync(c => c.Title.ToLower() == courseName.ToLower());
 
-            var courseOutput = this.Mapper.Map<CourseDto>(course);
-            return courseOutput;
+            return course == null ? null : _mapper.Map<CourseDto>(course);
         }
+
+        //v1
+        //public async Task<CourseDto> GetByCourseNameAsync(string courseName)
+        //{
+        //    var course = await this.McDBContext.MoocCourses
+        //        .Include(c => c.Category)
+        //        .Include(c => c.CourseInstances)
+        //            .ThenInclude(ci => ci.TeacherCourseInstances)
+        //                .ThenInclude(tci => tci.Teacher)
+        //        .FirstOrDefaultAsync(c => c.Title.ToLower() == courseName.ToLower());
+
+        //    if (course == null)
+        //    {
+        //        return null;
+        //    }
+
+        //    // maps the course to CourseDto, including nested properties
+        //    return _mapper.Map<CourseDto>(course);
+        //}
+
+        //yang's version
+        //public async Task<CourseDto> GetByCourseNameAsync(string courseName)
+        //{
+        //    var course = await this.McDBContext.MoocCourses
+        //        .Include(c => c.Category)
+        //        .Include(c => c.CourseInstances)
+        //        .ThenInclude(ci => ci.TeacherCourseInstances)
+        //                .ThenInclude(tci => tci.Teacher)
+        //        .FirstOrDefaultAsync(x =>
+        //        x.Title.ToLower() == courseName.ToLower());
+
+        //    if (course == null)
+        //        return null;
+
+        //    var courseOutput = this.Mapper.Map<CourseDto>(course);
+        //    courseOutput.CategoryName = course.Category?.CategoryName;
+
+        //    return courseOutput;
+        //}
+
+        public async override Task<CourseDto> GetAsync(long id)
+        {
+            // 1. Fetch the course with related data
+            var course = await this.McDBContext.MoocCourses
+                .Include(c => c.Category)
+                .Include(c => c.CourseInstances)
+                    .ThenInclude(ci => ci.TeacherCourseInstances)
+                        .ThenInclude(tci => tci.Teacher)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+
+            if (course == null)
+            {
+                // Handle course not found (maybe throw an exception)
+                return null;
+            }
+
+            // 2. Map to DTO and populate additional properties
+            var courseDto = this._mapper.Map<CourseDto>(course);
+            courseDto.CategoryName = course.Category?.CategoryName;
+
+            return courseDto;
+        }
+
+
+
 
 
 
 
         public async Task<List<CourseDto>> GetAllAsync()
         {
-            var courses = await this.McDBContext.MoocCourses.ToListAsync();
+            var courses = await this.McDBContext.MoocCourses
+                .Include(c => c.Category) // Include Category to load CategoryName
+                .Include(c => c.CourseInstances) // Include CourseInstances
+                .ToListAsync();
 
             if (courses.Count == 0)
                 return new List<CourseDto>();
-            var courseOutput = this._mapper.Map<List<CourseDto>>(courses);
-            return courseOutput;
 
+            var courseOutput = this._mapper.Map<List<CourseDto>>(courses);
+
+            courseOutput.ForEach(c => c.CategoryName = c.Category?.CategoryName);
+
+            return courseOutput;
         }
 
         public async Task<bool> CourseExist(string title)
@@ -84,6 +165,25 @@ namespace Mooc.Application.Course
             // return _context.Stock.AnyAsync(s => s.Id == id);
             return await this.McDBContext.MoocCourses.AnyAsync(c => c.Title == title);
         }
+        public async Task<List<CourseInstanceDto>> GetCourseInstancesByCourseIdAsync(long courseId)
+        {
+            // Assuming you have a DbContext called _dbContext
+            var courseInstances = await this.McDBContext.CourseInstances
+                .Where(ci => ci.MoocCourseId == courseId) // Assuming CourseId is the foreign key
+                .Select(ci => new CourseInstanceDto
+                {
+                    // Map properties from CourseInstance to CourseInstanceDto
+                    Id = ci.Id,
+                    // ... other properties
+                })
+                .ToListAsync();
+            return courseInstances;
+        }
+        public async Task<PagedResultDto<CourseDto>> GetListAsync(FilterPagedResultRequestDto input)
+        {
+            return await base.GetListAsync(input);
+        }
+
 
 
     }

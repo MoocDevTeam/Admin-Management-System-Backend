@@ -51,6 +51,7 @@ namespace MoocWebApi.Controllers.Course
         [HttpGet]
         public async Task<PagedResultDto<ReadSessionDto>> GetByPageAsync([FromQuery] FilterPagedResultRequestDto input)
         {
+
             if (input.PageIndex <= 0)
             {
                 throw new ArgumentException("PageIndex must be greater than 0.");

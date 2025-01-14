@@ -1,5 +1,4 @@
 ﻿using Mooc.Application.Contracts.ExamManagement;
-using Mooc.Application.Contracts.ExamManagement.Dto.QuestionType;
 
 namespace MoocWebApi.Controllers.ExamManagement
 {

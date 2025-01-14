@@ -1,6 +1,5 @@
-using Mooc.Model.Entity.ExamManagement;
-
 namespace Mooc.Model.Entity;
+
 public class ExamQuestion : BaseEntityWithAudit
 { 
   public long? ExamId { get; set; }

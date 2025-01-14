@@ -1,5 +1,3 @@
-using Mooc.Model.Entity.ExamManagement;
-
 namespace Mooc.Application.Contracts.ExamManagement;
 
 public class OptionDto : BaseEntityDto

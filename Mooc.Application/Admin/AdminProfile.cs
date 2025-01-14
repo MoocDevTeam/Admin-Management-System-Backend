@@ -13,5 +13,6 @@ public class AdminProfile: Profile
         CreateMap<Role, RoleDto>();
         CreateMap<CreateRoleDto, Role>();
         CreateMap<UpdateRoleDto, Role>();
+        CreateMap<LoginRequestDto, User>();
     }
 }

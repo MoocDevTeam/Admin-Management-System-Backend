@@ -13,7 +13,9 @@ public class CourseProfile : Profile
         CreateMap<UpdateEnrollmentDto, Enrollment>();
 
         CreateMap<CourseDto, MoocCourse>();
-        CreateMap<MoocCourse, CourseDto>();
+        CreateMap<MoocCourse, CourseDto>()
+        .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName))
+         .ForMember(dest => dest.CourseInstances, opt => opt.MapFrom(src => src.CourseInstances));
         CreateMap<CreateCourseDto, MoocCourse>();
         CreateMap<MoocCourse, CreateCourseDto>();
         CreateMap<UpdateCourseDto, MoocCourse>();
@@ -42,14 +44,14 @@ public class CourseProfile : Profile
             .ForMember(dest => dest.CreatedByUserId, opt => opt.Ignore())
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
             .ForMember(dest => dest.UpdatedByUserId, opt => opt.Ignore());
-            
+
         //Database ---> Frontend
         CreateMap<TeacherCourseInstance, TeacherCourseInstanceReadDto>()
             .ForMember(dest => dest.CreatedByUser, opt => opt.MapFrom(src => src.CreatedByUser != null ? src.CreatedByUser.UserName : null))
             .ForMember(dest => dest.UpdatedByUser, opt => opt.MapFrom(src => src.UpdatedByUser != null ? src.UpdatedByUser.UserName : null));
 
         CreateMap<TeacherCourseInstance, TeacherCourseInstancePermissionDto>();
-        
+
         // Session Mapping
         // Frontend -> Backend -> Database 
         CreateMap<CreateSessionDto, Session>()
@@ -73,9 +75,14 @@ public class CourseProfile : Profile
         CreateMap<Media, ReadMediaDto>();
 
         // CourseInstance Mapping
-        CreateMap<CourseInstance, CourseInstanceDto>();
+        CreateMap<CourseInstance, CourseInstanceDto>()
+         .ForMember(dest => dest.Teachers, opt => opt.MapFrom(src => src.TeacherCourseInstances.Select(tci => tci.Teacher)))
+        .ForMember(dest => dest.Sessions, opt => opt.MapFrom(src => src.Sessions))
+         .ForMember(dest => dest.Enrollment, opt => opt.MapFrom(src => src.Enrollment));
         CreateMap<CreateCourseInstanceDto, CourseInstance>();
         CreateMap<UpdateCourseInstanceDto, CourseInstance>();
+
+        CreateMap<Media, MediaDto>();
     }
 }
 

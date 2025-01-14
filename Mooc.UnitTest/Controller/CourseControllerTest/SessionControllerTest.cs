@@ -16,6 +16,7 @@ namespace Mooc.UnitTest.Controller.CourseController
       _sessionServiceMock = new Mock<ISessionService>();
       _sessionController = new SessionController(_sessionServiceMock.Object);
     }
+
     // Test get paginated method
     [Test]
     // Valid Input PageIndex and PageSize

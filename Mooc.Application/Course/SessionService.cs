@@ -67,6 +67,7 @@ namespace Mooc.Application.Course
           .Where(m => m.SessionId == sessionId && m.ApprovalStatus == MediaApprovalStatus.Approved)
           .CountAsync();
 
+
       var rejectedCount = await McDBContext.Media
           .Where(m => m.SessionId == sessionId && m.ApprovalStatus == MediaApprovalStatus.Rejected)
           .CountAsync();
@@ -114,6 +115,7 @@ namespace Mooc.Application.Course
       return await base.UpdateAsync(id, input);
     }
 
+
     // Override query
     protected override IQueryable<Session> CreateFilteredQuery(FilterPagedResultRequestDto input)
     {
@@ -153,6 +155,7 @@ namespace Mooc.Application.Course
           .Where(s => s.Title.Contains(sessionTitle)).ToListAsync();
 
       if (!sessionList.Any())
+
       {
         throw new EntityNotFoundException("No sessions found with the specified title.");
       }

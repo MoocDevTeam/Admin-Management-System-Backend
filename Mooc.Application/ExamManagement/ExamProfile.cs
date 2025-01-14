@@ -1,5 +1,4 @@
-﻿using Mooc.Application.Contracts.ExamManagemen;
-using Mooc.Application.Contracts.ExamManagement.Dto.QuestionType;
+﻿using Mooc.Application.Contracts.ExamManagement.Dto.QuestionType;
 using Mooc.Model.Entity.ExamManagement;
 
 namespace Mooc.Application.ExamManagement;

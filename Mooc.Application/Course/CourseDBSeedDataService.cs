@@ -29,13 +29,21 @@ namespace Mooc.Application.Course
         {
             new MoocCourse() { Id = 1, Title = "React", CourseCode = "100", CoverImage = "xxx.png", Description = "React", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
             new MoocCourse() { Id = 2, Title = ".Net", CourseCode = "101", CoverImage = "xxx.png", Description = ".Net", CreatedByUserId = 1, UpdatedByUserId = 1, CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
-            new MoocCourse() { Id = 3, Title = "Nodejs", CourseCode = "102", CoverImage = "xxx.png", Description = "Nodejs", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 3, Title = "Nodejs", CourseCode = "102", CoverImage = "xxx.png", Description = "Nodejs", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=2, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 4, Title = "Java", CourseCode = "103", CoverImage = "xxx.png", Description = "Java", CreatedByUserId = 1, UpdatedByUserId = 2,CategoryId=2, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 5, Title = "C++", CourseCode = "104", CoverImage = "xxx.png", Description = "C++", CreatedByUserId = 1, UpdatedByUserId = 2, CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 6, Title = "Python", CourseCode = "105", CoverImage = "xxx.png", Description = "Python", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 7, Title = "Business Analyse", CourseCode = "106", CoverImage = "xxx.png", Description = "Business Analyse", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 8, Title = "DevOps", CourseCode = "107", CoverImage = "xxx.png", Description = "DevOps", CreatedByUserId = 1, UpdatedByUserId = 2, CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 9, Title = "Data Science", CourseCode = "108", CoverImage = "xxx.png", Description = "Data Science", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 10, Title = "Programming Bootcamp", CourseCode = "109", CoverImage = "xxx.png", Description = "Programming Bootcamp", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+
         };
 
         private List<CourseInstance> courseInstances = new List<CourseInstance>()
         {
-            new CourseInstance(){Id=1, MoocCourseId=1, TotalSessions=10, Status=CourseInstanceStatus.Open, Permission=CourseInstancePermission.Private, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(1), CreatedByUserId=1 ,UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
-            new CourseInstance(){Id=2, MoocCourseId=2, TotalSessions=20, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=1, Description="No.23 Fullstack", MoocCourseId=1, TotalSessions=10, Status=CourseInstanceStatus.Open, Permission=CourseInstancePermission.Private, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(1), CreatedByUserId=1 ,UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=2, Description="No.24 Fullstack", MoocCourseId=2, TotalSessions=20, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
         };
 
 
@@ -213,7 +221,7 @@ namespace Mooc.Application.Course
 
         //TeacherCourseInstance Data seeding
         private static List<TeacherCourseInstance> teacherCourseInstances = new List<TeacherCourseInstance>()
-        {    
+        {
             new TeacherCourseInstance() { Id = 1, PermissionType = TeacherCourseInstancePermissionType.CanEdit, CourseInstanceId = 1, TeacherId = 1, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now, CreatedByUserId= 1, UpdatedByUserId= 1 },
             new TeacherCourseInstance() { Id = 2, PermissionType = TeacherCourseInstancePermissionType.NoAutherization, CourseInstanceId = 1, TeacherId = 2, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now,CreatedByUserId= 1, UpdatedByUserId= 1}
         };
@@ -392,7 +400,7 @@ namespace Mooc.Application.Course
                 UpdatedByUserId = 1,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now.AddMinutes(1),
-                ApprovalStatus = MediaApprovalStatus.Pending
+                ApprovalStatus = MediaApprovalStatus.Rejected
             }
         };
 
@@ -422,7 +430,7 @@ namespace Mooc.Application.Course
                 await this._dbContext.Enrollment.AddRangeAsync(enrollments);
                 await this._dbContext.SaveChangesAsync();
             }
-            
+
             if (!_dbContext.Session.Any())
             {
                 await this._dbContext.Session.AddRangeAsync(sessions);
@@ -430,10 +438,10 @@ namespace Mooc.Application.Course
             }
 
             if (!_dbContext.Teachers.Any())
-             {
+            {
                 await this._dbContext.Teachers.AddRangeAsync(teachers);
                 await this._dbContext.SaveChangesAsync();
-            }   
+            }
 
             if (!_dbContext.TeacherCourseInstances.Any())
             {

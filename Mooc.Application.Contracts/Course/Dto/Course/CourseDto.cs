@@ -17,4 +17,6 @@ public class CourseDto : BaseEntityDto
     public string CategoryName { get; set; }
     public virtual Category Category { get; set; }
     public List<CourseInstanceDto> CourseInstances { get; set; }
+    public TeacherCourseInstance teacherCourseInstance { get; set; }
+
 }

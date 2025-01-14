@@ -51,7 +51,18 @@ namespace MoocWebApi.Controllers.Course
         [HttpGet]
         public async Task<PagedResultDto<ReadSessionDto>> GetByPageAsync([FromQuery] FilterPagedResultRequestDto input)
         {
-            var pagedResult = await this._sessionService.GetListAsync(input);
+
+            if (input.PageIndex <= 0)
+            {
+                throw new ArgumentException("PageIndex must be greater than 0.");
+            }
+
+            if (input.PageSize <= 0)
+            {
+                throw new ArgumentException("PageSize must be greater than 0.");
+            }
+
+            var pagedResult = await _sessionService.GetListAsync(input);
             return pagedResult;
         }
 

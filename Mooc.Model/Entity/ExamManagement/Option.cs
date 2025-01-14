@@ -1,6 +1,6 @@
 namespace Mooc.Model.Entity.ExamManagement;
 
-public class Option : BaseEntity
+public class Option : BaseEntityWithAudit
 {
     public long ChoiceQuestionId { get; set; }
 
@@ -10,20 +10,12 @@ public class Option : BaseEntity
 
     public string? OptionValue { get; set; }
 
-    public long? CreatedByUserId { get; set; }
-
     public User? CreatedByUser { get; set; }
 
-    public DateTime CreatedAt { get; set; }
-
-    public long? UpdatedByUserId { get; set; }
-
-    public virtual ICollection<User>? UpdatedByUsers { get; set; }
-
-    public DateTime UpdatedAt { get; set; }
+    public virtual User? UpdatedByUser { get; set; }
 
     public string? ErrorExplanation { get; set; }
 
-/*    public DateTime Field {  get; set; }*/
+    /*    public DateTime Field {  get; set; }*/
 
 }

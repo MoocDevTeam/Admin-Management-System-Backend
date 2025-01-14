@@ -408,7 +408,7 @@ namespace Mooc.Application.Course
                 UpdatedByUserId = 1,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now.AddMinutes(1),
-                ApprovalStatus = MediaApprovalStatus.Pending
+                ApprovalStatus = MediaApprovalStatus.Rejected
             }
         };
 

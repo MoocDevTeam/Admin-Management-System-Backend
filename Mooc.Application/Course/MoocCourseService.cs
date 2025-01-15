@@ -7,6 +7,7 @@ using Mooc.Application.Contracts.Course;
 
 using Mooc.Core.Utils;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mooc.Application.Course
 {
@@ -77,7 +78,14 @@ namespace Mooc.Application.Course
                 x.Title.ToLower() == courseName.ToLower());
 
             if (course == null)
+            {
+                // Handle course not found (maybe throw an exception)
                 return null;
+            }
+
+            // 2. Map to DTO and populate additional properties
+            var courseDto = this._mapper.Map<CourseDto>(course);
+            courseDto.CategoryName = course.Category?.CategoryName;
 
             var courseOutput = this.Mapper.Map<CourseDto>(course);
             courseOutput.CategoryName = course.Category?.CategoryName;

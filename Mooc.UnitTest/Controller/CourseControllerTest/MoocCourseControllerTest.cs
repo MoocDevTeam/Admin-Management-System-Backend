@@ -7,9 +7,9 @@ using Mooc.Application.Contracts.Dto;
 using Mooc.Model.Entity;
 using MoocWebApi.Controllers.Course;
 using Moq;
-namespace Mooc.UnitTest.Controller
+namespace Mooc.UnitTest.Controller.CourseControllerTest
 {
-    public class CourseControllerTest
+    public class MoocCourseControllerTest
     {
         private MoocCourseController _controller;
         private Mock<IMoocCourseService> _courseServiceMock;

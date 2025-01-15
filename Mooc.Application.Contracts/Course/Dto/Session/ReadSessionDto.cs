@@ -16,7 +16,10 @@ public class ReadSessionDto : BaseEntityDto
   public DateTime CreatedAt { get; set; }
   public DateTime UpdatedAt { get; set; }
 
-  // Media-related information
-  public int MediaCount { get; set; } 
-  public bool HasMedia { get; set; } 
+  // Media Summary information
+  public int MediaCount { get; set; }
+  public int PendingCount { get; set; }
+  public int ApprovedCount { get; set; }
+  public int RejectedCount { get; set; }
+  public List<ReadMediaDto> MediaFiles { get; set; } = new List<ReadMediaDto>();
 }

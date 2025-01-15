@@ -11,53 +11,103 @@ namespace Mooc.Application.Course
         private readonly AwsS3Config _awsConfig;
         private readonly IAmazonS3 _s3Client;
 
-        public FileUploadService(AwsS3Config awsConfig) 
+        public FileUploadService(AwsS3Config awsConfig)
         {
             _awsConfig = awsConfig;
             _s3Client = new AmazonS3Client(_awsConfig.AccessKeyId, _awsConfig.SecretAccessKey, RegionEndpoint.GetBySystemName(_awsConfig.Region));
         }
-    
-        public async Task<string> UploadFileAsync(IFormFile file, string folderName)
+
+        public async Task<string> UploadLargeFileAsync(IFormFile file, string folderName, int partSizeMb = 5, IProgress<int> progress = null)
         {
-            // Validate if the file is null or has zero length
             if (file == null || file.Length == 0)
                 throw new ArgumentException("No file uploaded");
 
-            // Define the allowed file extensions
-            var allowedExtensions = new[] {".mp4", ".avi"};
-            var extention = Path.GetExtension(file.FileName).ToLower();
-
-            // Check if the file has a valid extension
-            if (!allowedExtensions.Contains(extention))
+            // Validate file extension
+            var allowedExtensions = new[] { ".mp4", ".avi" };
+            var extension = Path.GetExtension(file.FileName).ToLower();
+            if (!allowedExtensions.Contains(extension))
                 throw new ArgumentException("Invalid file type");
 
-            //limite the size of the file (Maximum 800MB)
-            const int maxFileSize = 800 * 1024 * 1024;
-            if (file.Length > maxFileSize)
-                throw new ArgumentException("File size exceeds the maximum limit");
+            // Regenerate the file name
+            var fileName = $"{Path.GetRandomFileName()}{extension}";
+            var filePath = Path.Combine(folderName, fileName).Replace("\\", "/");
 
-            // Regenerate the file name to avoid conflicts and keep it unique
-            var fileName = Path.GetRandomFileName()+extention;
-            var filePath = Path.Combine(folderName, fileName);
+            // Convert part size to bytes
+            var partSize = partSizeMb * 1024 * 1024;
 
-            // Upload the file to S3 using a stream
-            using (var stream = file.OpenReadStream()) 
+            // Initialize multipart upload
+            var initiateRequest = new InitiateMultipartUploadRequest
             {
-                var putRequest = new PutObjectRequest
+                BucketName = _awsConfig.BucketName,
+                Key = filePath,
+                ContentType = file.ContentType
+            };
+
+            var initiateResponse = await _s3Client.InitiateMultipartUploadAsync(initiateRequest);
+            var uploadId = initiateResponse.UploadId;
+
+            var partETags = new List<PartETag>();
+            long totalBytes = file.Length;
+            long uploadedBytes = 0;
+
+            try
+            {
+                // Upload parts
+                using (var fileStream = file.OpenReadStream())
+                {
+                    var partNumber = 1;
+                    var buffer = new byte[partSize];
+                    int bytesRead;
+                    while ((bytesRead = await fileStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                    {
+                        using (var partStream = new MemoryStream(buffer, 0, bytesRead))
+                        {
+                            var uploadPartRequest = new UploadPartRequest
+                            {
+                                BucketName = _awsConfig.BucketName,
+                                Key = filePath,
+                                UploadId = uploadId,
+                                PartNumber = partNumber,
+                                PartSize = bytesRead,
+                                InputStream = partStream
+                            };
+
+                            var uploadPartResponse = await _s3Client.UploadPartAsync(uploadPartRequest);
+                            partETags.Add(new PartETag(partNumber, uploadPartResponse.ETag));
+                            partNumber++;
+
+                            // Update the uploaded bytes and progress
+                            uploadedBytes += bytesRead;
+                            var percentage = (int)((uploadedBytes * 100) / totalBytes);
+                            progress?.Report(percentage); // Report progress to the front-end
+                        }
+                    }
+                }
+
+                // Complete multipart upload
+                var completeRequest = new CompleteMultipartUploadRequest
                 {
                     BucketName = _awsConfig.BucketName,
                     Key = filePath,
-                    InputStream = stream,
-                    ContentType = file.ContentType
+                    UploadId = uploadId,
+                    PartETags = partETags
                 };
-                var respose = await _s3Client.PutObjectAsync(putRequest);
-                if (respose.HttpStatusCode != System.Net.HttpStatusCode.OK)
-                {
-                    throw new Exception("Error uploading file to S3");
-                }
+
+                var completeResponse = await _s3Client.CompleteMultipartUploadAsync(completeRequest);
+                return $"https://{_awsConfig.BucketName}.s3.amazonaws.com/{filePath}";
             }
-            var fileUrl = $"https://{_awsConfig.BucketName}.s3.amazonaws.com/{filePath}";
-            return fileUrl;
+            catch (Exception ex)
+            {
+                // Abort multipart upload on failure
+                await _s3Client.AbortMultipartUploadAsync(new AbortMultipartUploadRequest
+                {
+                    BucketName = _awsConfig.BucketName,
+                    Key = filePath,
+                    UploadId = uploadId
+                });
+
+                throw new Exception($"Error uploading file: {ex.Message}", ex);
+            }
         }
     }
 }

@@ -25,6 +25,10 @@ namespace Mooc.Application.Course
         //Create teacher
         public override async Task<TeacherReadDto> CreateAsync(CreateOrUpdateTeacherDto input)
         {
+            if (input == null)
+            { 
+                throw new ArgumentNullException(nameof(input));
+            }
             await ValidateIdAsync(input.UserId);
             var teacherDto = await base.CreateAsync(input);
             return teacherDto;

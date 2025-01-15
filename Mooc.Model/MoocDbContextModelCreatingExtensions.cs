@@ -415,19 +415,19 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(x => x.CourseInstanceId)
               .IsRequired();
 
-            b.Property(x => x.CreatedByUserId)
-                .IsRequired();
+            // b.Property(x => x.CreatedByUserId)
+            //     .IsRequired();
 
-            b.Property(x => x.UpdatedByUserId)
-                .IsRequired(false);
+            // b.Property(x => x.UpdatedByUserId)
+            //     .IsRequired(false);
 
-            b.Property(x => x.CreatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            // b.Property(x => x.CreatedAt)
+            //     .IsRequired()
+            //     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            b.Property(x => x.UpdatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            // b.Property(x => x.UpdatedAt)
+            //     .IsRequired()
+            //     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             //Relationships
             b.HasOne<User>(x => x.CreatedByUser)
@@ -524,12 +524,12 @@ public static class MoocDbContextModelCreatingExtensions
                 .IsRequired();
             b.Property(cs => cs.ThumbnailPath)
                 .IsRequired();
-            b.Property(cs => cs.CreatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
-            b.Property(cs => cs.UpdatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
+            // b.Property(cs => cs.CreatedAt)
+            //     .IsRequired()
+            //     .HasDefaultValueSql("GETDATE()");
+            // b.Property(cs => cs.UpdatedAt)
+            //     .IsRequired()
+            //     .HasDefaultValueSql("GETDATE()");
             b.Property(cs => cs.ApprovalStatus)
                 .IsRequired()
                 .HasConversion(
@@ -537,10 +537,10 @@ public static class MoocDbContextModelCreatingExtensions
                     v => (MediaApprovalStatus)Enum.Parse(typeof(MediaApprovalStatus), v)
                 );
             b.Property(cs => cs.SessionId).IsRequired();
-            b.Property(x => x.CreatedByUserId)
-                .IsRequired();
-            b.Property(x => x.UpdatedByUserId)
-                .IsRequired(false);
+            // b.Property(x => x.CreatedByUserId)
+            //     .IsRequired();
+            // b.Property(x => x.UpdatedByUserId)
+            //     .IsRequired(false);
 
             // Relationships
             b.HasOne<User>(x => x.CreatedByUser)

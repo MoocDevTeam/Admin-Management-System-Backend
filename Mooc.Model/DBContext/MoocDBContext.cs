@@ -1,6 +1,4 @@
-﻿using Mooc.Model.Entity.ExamManagement;
-
-namespace Mooc.Model.DBContext;
+﻿namespace Mooc.Model.DBContext;
 
 public class MoocDBContext : DbContext
 {

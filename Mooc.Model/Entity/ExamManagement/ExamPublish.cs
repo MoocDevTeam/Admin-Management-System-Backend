@@ -13,11 +13,11 @@ public class ExamPublish : BaseEntityWithAudit
 
     // Navigation propertye:
 
-  public Exam? Exam { get; set; }
+  public virtual Exam? Exam { get; set; }
 
-  public User? CreatedByUser { get; set; }
+  public virtual User? CreatedByUser { get; set; }
 
-  public User? UpdatedByUser { get; set; }
+  public virtual User? UpdatedByUser { get; set; }
 
   //public User? PublishedByUser { get; set; }
 

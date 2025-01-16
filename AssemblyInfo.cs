@@ -7,8 +7,8 @@ using System.Runtime.InteropServices;
 
 
 
-[assembly: AssemblyVersion("1.0.0.55")]
-[assembly: AssemblyFileVersion("1.0.0.55")]
+[assembly: AssemblyVersion("1.0.0.56")]
+[assembly: AssemblyFileVersion("1.0.0.56")]
 
 
 

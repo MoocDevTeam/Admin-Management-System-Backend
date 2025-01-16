@@ -24,4 +24,7 @@ public class ExamDto : BaseEntityDto
     public int TotalScore { get; set; }
 
     public int TimePeriod { get; set; }
+
+    public List<ExamQuestionDto>? ExamQuestion { get; set; }
+
 }

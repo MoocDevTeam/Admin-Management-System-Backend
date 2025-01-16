@@ -60,10 +60,10 @@ public class ShortAnsQuestionController : ControllerBase
     }
 
     /// <summary>
-    /// Updates an existing ChoiceQuestion based on the provided ChoiceQuestion details.
+    /// Updates an existing ShortAnsQuestion based on the provided ShortAnsQuestion details.
     /// </summary>
-    /// <param name="input">The ChoiceQuestion details with updated information.</param>
-    /// <returns>Returns true if the ChoiceQuestion was successfully updated; otherwise, false.</returns>
+    /// <param name="input">The ShortAnsQuestion details with updated information.</param>
+    /// <returns>Returns true if the ShortAnsQuestion was successfully updated; otherwise, false.</returns>
     /// <remarks></remarks>
     [HttpPost("{id}")]
     public async Task<bool> UpdateShortAnsQuestionAsync([FromBody] UpdateShortAnsQuestionDto input)

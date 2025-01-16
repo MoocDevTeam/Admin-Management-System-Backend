@@ -1,7 +1,4 @@
-﻿using Mooc.Application.Contracts.ExamManagement.Dto.QuestionType;
-using Mooc.Model.Entity.ExamManagement;
-
-namespace Mooc.Application.ExamManagement;
+﻿namespace Mooc.Application.ExamManagement;
 
 public class QuestionTypeService : CrudService<QuestionType, QuestionTypeDto, QuestionTypeDto, long, FilterPagedResultRequestDto, CreateQuestionTypeDto, UpdateQuestionTypeDto>, IQuestionTypeService, ITransientDependency
 {

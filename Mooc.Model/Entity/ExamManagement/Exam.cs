@@ -17,13 +17,13 @@ public class Exam : BaseEntityWithAudit
   public int TimePeriod { get; set; }
 
   // Navigation property:
-  public User? CreatedByUser { get; set; }
+  public virtual  User? CreatedByUser { get; set; }
 
   public virtual User? UpdatedByUser { get; set; }
 
   public virtual ICollection<ExamQuestion>? ExamQuestion { get; set; }
 
-  public ExamPublish? ExamPublish { get; set; }
+  public virtual  ExamPublish? ExamPublish { get; set; }
 
-  public CourseInstance? CourseInstance { get; set; }
+  public virtual CourseInstance? CourseInstance { get; set; }
 }

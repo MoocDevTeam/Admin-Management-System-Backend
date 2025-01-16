@@ -1,6 +1,4 @@
-﻿
-using Mooc.Model.Entity.ExamManagement;
-using Mooc.Shared.Entity.Admin;
+﻿using Mooc.Shared.Entity.Admin;
 using Mooc.Shared.Entity.ExamManagement;
 using Mooc.Shared.Entity.Course;
 using Mooc.Model.Entity;

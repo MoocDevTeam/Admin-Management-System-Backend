@@ -1,8 +1,4 @@
-﻿using Mooc.Application.Contracts.ExamManagemen;
-using Mooc.Application.Contracts.ExamManagement.Dto.QuestionType;
-using Mooc.Model.Entity.ExamManagement;
-
-namespace Mooc.Application.ExamManagement;
+﻿namespace Mooc.Application.ExamManagement;
 
 public class ExamProfile : Profile
 {
@@ -32,7 +28,8 @@ public class ExamProfile : Profile
         CreateMap<CreateExamQuestionDto, ExamQuestion>();
         CreateMap<UpdateExamQuestionDto, ExamQuestion>();
 
-        CreateMap<Exam, ExamDto>();
+        CreateMap<Exam, ExamDto>()
+         .ForMember(dest => dest.ExamQuestion, opt => opt.MapFrom(src => src.ExamQuestion));
         CreateMap<CreateExamDto, Exam>();
         CreateMap<UpdateExamDto, Exam>();
 

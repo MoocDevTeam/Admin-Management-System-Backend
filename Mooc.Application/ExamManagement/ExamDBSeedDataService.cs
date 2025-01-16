@@ -1,7 +1,6 @@
 using Mooc.Application.Contracts;
 using Mooc.Core.MoocAttribute;
 using Mooc.Core.Utils;
-using Mooc.Model.Entity.ExamManagement;
 using StackExchange.Redis;
 
 namespace Mooc.Application.ExamManagement

@@ -1,6 +1,5 @@
-using Mooc.Model.Entity.ExamManagement;
-
 namespace Mooc.Model.Entity;
+
 public class ExamQuestion : BaseEntityWithAudit
 { 
   public long? ExamId { get; set; }
@@ -22,7 +21,7 @@ public class ExamQuestion : BaseEntityWithAudit
 
   // Navigation property:
 
-  public User? CreatedByUser { get; set; }
+  public virtual User? CreatedByUser { get; set; }
 
   public virtual User? UpdatedByUser { get; set; }
 
@@ -32,9 +31,9 @@ public class ExamQuestion : BaseEntityWithAudit
 
   //public string? QuestionType { get; set; } // Discriminator: "Choice", "Judgement", or "ShortAnswer"
 
-  public ChoiceQuestion? ChoiceQuestion { get; set; }
+  public virtual ChoiceQuestion? ChoiceQuestion { get; set; }
 
-  public JudgementQuestion? JudgementQuestion { get; set; }
+  public virtual JudgementQuestion? JudgementQuestion { get; set; }
 
-  public ShortAnsQuestion? ShortAnsQuestion { get; set; }
+  public virtual ShortAnsQuestion? ShortAnsQuestion { get; set; }
 }

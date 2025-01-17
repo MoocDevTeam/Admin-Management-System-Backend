@@ -11,4 +11,7 @@ public class CreateSessionDto : BaseEntityDto {
   // Foreign Key Fields
   [Required(ErrorMessage = "CourseInstanceId is required")]
   public long CourseInstanceId { get; set; }
+
+  //aadd TargetOrder to specify where to insert (optional)
+  public int? TargetOrder { get; set; }
 }

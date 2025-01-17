@@ -23,6 +23,7 @@ namespace MoocWebApi.Controllers.Course
         /// <returns>Returns true if the session was successfully added; otherwise, false.</returns>
         /// <remarks>URL: POST api/Session/Add</remarks>
         [HttpPost]
+        [Authorize]
         public async Task<bool> Add([FromBody] CreateSessionDto input)
         {
             var newSession = await _sessionService.CreateAsync(input);

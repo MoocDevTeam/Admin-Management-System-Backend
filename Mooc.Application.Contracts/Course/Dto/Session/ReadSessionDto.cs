@@ -14,7 +14,7 @@ public class ReadSessionDto : BaseEntityDto
 
   // Timestamp 
   public DateTime CreatedAt { get; set; }
-  public DateTime UpdatedAt { get; set; }
+  public DateTime? UpdatedAt { get; set; }
 
   // Media Summary information
   public int MediaCount { get; set; }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
+using Mooc.Application.Contracts;
 using Mooc.Application.Contracts.Course.Dto;
 using Mooc.Shared.Enum;
 
@@ -8,6 +9,7 @@ namespace Mooc.Application.Course
   {
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly IMapper _mapper;
+
     public SessionService(
       MoocDBContext dbContext,
       IMapper mapper,
@@ -18,21 +20,47 @@ namespace Mooc.Application.Course
       this._mapper = mapper;
     }
 
-    //Override MapToEntity
-    protected override Session MapToEntity(CreateSessionDto input)
+    // Adjust Session Orders
+    private async Task AdjustSessionOrdersAsync(long courseInstanceId, int targetOrder)
     {
-      var entity = base.MapToEntity(input);
-      entity.CreatedByUserId = 1;//---> need a method (getCurrentUserId)
-      entity.UpdatedByUserId = 1;
-      entity.Order = 10;//---> meed a method (getCurrentOrderNumber)
-      entity.CreatedAt = DateTime.Now; // write here or profile
-      entity.UpdatedAt = DateTime.Now;
+      await McDBContext.Session
+        .Where(s => s.CourseInstanceId == courseInstanceId && s.Order >= targetOrder)
+        .ForEachAsync(s => s.Order += 1);
+
+      await McDBContext.SaveChangesAsync();
+    }
+
+    // Set Session Order
+    private async Task<int> SetSessionOrderAsync(long courseInstanceId, int? targetOrder)
+    {
+      if (targetOrder.HasValue) // If a target position is specified, it means it's inserted in the middle.
+      {
+        await AdjustSessionOrdersAsync(courseInstanceId, targetOrder.Value);
+        return targetOrder.Value;
+      }
+      else // add at the end
+      {
+        return await McDBContext.Session
+         .Where(x => x.CourseInstanceId == courseInstanceId)
+         .CountAsync() + 1;
+      }
+    }
+
+    //Override MapToEntity
+    private async Task<Session> MapToEntityAsync(CreateSessionDto input)
+    {
+      var entity = this.Mapper.Map<CreateSessionDto, Session>(input);
+      var courseInstanceId = input.CourseInstanceId;
+      var targetOrder = input.TargetOrder;
+      entity.Order = await SetSessionOrderAsync(courseInstanceId, targetOrder);
       SetIdForLong(entity);
+      SetCreatedAudit(entity);
       return entity;
     }
 
     // Verify that the CourseInstanceId exist
-    private async Task ValidateCourseInstanceAsync(long courseInstanceId)
+    public
+     async Task ValidateCourseInstanceAsync(long courseInstanceId)
     {
       var courseInstanceExists = await McDBContext.CourseInstances.AnyAsync(x => x.Id == courseInstanceId);
       if (!courseInstanceExists)
@@ -42,7 +70,7 @@ namespace Mooc.Application.Course
     }
 
     //Verify that the SessionId exist
-    protected virtual async Task ValidateSessionIdAsync(long sessionId)
+    public virtual async Task ValidateSessionIdAsync(long sessionId)
     {
       var sessionExist = await McDBContext.Session.AnyAsync(x => x.Id == sessionId);
       if (!sessionExist)
@@ -95,10 +123,13 @@ namespace Mooc.Application.Course
     }
 
     //Create session
-    public override async Task<ReadSessionDto> CreateAsync(CreateSessionDto input)
+    public async Task<ReadSessionDto> CreateSessionAsync(CreateSessionDto input)
     {
+      var entity = MapToEntityAsync(input);
+      // GetDbSet().Add(entity);
+      await this.McDBContext.SaveChangesAsync();
       await ValidateCourseInstanceAsync(input.CourseInstanceId);
-      var createSessionDto = await base.CreateAsync(input); 
+      var createSessionDto = await base.CreateAsync(input);
       return createSessionDto;
     }
 

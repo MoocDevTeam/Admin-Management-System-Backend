@@ -136,11 +136,15 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
     {
         var user = await this.McDBContext.Users.FirstOrDefaultAsync(x => x.UserName == userName);
         if (user == null)
-            return null;
+        {
+            throw new EntityNotFoundException($"User {userName} not found", $"{userName} not found");
+        }
 
         var userOutput = this.Mapper.Map<UserDto>(user);
         return userOutput;
     }
+
+
 
     /// <summary>
     /// delete user with cascade delete of user roles

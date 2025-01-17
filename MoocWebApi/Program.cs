@@ -155,6 +155,8 @@ namespace MoocWebApi
 
                 var app = builder.Build();
 
+
+
                 app.UseCors(defaultPolicy);
                 app.UseMiddleware<ExceptionHandlingMiddleware>();
                 // Configure the HTTP request pipeline.

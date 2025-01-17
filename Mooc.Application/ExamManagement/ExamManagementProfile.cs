@@ -1,8 +1,8 @@
 ﻿namespace Mooc.Application.ExamManagement;
 
-public class ExamProfile : Profile
+public class ExamManagementProfile : Profile
 {
-    public ExamProfile()
+    public ExamManagementProfile()
     {
         CreateMap<QuestionType, QuestionTypeDto>();
         CreateMap<CreateQuestionTypeDto, QuestionType>();

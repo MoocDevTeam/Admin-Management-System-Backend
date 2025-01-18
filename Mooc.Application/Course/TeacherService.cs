@@ -22,7 +22,12 @@ namespace Mooc.Application.Course
             return base.CreateFilteredQuery(input);
         }
 
-        //Create teacher
+        /// <summary>
+        /// Create teacher
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public override async Task<TeacherReadDto> CreateAsync(CreateOrUpdateTeacherDto input)
         {
             if (input == null)
@@ -34,14 +39,25 @@ namespace Mooc.Application.Course
             return teacherDto;
         }
 
-        //Update
+        /// <summary>
+        /// Update
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public override async Task<TeacherReadDto> UpdateAsync(long id, CreateOrUpdateTeacherDto input)
         {
             await ValidateIdAsync(id);
             return await base.UpdateAsync(id, input);
         }
 
-        //GetByName
+
+        /// <summary>
+        /// GetByName
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="EntityNotFoundException"></exception>
         public async Task<TeacherReadDto> GetTeacherByName(string input)
         {
             var user = await this.McDBContext.Users.FirstOrDefaultAsync(x => x.UserName == input);

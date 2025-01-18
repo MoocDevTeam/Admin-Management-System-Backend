@@ -18,6 +18,9 @@ namespace Mooc.Application.Contracts.Course
     /// <returns>List of DTOs that contain all Sessions</returns>
     Task<IEnumerable<ReadSessionDto>> GetAllSessionsByCourseInstanceId(long courseInstanceId);
 
+        // Create with order
+        Task<ReadSessionDto> CreateWithOrderAsync(CreateSessionDto input);
+
 
   }
 }

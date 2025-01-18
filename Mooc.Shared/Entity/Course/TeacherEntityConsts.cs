@@ -12,7 +12,5 @@
 
         public const int MaxOfficeLength = 255;
 
-        public const int MaxDisplayNameLength = 50;
-
     }
 }

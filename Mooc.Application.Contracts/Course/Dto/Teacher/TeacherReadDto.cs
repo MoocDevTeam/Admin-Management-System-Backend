@@ -16,19 +16,9 @@
         public DateTime HiredDate { get; set; }
 
         public bool IsActive { get; set; }
-
         public long CreatedByUserId { get; set; }
-
         public long UpdatedByUserId { get; set; }
-
         public string CreatedByUser { get; set; }
-
         public string UpdatedByUser { get; set; }
-
-        public string DisplayName { get; set; }
-
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-
     }
 }

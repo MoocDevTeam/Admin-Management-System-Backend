@@ -264,15 +264,22 @@ public static class MoocDbContextModelCreatingExtensions
             b.ToTable("Teacher");
             b.HasKey(x => x.Id);
             b.Property(e => e.Id).ValueGeneratedNever();
-            b.Property(t => t.Title).IsRequired().HasMaxLength(TeacherEntityConsts.MaxTitleLength);
-            b.Property(t => t.Department).IsRequired().HasMaxLength(TeacherEntityConsts.MaxDepartmentLength);
-            b.Property(t => t.Office).IsRequired().HasMaxLength(TeacherEntityConsts.MaxOfficeLength);
-            b.Property(t => t.Introduction).HasMaxLength(TeacherEntityConsts.MaxIntroductionLength);
-            b.Property(t => t.Expertise).IsRequired().HasMaxLength(TeacherEntityConsts.MaxExpertiseLength);
-            b.Property(t => t.DisplayName).IsRequired().HasMaxLength(TeacherEntityConsts.MaxDisplayNameLength);
+            b.Property(cs => cs.Title).IsRequired().HasMaxLength(TeacherEntityConsts.MaxTitleLength);
+            b.Property(cs => cs.Department).IsRequired().HasMaxLength(TeacherEntityConsts.MaxDepartmentLength);
+            b.Property(cs => cs.Office).IsRequired().HasMaxLength(TeacherEntityConsts.MaxOfficeLength);
+            b.Property(cs => cs.Introduction).HasMaxLength(TeacherEntityConsts.MaxIntroductionLength);
+            b.Property(cs => cs.Expertise).IsRequired().HasMaxLength(TeacherEntityConsts.MaxExpertiseLength);
             b.ConfigureAudit();
 
+            ////Set create or update time by Datebase itself
+            //b.Property(e => e.CreatedAt)
+            //    .IsRequired()
+            //    .HasDefaultValueSql("GETDATE()");
+            //b.Property(e => e.UpdatedAt)
+            //    .IsRequired()
+            //    .HasDefaultValueSql("GETDATE()");
 
+            //b.Property(e => e.UpdatedAt).ValueGeneratedOnUpdate();
             b.HasOne<User>(x => x.User)
             .WithMany()
             .HasForeignKey(x => x.UserId)

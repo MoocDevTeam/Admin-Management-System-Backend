@@ -115,6 +115,7 @@ namespace Mooc.Application.Course
       return await base.UpdateAsync(id, input);
     }
 
+
     // Override query
     protected override IQueryable<Session> CreateFilteredQuery(FilterPagedResultRequestDto input)
     {

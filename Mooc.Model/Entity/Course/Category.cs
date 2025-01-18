@@ -22,6 +22,7 @@ public class Category : BaseEntityWithAudit
     public virtual User UpdatedByUser { get; set; }
 
     //Nav Category
+    [JsonIgnore]
     public virtual Category ParentCategory { get; set; }
     public virtual ICollection<Category> ChildrenCategories { get; set; }
 

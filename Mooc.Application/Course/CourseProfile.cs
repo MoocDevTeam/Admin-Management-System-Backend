@@ -11,9 +11,9 @@ public class CourseProfile : Profile
         CreateMap<CreateEnrollmentDto, Enrollment>();
         CreateMap<UpdateEnrollmentDto, Enrollment>();
 
-        CreateMap<CourseDto, MoocCourse>();
         CreateMap<MoocCourse, CourseDto>()
-        .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName));
+            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName));
+            //.ForMember(dest => dest.CourseInstances, opt => opt.MapFrom(src => src.CourseInstances));
         CreateMap<CreateCourseDto, MoocCourse>();
         CreateMap<MoocCourse, CreateCourseDto>();
         CreateMap<UpdateCourseDto, MoocCourse>();
@@ -62,6 +62,8 @@ public class CourseProfile : Profile
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
         //  Database  -> Backend -> Frontend
         CreateMap<Session, ReadSessionDto>();
+        //.ForMember(dest => dest.MediaFiles, opt => opt.MapFrom(src => src.Sessionmedia))
+        //.ForMember(dest => dest.MediaCount, opt => opt.MapFrom(src => src.Sessionmedia.Count));
 
         //Media Mapping
         // Frontend -> Backend -> Database 
@@ -74,13 +76,23 @@ public class CourseProfile : Profile
         //  Database  -> Backend -> Frontend
         CreateMap<Media, ReadMediaDto>();
 
-        // CourseInstance Mapping
+        #region //CourseInstance Mapping
+
         CreateMap<CourseInstance, CourseInstanceDto>()
-         .ForMember(dest => dest.Teachers, opt => opt.MapFrom(src => src.TeacherCourseInstances.Select(tci => tci.Teacher)))
-        .ForMember(dest => dest.Sessions, opt => opt.MapFrom(src => src.Sessions))
-         .ForMember(dest => dest.Enrollment, opt => opt.MapFrom(src => src.Enrollment));
+            .ForMember(dest => dest.MoocCourseTitle, opt => opt.MapFrom(src => src.MoocCourse.Title))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
+            .ForMember(dest => dest.Permission, opt => opt.MapFrom(src => src.Permission.ToString()))
+            .ForMember(dest => dest.Teachers, opt => opt.MapFrom(src => src.TeacherCourseInstances.Select(tci => tci.Teacher)))
+            .ForMember(dest => dest.Sessions, opt => opt.MapFrom(src => src.Sessions))
+            .ForMember(dest => dest.TotalSessions, opt => opt.MapFrom(src => src.Sessions.Count()))
+            .ForMember(dest => dest.Enrollment, opt => opt.MapFrom(src => src.Enrollment))
+            .ForMember(dest => dest.CreatedUserName, opt => opt.MapFrom(src => src.CreatedByUser.UserName))
+            .ForMember(dest => dest.UpdatedUserName, opt => opt.MapFrom(src => src.UpdatedByUser.UserName))
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
         CreateMap<CreateCourseInstanceDto, CourseInstance>();
         CreateMap<UpdateCourseInstanceDto, CourseInstance>();
+        #endregion
 
         CreateMap<Media, MediaDto>();
     }

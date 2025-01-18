@@ -186,6 +186,10 @@ public static class MoocDbContextModelCreatingExtensions
         ConfigureTeacherCourseInstance(modelBuilder);
     }
 
+    /// <summary>
+    /// Configures the CourseInstance entity in the database model
+    /// </summary>
+    /// <param name="modelBuilder">ModelBuilder used for entity configuration</param>
     private static void ConfigureCourseInstance(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<CourseInstance>(c =>
@@ -193,8 +197,8 @@ public static class MoocDbContextModelCreatingExtensions
             c.ToTable(TablePrefix + "CourseInstances");
             c.HasKey(x => x.Id);
             c.Property(x => x.Id).ValueGeneratedNever();
+            c.Property(x => x.Description).IsRequired();
             c.Property(x => x.MoocCourseId).IsRequired();
-            c.Property(x => x.TotalSessions).IsRequired();
             c.Property(x => x.Status).HasConversion(
                 v => v.ToString(),
                 v => (CourseInstanceStatus)Enum.Parse(typeof(CourseInstanceStatus), v))
@@ -209,16 +213,19 @@ public static class MoocDbContextModelCreatingExtensions
             c.Property(x => x.EndDate).IsRequired();
             c.Property(x => x.CreatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
             c.Property(x => x.UpdatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
-            c.Property(x => x.CreatedByUserId).IsRequired();
-            //c.HasOne(x => x.CreatedByUser)
-            //    .WithMany(u => u.CreatedCourseInstances)
-            //    .HasForeignKey(x => x.CreatedByUserId)
-            //    .OnDelete(DeleteBehavior.Restrict);
-            c.Property(x => x.UpdatedByUserId).IsRequired();
-            //c.HasOne(x => x.UpdatedByUser)
-            //    .WithMany(u => u.UpdatedCourseInstances)
-            //    .HasForeignKey(x => x.UpdatedByUserId)
-            //    .OnDelete(DeleteBehavior.Cascade);
+
+            c.ConfigureAudit();
+
+            //Many to One
+            c.HasOne(x => x.CreatedByUser)
+                .WithMany()
+                .HasForeignKey(x => x.CreatedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            //Many to One
+            c.HasOne(x => x.UpdatedByUser)
+                .WithMany()
+                .HasForeignKey(x => x.UpdatedByUserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             //Many to One: CourseInstance->MoocCourse
             c.HasOne(x => x.MoocCourse)
@@ -240,18 +247,6 @@ public static class MoocDbContextModelCreatingExtensions
                 .WithOne()
                 .HasForeignKey<Enrollment>(e => e.CourseInstanceId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            // They will be moved to User Configuration later
-            // One to Many: MoocUser->CreatedCourseInstances
-            //b.HasMany(cs => cs.CreatedCourseInstances)
-            //            .WithOne(cci => cci.CreatedByUser)
-            //            .HasForeignKey(cci => cci.CreatedByUserId)
-            //            .OnDelete(DeleteBehavior.Restrict);
-            // One to Many: MoocUser->UpdatedCourseInstances
-            //b.HasMany(cs => cs.UpdatedCourseInstances)
-            //            .WithOne(uci => uci.UpdatedByUser)
-            //            .HasForeignKey(uci => uci.UpdatedByUserId)
-            //            .OnDelete(DeleteBehavior.Restrict);
         });
     }
     /// <summary>

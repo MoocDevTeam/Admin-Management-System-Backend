@@ -21,5 +21,5 @@ public class ReadSessionDto : BaseEntityDto
   public int PendingCount { get; set; }
   public int ApprovedCount { get; set; }
   public int RejectedCount { get; set; }
-  public List<ReadMediaDto> MediaFiles { get; set; } = new List<ReadMediaDto>();
+  public List<ReadMediaDto> MediaFiles { get; set; }
 }

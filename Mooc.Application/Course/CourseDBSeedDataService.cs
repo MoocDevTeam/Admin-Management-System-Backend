@@ -79,8 +79,7 @@ namespace Mooc.Application.Course
                 UserId=2,
                 IsActive = false,
                 CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                DisplayName = "Jack"
+                UpdatedAt = DateTime.Now
             },
             new Teacher()
             {
@@ -96,8 +95,7 @@ namespace Mooc.Application.Course
                 UserId=2,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddYears(-2),
-                UpdatedAt = DateTime.Now.AddMonths(-3),
-                DisplayName = "Joe"
+                UpdatedAt = DateTime.Now.AddMonths(-3)
             },
             new Teacher()
             {
@@ -113,8 +111,7 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddMonths(-8),
-                UpdatedAt = DateTime.Now.AddMonths(-2),
-                DisplayName = "Jacob"
+                UpdatedAt = DateTime.Now.AddMonths(-2)
             },
             new Teacher()
             {
@@ -130,8 +127,7 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddYears(-1),
-                UpdatedAt = DateTime.Now,
-                DisplayName = "Josh"
+                UpdatedAt = DateTime.Now
             },
             new Teacher()
             {
@@ -147,8 +143,7 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddYears(-10),
-                UpdatedAt = DateTime.Now.AddMonths(-1),
-                DisplayName = "John"
+                UpdatedAt = DateTime.Now.AddMonths(-1)
             },
             new Teacher()
             {
@@ -164,8 +159,7 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddYears(-3),
-                UpdatedAt = DateTime.Now.AddMonths(-4),
-                DisplayName = "James"
+                UpdatedAt = DateTime.Now.AddMonths(-4)
             },
             new Teacher()
             {
@@ -181,8 +175,7 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = false,
                 CreatedAt = DateTime.Now.AddYears(-5),
-                UpdatedAt = DateTime.Now.AddMonths(-2),
-                DisplayName = "Jordan"
+                UpdatedAt = DateTime.Now.AddMonths(-2)
             },
             new Teacher()
             {
@@ -198,8 +191,7 @@ namespace Mooc.Application.Course
                 UserId=2,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddMonths(-6),
-                UpdatedAt = DateTime.Now.AddDays(-15),
-                DisplayName = "Jason"
+                UpdatedAt = DateTime.Now.AddDays(-15)
             },
             new Teacher()
             {
@@ -215,8 +207,7 @@ namespace Mooc.Application.Course
                 UserId=2,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddYears(-8),
-                UpdatedAt = DateTime.Now,
-                DisplayName = "Jackson"
+                UpdatedAt = DateTime.Now
             },
             new Teacher()
             {
@@ -232,8 +223,7 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = false,
                 CreatedAt = DateTime.Now.AddMonths(-12),
-                UpdatedAt = DateTime.Now.AddDays(-10),
-                DisplayName = "Jenny"
+                UpdatedAt = DateTime.Now.AddDays(-10)
             }
         };
 

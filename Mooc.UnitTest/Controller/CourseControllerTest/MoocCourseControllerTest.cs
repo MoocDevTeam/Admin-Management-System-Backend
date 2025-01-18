@@ -7,7 +7,7 @@ using Mooc.Application.Contracts.Dto;
 using Mooc.Model.Entity;
 using MoocWebApi.Controllers.Course;
 using Moq;
-namespace Mooc.UnitTest.Controller.CourseControllerTest
+namespace Mooc.UnitTest.Controller.CourseController
 {
     public class MoocCourseControllerTest
     {

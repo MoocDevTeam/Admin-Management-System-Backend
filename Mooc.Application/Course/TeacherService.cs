@@ -34,7 +34,12 @@ namespace Mooc.Application.Course
             { 
                 throw new ArgumentNullException(nameof(input));
             }
+            //validate id 
             await ValidateIdAsync(input.UserId);
+
+            //get user name and add to input
+            var userNameForDisplay = await McDBContext.Users.Where(u => u.Id == input.UserId).Select(u => u.UserName).FirstOrDefaultAsync();
+            input.DisplayName = userNameForDisplay;
             var teacherDto = await base.CreateAsync(input);
             return teacherDto;
         }

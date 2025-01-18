@@ -74,8 +74,12 @@ namespace Mooc.Application.Course
                 .Include(c => c.CourseInstances)
                 .ThenInclude(ci => ci.TeacherCourseInstances)
                         .ThenInclude(tci => tci.Teacher)
-                .FirstOrDefaultAsync(x =>
-                x.Title.ToLower() == courseName.ToLower());
+                .Include(c => c.CourseInstances)
+                    .ThenInclude(ci => ci.Sessions)
+                        .ThenInclude(s => s.Sessionmedia)
+                .Include(c => c.CourseInstances)
+                    .ThenInclude(ci => ci.Enrollment)
+                .FirstOrDefaultAsync(c => c.Title.ToLower() == courseName.ToLower());
 
             if (course == null)
             {

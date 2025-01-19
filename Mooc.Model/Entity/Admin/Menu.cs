@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mooc.Model.Entity;
 
-public class Menu : BaseEntity
+public class Menu : BaseEntityWithAudit
 {
     /// <summary>
     /// the title of the menu.

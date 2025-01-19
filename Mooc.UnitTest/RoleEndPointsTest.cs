@@ -99,7 +99,7 @@ namespace Mooc.UnitTest
             var jsonContent = JsonContent.Create(role);
            
 
-            var resp = await Client.PutAsync("/api/role/Update", jsonContent);
+            var resp = await Client.PostAsync("/api/role/Update", jsonContent);
            
             Assert.IsNotNull(resp);
 

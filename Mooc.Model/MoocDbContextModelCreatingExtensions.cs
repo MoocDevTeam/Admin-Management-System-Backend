@@ -1,6 +1,4 @@
-﻿
-using Mooc.Model.Entity.ExamManagement;
-using Mooc.Shared.Entity.Admin;
+﻿using Mooc.Shared.Entity.Admin;
 using Mooc.Shared.Entity.ExamManagement;
 using Mooc.Shared.Entity.Course;
 using Mooc.Model.Entity;
@@ -70,6 +68,7 @@ public static class MoocDbContextModelCreatingExtensions
            ).HasMaxLength(MenuEntityConsts.MaxMenuTypeLength);
             b.HasMany(cs => cs.RoleMenus);
             b.HasOne(cs => cs.Parent).WithMany(cs => cs.Children).HasForeignKey(cs => cs.ParentId);
+            b.ConfigureAudit();
         });
     }
     private static void ConfigureRole(ModelBuilder modelBuilder)
@@ -108,12 +107,13 @@ public static class MoocDbContextModelCreatingExtensions
         modelBuilder.Entity<UserRole>(b =>
         {
             b.ToTable(TablePrefix + "UserRole");
-            b.HasKey(x => x.Id);
+           // b.HasKey(x => x.Id);
             b.Property(x => x.Id).ValueGeneratedNever();
             b.HasKey(ur => new { ur.UserId, ur.RoleId });
             b.HasOne(ur => ur.User)
                   .WithMany(u => u.UserRoles)
-                  .HasForeignKey(ur => ur.UserId);
+                  .HasForeignKey(ur => ur.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
             b.HasOne(ur => ur.Role)
                   .WithMany(r => r.UserRoles)
                   .HasForeignKey(ur => ur.RoleId);
@@ -126,18 +126,33 @@ public static class MoocDbContextModelCreatingExtensions
     {
         modelBuilder.Entity<Carousel>(b =>
         {
-            b.ToTable("Carousel");
+
             b.HasKey(x => x.Id);
-            b.Property(x => x.Title).IsRequired().HasMaxLength(CarouselEntityConsts.MaxTitleLength);
+            b.Property(x => x.Title)
+                .IsRequired()
+                .HasMaxLength(CarouselEntityConsts.MaxTitleLength);
             b.Property(x => x.ImageUrl).IsRequired();
-            b.Property(x => x.RedirectUrl).HasMaxLength(CarouselEntityConsts.MaxRedirectUrlLength);
-            b.Property(x => x.IsActive).IsRequired().HasDefaultValue(CarouselEntityConsts.DefaultIsActive);
+            b.Property(x => x.RedirectUrl)
+                .HasMaxLength(CarouselEntityConsts.MaxRedirectUrlLength);
+            b.Property(x => x.IsActive)
+                .IsRequired()
+                .HasDefaultValue(CarouselEntityConsts.DefaultIsActive);
             b.Property(x => x.UpdatedAt).IsRequired();
             b.Property(x => x.StartDate).IsRequired();
             b.Property(x => x.EndDate).IsRequired();
-            b.Property(x => x.Position).IsRequired();
-            b.HasOne<User>().WithMany().HasForeignKey(x => x.CreatedByUserId);
-            b.HasOne<User>().WithMany().HasForeignKey(x => x.UpdatedByUserId);
+            b.ToTable("Carousel", t =>
+            {
+                t.HasCheckConstraint("CK_Carousel_Position_Range", "[Position] BETWEEN 1 AND 6");
+            });
+            b.Property(x => x.Position)
+                .IsRequired();
+            b.HasIndex(x => x.Position).IsUnique();
+            b.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(x => x.CreatedByUserId);
+            b.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(x => x.UpdatedByUserId);
         });
     }
 
@@ -146,27 +161,36 @@ public static class MoocDbContextModelCreatingExtensions
         modelBuilder.Entity<Comment>(b =>
         {
             b.ToTable("Comment");
-            b.HasKey(x => x.Id);
-            b.Property(x => x.Content).IsRequired().HasMaxLength(CommentEntityConsts.MaxContentLength);
-            b.Property(x => x.IsActive).IsRequired().HasDefaultValue(CommentEntityConsts.DefaultIsActive);
-            b.Property(x => x.IsFlagged).IsRequired().HasDefaultValue(CommentEntityConsts.DefaultIsFlagged);
-            b.HasOne<User>().WithMany().HasForeignKey(x => x.CreatedByUserId);
-            b.HasOne<Comment>().WithMany().HasForeignKey(x => x.ParentCommentId);
-
-
-            //Need to communicate with Young to fix
-
-            //// Explicit relationship to MoocCourse for CreatedCourses
-            //b.HasMany(u => u.CreatedCourses)
-            //    .WithOne(c => c.CreatedByUser)
-            //    .HasForeignKey(c => c.CreatedByUserId)  // Foreign key property
-            //    .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
-
-            //// Explicit relationship to MoocCourse for UpdatedCourses
-            //b.HasMany(u => u.UpdatedCourses)
-            //    .WithOne(c => c.UpdatedByUser)
-            //    .HasForeignKey(c => c.UpdatedByUserId)  // Foreign key property
-            //    .OnDelete(DeleteBehavior.Restrict);  // Delete behavior
+            b.HasKey(c => c.Id);
+            b.Property(c => c.Content)
+                .IsRequired()
+                .HasMaxLength(1000);
+            b.Property(c => c.IsActive)
+                .IsRequired()
+                .HasDefaultValue(true);
+            b.Property(c => c.IsFlagged)
+                .IsRequired()
+                .HasDefaultValue(false);
+            b.HasOne(c => c.MoocCourse)
+                .WithMany()
+                .HasForeignKey(c => c.MoocCourseId)
+                .OnDelete(DeleteBehavior.Restrict);
+            b.HasOne(c => c.Category)
+                .WithMany()
+                .HasForeignKey(c => c.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+            b.HasOne(c => c.Session)
+                .WithMany()
+                .HasForeignKey(c => c.SessionId)
+                .OnDelete(DeleteBehavior.Restrict);
+            b.HasOne(c => c.Teacher)
+                .WithMany()
+                .HasForeignKey(c => c.TeacherId)
+                .OnDelete(DeleteBehavior.Restrict);
+            b.HasOne(c => c.ParentComment)
+                .WithMany(c => c.Replies)
+                .HasForeignKey(c => c.ParentCommentId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 
@@ -573,29 +597,6 @@ public static class MoocDbContextModelCreatingExtensions
 
             b.HasKey(cq => cq.Id);
             b.Property(cq => cq.Id).ValueGeneratedNever();
-            //b.HasOne<Course>()
-            //    .WithMany()
-            //    .HasForeignKey(cq => cq.CourseId);
-
-            b.HasOne(cq => cq.CreatedByUser)
-                //.WithMany(u => u.CreatedChoiceQuestions)
-                .WithMany()
-                .HasForeignKey(o => o.CreatedByUserId);
-
-            b.HasOne<User>()
-                //b.HasMany<User>()
-                //.WithMany(u => u.UpdatedChoiceQuestions)
-                .WithMany()
-                //.UsingEntity(j =>
-                //    j.ToTable("ChoiceQuestionUpdatedByUsers"));
-                .HasForeignKey(cq => cq.UpdatedByUserId);
-
-            b.Property(cq => cq.CreatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
-            b.Property(cq => cq.UpdatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
             b.Property(cq => cq.QuestionBody)
                 .IsRequired()
                 .HasMaxLength(BaseQuestionEntityConsts.MaxQuestionBodyLength);
@@ -613,6 +614,10 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasMany<Option>()
                  .WithOne(o => o.ChoiceQuestion)
                  .HasForeignKey(o => o.ChoiceQuestionId);
+            b.HasOne(cq => cq.CourseInstance)
+                   .WithMany()
+                   .HasForeignKey(cq => cq.CourseId);
+            b.ConfigureAudit();
         });
     }
 
@@ -628,28 +633,6 @@ public static class MoocDbContextModelCreatingExtensions
                 .WithMany(cq => cq.Option)
                 .HasForeignKey(o => o.ChoiceQuestionId);
 
-            b.HasOne(o => o.CreatedByUser)
-                //.WithMany(u => u.CreatedChoiceQuestions)
-                .WithMany()
-                .HasForeignKey(o => o.CreatedByUserId);
-
-            b.HasOne<User>()
-                //b.HasMany<User>()
-                //.WithMany(u => u.UpdatedChoiceQuestions)
-                .WithMany()
-                //.UsingEntity(j =>
-                //    j.ToTable("OptionUpdatedByUsers"));
-                .HasForeignKey(o => o.UpdatedByUserId);
-
-            b.Property(o => o.CreatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
-            b.Property(o => o.UpdatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
-            /*            b.Property(o => o.Field)
-                            .IsRequired()
-                            .HasDefaultValueSql("CURRENT_TIMESTAMP)");*/
             b.Property(o => o.OptionOrder)
                 .IsRequired()
                 .HasMaxLength(OptionEntityConsts.MaxOrderLength);
@@ -659,6 +642,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(o => o.ErrorExplanation)
                 .IsRequired()
                 .HasMaxLength(OptionEntityConsts.MaxErrorExplanationLength);
+            b.ConfigureAudit();
         });
     }
 
@@ -675,29 +659,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasKey(jq => jq.Id);
             b.Property(jq => jq.Id)
                 .ValueGeneratedNever();
-            //b.HasOne<Course>()
-            //    .WithMany()
-            //    .HasForeignKey(jq => jq.CourseId);
 
-            b.HasOne(jq => jq.CreatedByUser)
-                //.WithMany(u => u.CreatedChoiceQuestions)
-                .WithMany()
-                .HasForeignKey(jq => jq.CreatedByUserId);
-
-            b.HasOne<User>()
-                //b.HasMany<User>()
-                //.WithMany(u => u.UpdatedChoiceQuestions)
-                .WithMany()
-                //.UsingEntity(j =>
-                //    j.ToTable("JudgementQuestionUpdatedByUsers"));
-                .HasForeignKey(jq => jq.UpdatedByUserId);
-
-            b.Property(jq => jq.CreatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
-            b.Property(jq => jq.UpdatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
             b.Property(jq => jq.QuestionBody)
                 .IsRequired()
                 .HasMaxLength(BaseQuestionEntityConsts.MaxQuestionBodyLength);
@@ -712,6 +674,10 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasOne(jq => jq.QuestionType)
                 .WithMany(qt => qt.JudgementQuestions)
                 .HasForeignKey(cq => cq.QuestionTypeId);
+            b.HasOne(jq => jq.CourseInstance)
+             .WithMany()
+             .HasForeignKey(jq => jq.CourseId);
+            b.ConfigureAudit();
         });
     }
 
@@ -726,31 +692,7 @@ public static class MoocDbContextModelCreatingExtensions
             });
 
             b.HasKey(saq => saq.Id);
-            b.Property(saq => saq.Id)
-                .ValueGeneratedNever();
-            //b.HasOne<Course>()
-            //    .WithMany()
-            //    .HasForeignKey(saq => saq.CourseId);
-
-            b.HasOne(saq => saq.CreatedByUser)
-                 //.WithMany(u => u.CreatedChoiceQuestions)
-                 .WithMany()
-                 .HasForeignKey(saq => saq.CreatedByUserId);
-
-            b.HasOne<User>()
-                //b.HasMany<User>()
-                //.WithMany(u => u.UpdatedChoiceQuestions)
-                .WithMany()
-                //.UsingEntity(j =>
-                //    j.ToTable("ShortAnsQuestionUpdatedByUsers"));
-                .HasForeignKey(saq => saq.UpdatedByUserId);
-
-            b.Property(saq => saq.CreatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
-            b.Property(saq => saq.UpdatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            b.Property(saq => saq.Id).ValueGeneratedNever();
             b.Property(saq => saq.QuestionBody)
                 .IsRequired()
                 .HasMaxLength(BaseQuestionEntityConsts.MaxQuestionBodyLength);
@@ -765,6 +707,10 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasOne(saq => saq.QuestionType)
                 .WithMany(qt => qt.ShortAnsQuestions)
                 .HasForeignKey(saq => saq.QuestionTypeId);
+            b.HasOne(saq => saq.CourseInstance)
+                 .WithMany()
+                 .HasForeignKey(saq => saq.CourseId);
+            b.ConfigureAudit();
         });
     }
     private static void ConfigureQuestionType(ModelBuilder modelBuilder)
@@ -788,21 +734,9 @@ public static class MoocDbContextModelCreatingExtensions
             b.ToTable(TablePrefix + "Exam");
             b.HasKey(e => e.Id);
             b.Property(e => e.Id).ValueGeneratedNever();
-            /* b.HasOne<Course>()
-                   .WithMany()
-                   .HasForeignKey(e => e.CourseId); */
-            b.HasOne(e => e.CreatedByUser)
+            b.HasOne(e=>e.CourseInstance)
                 .WithMany()
-                .HasForeignKey(e => e.CreatedByUserId);
-            b.HasOne<User>()
-            // HasMany wait future needs
-                .WithMany()
-                .HasForeignKey(e => e.UpdatedByUserId);
-            b.Property(e => e.CreatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP"); //for SQLite
-            b.Property(e => e.UpdatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP"); //for SQLite
+                .HasForeignKey(e => e.CourseId);
             b.Property(e => e.ExamTitle)
                 .HasMaxLength(ExamEntityConsts.MaxExamTitleLength);
             b.Property(e => e.Remark)
@@ -825,6 +759,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasMany<ExamQuestion>()
                .WithOne(eq => eq.Exam)
                .HasForeignKey(e => e.ExamId);
+            b.ConfigureAudit();
         });
     }
     private static void ConfigureExamQuestion(ModelBuilder modelBuilder)
@@ -837,7 +772,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasOne(eq => eq.Exam)
                 .WithMany(e => e.ExamQuestion)
                 .HasForeignKey(eq => eq.ExamId);
-            // we can choose either have 3 columns (ChoiceQuestionId, JudgementQuestionId, ShortAnsQuestionId) or have 1 column (questionId)
+
             b.HasOne(m => m.ChoiceQuestion)
                 .WithMany()
                 .HasForeignKey(eq => eq.ChoiceQuestionId);
@@ -847,28 +782,13 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasOne(m => m.ShortAnsQuestion)
                 .WithMany()
                 .HasForeignKey(eq => eq.ShortAnsQuestionId);
-            // 3 columns (ChoiceQuestionId, JudgementQuestionId, ShortAnsQuestionId) like above commented
-            /*            b.Property(x => x.QuestionType)
-                            .IsRequired();*/
-            // 1 column  (questionId) when use add controller, frontend need to send / backend controller need to accept 1 extra parameter QuestionType
-            b.HasOne(eq => eq.CreatedByUser)
-                .WithMany()
-                .HasForeignKey(eq => eq.CreatedByUserId);
-            b.HasOne<User>()
-            // HasMany wait future needs
-                .WithMany()
-                .HasForeignKey(eq => eq.UpdatedByUserId);
             b.Property(eq => eq.Marks)
                 .IsRequired()
                 .HasMaxLength(ExamQuestionEntityConsts.MaxMarksLength);
             b.Property(eq => eq.QuestionOrder)
                 .IsRequired()
                 .HasMaxLength(ExamQuestionEntityConsts.MaxQuestionOrderLength);
-            b.Property(eq => eq.CreatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
-            b.Property(eq => eq.UpdatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            b.ConfigureAudit();
         });
     }
 
@@ -882,16 +802,9 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasOne(ep => ep.Exam) // Navigation property in ExamPublish
                 .WithOne(e => e.ExamPublish) // Navigation property in Exam
                 .HasForeignKey<ExamPublish>(x => x.ExamId); // ExamPublish.ExamId is the FK to Exam.Id
-            b.HasOne(ep => ep.CreatedByUser); // default
-            b.Property(ep => ep.CreatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-            b.HasOne(ep => ep.UpdatedByUser); // default
-            b.Property(ep => ep.UpdatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
             b.Property(ep => ep.CloseAt)
                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            b.ConfigureAudit();
         });
     }
 

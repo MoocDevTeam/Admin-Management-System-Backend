@@ -5,8 +5,7 @@ using Mooc.Model.Entity;
 namespace MoocWebApi.Controllers.Admin
 {
 
-    [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.BaseService))]
-   // [Authorize]
+    [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.AdminService))]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [RequestFormLimits(MultipartBodyLengthLimit = 52428800)]

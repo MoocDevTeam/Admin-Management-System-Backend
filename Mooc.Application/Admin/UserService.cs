@@ -144,8 +144,6 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
         return userOutput;
     }
 
-
-
     /// <summary>
     /// delete user with cascade delete of user roles
     /// </summary>

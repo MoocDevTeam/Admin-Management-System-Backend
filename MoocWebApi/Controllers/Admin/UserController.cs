@@ -49,7 +49,7 @@ namespace MoocWebApi.Controllers.Admin
         public async Task<bool> Add([FromBody] CreateUserDto input)
         {
             var userDto = await _userService.CreateAsync(input);
-            return userDto.Id > 0;
+            return userDto.Id> 0;
         }
 
         /// <summary>
@@ -87,14 +87,7 @@ namespace MoocWebApi.Controllers.Admin
         [HttpGet("{userName}")]
         public async Task<UserDto> Get(string userName)
         {
-            var user = await _userService.GetByUserNameAsync(userName);
-            if (user == null)
-            {
-                HttpContext.Response.StatusCode = 404;
-                return null;
-            }
-
-            return user;
+            return await _userService.GetByUserNameAsync(userName);
         }
 
     }

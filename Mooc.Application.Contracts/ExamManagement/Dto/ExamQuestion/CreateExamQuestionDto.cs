@@ -1,14 +1,19 @@
-﻿namespace Mooc.Application.Contracts.ExamManagemen;
+﻿using System.Text.Json.Serialization;
+
+namespace Mooc.Application.Contracts.ExamManagement;
 
 public class CreateExamQuestionDto : BaseEntityDto
 {
+    [JsonIgnore]
+    public override long Id { get; set; }
+
     public long CreatedByUserId { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public long? UpdatedByUserId { get; set; }
 
-    public DateTime? UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
 
 
     public long? ExamId { get; set; }
@@ -16,16 +21,10 @@ public class CreateExamQuestionDto : BaseEntityDto
     public long? ChoiceQuestionId { get; set; }
 
     public long? JudgementQuestionId { get; set; }
-
+    
     public long? ShortAnsQuestionId { get; set; }
-
-    //public long QuestionId { get; set; }   // the foreign key will be removed if choose 1 column(questionId) and we will use a fake foreign key  Discriminator: 
-
-    //public string? QuestionType { get; set; } // Discriminator: "Choice", "Judgement", or "ShortAnswer"
 
     public int Marks { get; set; }
 
     public int QuestionOrder { get; set; }
-
-    public int QuestionTypeId { get; set; }
 }

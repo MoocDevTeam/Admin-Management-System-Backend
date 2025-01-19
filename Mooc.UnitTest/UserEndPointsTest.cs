@@ -13,7 +13,7 @@ namespace Mooc.UnitTest
 {
     public class UserEndPointsTest : BaseTest
     {
-
+        [Order(3)]
         [Test]
         public async Task TestGetByPageAsync([Values("test01", "test02")] string userName)
         {
@@ -38,6 +38,7 @@ namespace Mooc.UnitTest
 
         }
 
+        [Order(2)]
         [Test, Sequential]
         public async Task TestDeleteAsync(
             [Values("test01", "test02")] string userName
@@ -82,28 +83,37 @@ namespace Mooc.UnitTest
             return new List<long>();
         }
 
-
+        [Order(1)]
         [Test, Sequential]
         public async Task TestAddAsync(
         [Values("test01", "test02")] string userName,
-        [Values("123456", "123456")] string password,
+        [Values("123456", "123455")] string password,
         [Values(30, 40)] int Age,
-        [Values("abc@gmail.com", "bcd@gmail.com")] string email,
-        [Values("0421658272", "0421658273")] string phone,
-        [Values("brisbane", "Goldcoast")] string address,
+        [Values("abc@gmail.com", "qqq@gmail.com")] string email,
+        [Values("0421658272", "0421658255")] string phone,
+        [Values("brisbane", "Adelaide")] string address,
         [Values(Gender.Female, Gender.Male)] Gender gender,
         [Values("test01", "test02")] string Avatar
         )
         {
-                CreateUserDto user = new CreateUserDto();
-                user.UserName = userName;
-                user.Password = password;
-                user.Age = Age;
-                user.Email = email;
-                user.Gender = gender;
-                user.Avatar = Avatar;
+            long uniqueId = DateTime.UtcNow.Ticks;
+            string uniqueUserName = $"{userName}_{Guid.NewGuid()}";
+            string uniqueEmail = $"{Guid.NewGuid()}_{email}";
+            CreateUserDto user = new CreateUserDto
+            {
+                Id = uniqueId,
+                UserName = uniqueUserName,
+                Password = password,
+                Age = Age,
+                Email = uniqueEmail,
+                        
+                Gender = gender,
+                Avatar = Avatar,
+                // Include RoleIds if required by the API
+                RoleIds = new List<long> { 1 } // Example role ID; ensure it exists in your test DB
+            };
 
-                var jsonContent = JsonContent.Create(user);
+            var jsonContent = JsonContent.Create(user);
 
                 var resp = await this.Client.PostAsync("/api/user/Add", jsonContent);
                 Assert.IsNotNull(resp);

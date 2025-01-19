@@ -1,7 +1,12 @@
+using System.Text.Json.Serialization;
+
 namespace Mooc.Application.Contracts.ExamManagement;
 
 public class CreateOptionDto : BaseEntityDto
 {
+    [JsonIgnore]
+    public override long Id { get; set; }
+
     public long ChoiceQuestionId { get; set; }
 
     public long OptionOrder { get; set; }

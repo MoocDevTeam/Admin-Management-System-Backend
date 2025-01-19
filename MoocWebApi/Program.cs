@@ -24,6 +24,8 @@ using System.Text.Json;
 using MoocWebApi.Config;
 using Microsoft.OpenApi.Models;
 using DotNetEnv;
+using MoocWebApi.Hubs;
+
 
 namespace MoocWebApi
 {
@@ -145,20 +147,25 @@ namespace MoocWebApi
                         builder =>
                         {
                             builder
-                            .AllowAnyOrigin()
+                            .WithOrigins("http://localhost:9008") 
+                            .AllowAnyHeader()
                             .AllowAnyMethod()
-                            .AllowAnyHeader();
+                            .AllowCredentials();
                         });
                 });
 
-                //
+                builder.Services.AddSignalR();
 
                 var app = builder.Build();
 
 
 
+                app.UseRouting();
                 app.UseCors(defaultPolicy);
                 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+                app.MapHub<FileUploadHub>("/fileUploadHub");  
+
                 // Configure the HTTP request pipeline.
                 app.UseSwaggerMooc();
                 if (app.Environment.IsDevelopment())
@@ -180,7 +187,7 @@ namespace MoocWebApi
                     foreach (var dbSeedDataSevice in dbSeedDataSevices)
                     {
                         var orderAttri = dbSeedDataSevice.GetType().GetCustomAttribute<DBSeedDataOrderAttribute>();
-                        if (orderAttri!=null)
+                        if (orderAttri != null)
                         {
                             sdSeedData.Add(orderAttri.Order, dbSeedDataSevice);
                         }

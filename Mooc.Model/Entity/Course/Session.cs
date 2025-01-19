@@ -8,11 +8,6 @@ namespace Mooc.Model.Entity
 
         //Foreign keys
         public long CourseInstanceId { get; set;}
-        //public long CreatedByUserId { get; set; }
-        //public long? UpdatedByUserId { get; set; }  
-       
-        //public DateTime CreatedAt { get; set; }  
-        //public DateTime UpdatedAt { get; set; }
 
         // Navigation user 
         public virtual User CreatedByUser { get; set; }

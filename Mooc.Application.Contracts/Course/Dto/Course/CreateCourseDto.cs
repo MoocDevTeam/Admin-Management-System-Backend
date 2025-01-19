@@ -10,8 +10,8 @@ namespace Mooc.Application.Contracts.Course
 {
     public class CreateCourseDto : BaseEntityDto
     {
-        // [JsonIgnore]
-        // public long id { get; set; }
+        [JsonIgnore]
+        public new long Id { get; set; }
         public string Title { get; set; }
         public string CourseCode { get; set; }
         public string? CoverImage { get; set; }

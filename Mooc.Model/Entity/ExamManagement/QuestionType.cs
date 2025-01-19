@@ -1,7 +1,9 @@
-namespace Mooc.Model.Entity.ExamManagement;
+namespace Mooc.Model.Entity;
 
 public class QuestionType : BaseEntity
 {
+    public DateTime? CreatedAt { get; set; }
+
     public string? QuestionTypeName { get; set; }
 
     // Navigation property:

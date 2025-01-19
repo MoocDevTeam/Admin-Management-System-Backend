@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyModel;
 using System.Reflection;
 using System.Runtime.Loader;
+using Mooc.Application.Admin;
+using Mooc.Application.Contracts.Admin;
 
 namespace Mooc.Application;
 
@@ -15,7 +17,10 @@ public class AutofacModule : Autofac.Module
         //builder.RegisterType<MoocDBSeedDataService>().As<IDBSeedDataService>().InstancePerDependency();
         //builder.RegisterType<UserService>().As<IUserService>().InstancePerDependency();
         //builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerDependency();
-
+        builder
+            .RegisterType<AuthenticationService>()
+            .As<IAuthenticationService>()
+            .InstancePerDependency();
         //var assemblys = Assembly.GetExecutingAssembly();
         //builder.RegisterAssemblyTypes(assemblys).Where(x => x.IsAssignableTo<ITransientDependency>()).
         //    AsImplementedInterfaces().

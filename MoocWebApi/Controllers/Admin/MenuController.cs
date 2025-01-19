@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Mooc.Core.ExceptionHandling;
 using Mooc.Core.WrapperResult;
 
 namespace MoocWebApi.Controllers.Admin
@@ -47,14 +48,16 @@ namespace MoocWebApi.Controllers.Admin
         [HttpPost]
         public async Task<bool> Update([FromBody] UpdateMenuDto input)
         {
-            var menu = await _menuService.GetAsync(input.Id);
-            if (menu == null)
+            try
+            {
+                await _menuService.UpdateAsync(input.Id, input);
+            }
+            catch (EntityNotFoundException)
             {
                 HttpContext.Response.StatusCode = 404;
                 return false;
             }
 
-            await _menuService.UpdateAsync(input.Id, input);
             return true;
         }
 
@@ -66,20 +69,20 @@ namespace MoocWebApi.Controllers.Admin
         [HttpDelete("{id}")]
         public async Task<bool> Delete(long id)
         {
-            var menu = await _menuService.GetAsync(id);
-            if (menu == null)
+            try
+            {
+                await _menuService.DeleteAsync(id);
+            }
+            catch(EntityNotFoundException)
             {
                 HttpContext.Response.StatusCode = 404;
                 return false;
             }
-
-            if (menu.Children?.Any() == true)
+            catch (MoocValidationException)
             {
                 HttpContext.Response.StatusCode = 400;
                 return false;
             }
-
-            await _menuService.DeleteAsync(id);
             return true;
         }
 
@@ -91,13 +94,15 @@ namespace MoocWebApi.Controllers.Admin
         [HttpGet("{id}")]
         public async Task<MenuDto> GetById(long id)
         {
-            var menu = await _menuService.GetAsync(id);
-            if (menu == null)
+            var menu = new MenuDto();
+            try
+            {
+              menu =  await _menuService.GetAsync(id);
+            }
+            catch(EntityNotFoundException)
             {
                 HttpContext.Response.StatusCode = 404;
-                return null;
             }
-
             return menu;
         }
 

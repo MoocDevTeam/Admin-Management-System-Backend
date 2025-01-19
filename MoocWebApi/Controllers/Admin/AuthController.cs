@@ -10,7 +10,7 @@ using Mooc.Model.Entity;
 
 namespace MoocWebApi.Controllers.Admin
 {
-    [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.BaseService))]
+    [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.AdminService))]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class AuthController : ControllerBase

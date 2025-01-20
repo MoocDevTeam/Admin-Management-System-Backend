@@ -2,6 +2,6 @@
 {
     public interface ICourseInstanceService : ICrudService<CourseInstanceDto, CourseInstanceDto, long, FilterPagedResultRequestDto, CreateCourseInstanceDto, UpdateCourseInstanceDto>
     {
-        Task<List<CourseInstanceDto>> GetByMoocCourseTtileAsync(string moocCourseTtile);
+        //Task<List<CourseInstanceDto>> GetByMoocCourseTtileAsync(string moocCourseTtile);
     }
 }

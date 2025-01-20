@@ -43,9 +43,9 @@ namespace Mooc.UnitTest
             {
                 context.Menus.AddRange(new List<Menu>
                 {
-                    new Menu { Id = 1, Title = "Menu1", Description = "Desc1", MenuType = MenuType.Dir },
-                    new Menu { Id = 2, Title = "Menu2", Description = "Desc2", MenuType = MenuType.Menu },
-                    new Menu { Id = 3, Title = "Menu3", Description = "Desc3", MenuType = MenuType.Btn }
+                    new Menu { Id = 1, Title = "Menu1", Description = "Desc1", MenuType = MenuType.Dir, CreatedAt = DateTime.Now, CreatedByUserId = 1 },
+                    new Menu { Id = 2, Title = "Menu2", Description = "Desc2", MenuType = MenuType.Menu, CreatedAt = DateTime.Now, CreatedByUserId = 1  },
+                    new Menu { Id = 3, Title = "Menu3", Description = "Desc3", MenuType = MenuType.Btn, CreatedAt = DateTime.Now, CreatedByUserId = 1  }
                 });
                 context.SaveChanges();
 
@@ -82,7 +82,7 @@ namespace Mooc.UnitTest
                 OrderNum = 1,
                 Route = "/test-menu",
                 ComponentPath = "/components/test-menu",
-                ParentId = null
+                ParentId = null,
             };
 
             using (var context = new MoocDBContext(options))
@@ -111,7 +111,9 @@ namespace Mooc.UnitTest
                     Id = 1,
                     Title = "Test Menu",
                     Description = "Test Description",
-                    MenuType = MenuType.Menu
+                    MenuType = MenuType.Menu,
+                    CreatedAt = DateTime.Now,
+                    CreatedByUserId = 1
                 };
                 context.Menus.Add(menu);
                 context.SaveChanges();
@@ -140,7 +142,11 @@ namespace Mooc.UnitTest
                     Id = 1L, 
                     Title = "Old Menu",
                     Description = "Old Description",
-                    MenuType = MenuType.Btn
+                    MenuType = MenuType.Btn,
+                    CreatedAt = DateTime.Now,
+                    CreatedByUserId = 1,
+                    UpdatedAt = DateTime.Now,
+                    UpdatedByUserId = 1
                 };
                 context.Menus.Add(menu);
                 context.SaveChanges();
@@ -177,7 +183,9 @@ namespace Mooc.UnitTest
                     Id = 1L,
                     Title = "Test Menu",
                     Description = "Test Description",
-                    MenuType = MenuType.Menu
+                    MenuType = MenuType.Menu,
+                    CreatedAt = DateTime.Now,
+                    CreatedByUserId = 1
                 };
                 context.Menus.Add(menu);
                 context.SaveChanges();
@@ -201,10 +209,10 @@ namespace Mooc.UnitTest
             {
                 context.Menus.AddRange(new List<Menu>
         {
-            new Menu { Id = 1, Title = "Root Menu", ParentId = null },
-            new Menu { Id = 2, Title = "Child Menu 1", ParentId = 1 },
-            new Menu { Id = 3, Title = "Child Menu 2", ParentId = 1 },
-            new Menu { Id = 4, Title = "Sub Child Menu", ParentId = 2 }
+            new Menu { Id = 1, Title = "Root Menu", ParentId = null, CreatedAt = DateTime.Now, CreatedByUserId = 1  },
+            new Menu { Id = 2, Title = "Child Menu 1", ParentId = 1, CreatedAt = DateTime.Now, CreatedByUserId = 1  },
+            new Menu { Id = 3, Title = "Child Menu 2", ParentId = 1, CreatedAt = DateTime.Now, CreatedByUserId = 1  },
+            new Menu { Id = 4, Title = "Sub Child Menu", ParentId = 2, CreatedAt = DateTime.Now, CreatedByUserId = 1  }
         });
                 context.SaveChanges();
 

@@ -21,10 +21,14 @@ namespace Mooc.Application.Course
         // Add father table first. Example: MoocCourse has two foreign table: User, Category. Add User table -> Add Category table -> Add MoocCourse table
         private static List<Category> categories = new List<Category>()
         {
-            new Category(){Id=1, CategoryName="Programming Language",Description="",IconUrl="xxx@demo.com",CreatedByUserId=1,CreatedAt= DateTime.Now },
-            new Category(){Id=2, CategoryName="Business and Accounting",Description="", ParentId=1,IconUrl="xxx@demo.com",CreatedByUserId=1,CreatedAt= DateTime.Now },
-            new Category(){Id=3, CategoryName="Social",Description="", ParentId=1,IconUrl="xxx@demo.com",CreatedByUserId=1,CreatedAt= DateTime.Now },
-            new Category(){Id=4, CategoryName="Software Engineering",Description="", ParentId=1,IconUrl="xxx@demo.com",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=1, CategoryName="Engineer",Description="The practical and innovative application of maths and sciences will be used to design, develop and maintain infrastructures, products and systems on a large scale.",IconUrl="https://upload.wikimedia.org/wikipedia/commons/8/88/MarCO_CubeSat.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=2, CategoryName="Computer Science",Description="Computing, information systems and software engineering",ParentId=1,IconUrl="https://upload.wikimedia.org/wikipedia/commons/5/51/Computer_Science_Word_Cloud.png",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=3, CategoryName="Business and Accounting",Description="Covering finance, accounting, marketing, HR management and administrative studies",IconUrl="https://upload.wikimedia.org/wikipedia/commons/3/31/Business_man.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=4, CategoryName="Arts",Description="You’ll study the creation of visual work, from painting to computer graphics and video games, including fine art and product design.",IconUrl="https://upload.wikimedia.org/wikipedia/commons/1/19/Bundaberg_School_of_Arts_Building_184_Bourbong_St_Bundaberg_P1130021.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=5, CategoryName="Law",Description="International law and related areas are popular among international students looking for opportunities worldwide",IconUrl="https://upload.wikimedia.org/wikipedia/commons/0/02/Symbol_for_Psychology_%26_Law_Original.png",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=6, CategoryName="Education",Description="Education and Training",IconUrl="https://upload.wikimedia.org/wikipedia/commons/9/99/Schoolgirls_in_Bamozai.JPG",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=7, CategoryName="Accounting",Description="Accounting and Audit",ParentId=3,IconUrl="https://upload.wikimedia.org/wikipedia/commons/d/de/Young_%26_Dedicated_Accountant_at_Work.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=8, CategoryName="Mechanical engineering",Description="Mechanical engineering is the study of machines and how they move and use force.",ParentId=1,IconUrl="https://upload.wikimedia.org/wikipedia/commons/1/1a/B.Tech._Mechanical_Engineering.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
         };
 
         private static List<MoocCourse> courses = new List<MoocCourse>()

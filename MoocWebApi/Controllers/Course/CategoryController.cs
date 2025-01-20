@@ -100,6 +100,20 @@ public class CategoryController : ControllerBase
     }
 
     /// <summary>
+    /// Get Main Category List 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    /// <remarks>URL: POST api/Category/GetMainCategories</remarks>
+
+    [HttpGet]
+    public async Task<List<CategoryDto>> GetMainCategories()
+    {
+        var category = await _categoryService.GetAllMainCategoriesAsync();
+        return category;
+    }
+
+    /// <summary>
     /// Get Category Children List
     /// </summary>
     /// <param name="id"></param>

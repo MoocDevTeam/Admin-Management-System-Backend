@@ -19,7 +19,8 @@ public class CourseProfile : Profile
         CreateMap<UpdateCourseDto, MoocCourse>();
 
         CreateMap<Category, CategoryDto>()
-                 .ForMember(dest => dest.Courses, opt => opt.MapFrom(src => src.Courses));
+                 .ForMember(dest => dest.Courses, opt => opt.MapFrom(src => src.Courses))
+                 .ForMember(dest => dest.ChildrenCategories, opt => opt.MapFrom(src => src.ChildrenCategories));
         CreateMap<CreateCategoryDto, Category>();
         CreateMap<UpdateCategoryDto, Category>();
 

@@ -335,6 +335,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(cs => cs.CategoryName).IsRequired().HasMaxLength(CategoryEntityConsts.MaxCategoryNameLength);
             b.Property(cs => cs.Description).IsRequired().HasMaxLength(CategoryEntityConsts.MaxDescriptionLength);
             b.Property(cs => cs.IconUrl).HasMaxLength(CategoryEntityConsts.MaxIconUrlLength);
+            b.ConfigureAudit();
 
             // foreign keys
             b.HasOne(x => x.ParentCategory)
@@ -378,6 +379,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(e => e.MaxStudents)
                 .IsRequired()
                 .HasMaxLength(300);
+            b.ConfigureAudit();
 
             b.HasOne<User>(x => x.CreatedByUser)
              .WithMany()

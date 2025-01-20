@@ -48,8 +48,8 @@ namespace Mooc.Application.Admin
 
         private List<Carousel> carousels = new List<Carousel>()
         {
-            new Carousel(){Id=1, Title="Welcome Banner", ImageUrl="/images/welcome.jpg", RedirectUrl="/home", IsActive=true, UpdatedAt=DateTime.Now, Position=1, StartDate=DateTime.Now.AddDays(-7), EndDate=DateTime.Now.AddDays(30), CreatedByUserId=1, UpdatedByUserId=1 },
-            new Carousel(){Id=2, Title="Sale Banner", ImageUrl="/images/sale.jpg", RedirectUrl="/sale", IsActive=true, UpdatedAt=DateTime.Now, Position=2, StartDate=DateTime.Now.AddDays(-1), EndDate=DateTime.Now.AddDays(10), CreatedByUserId=2, UpdatedByUserId=2 }
+            new Carousel(){Id=1, Title="Welcome Banner", ImageUrl="/images/welcome.jpg", RedirectUrl="/home", IsActive=true, UpdatedAt=DateTime.Now, Position=1, StartTime=DateTime.Now.AddDays(-7), EndTime=DateTime.Now.AddDays(30), CreatedByUserId=1, UpdatedByUserId=1 },
+            new Carousel(){Id=2, Title="Sale Banner", ImageUrl="/images/sale.jpg", RedirectUrl="/sale", IsActive=true, UpdatedAt=DateTime.Now, Position=2, StartTime=DateTime.Now.AddDays(-1), EndTime=DateTime.Now.AddDays(10), CreatedByUserId=2, UpdatedByUserId=2 }
         };
 
         private List<Menu> menus = new List<Menu>()

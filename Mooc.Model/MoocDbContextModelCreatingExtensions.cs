@@ -139,8 +139,8 @@ public static class MoocDbContextModelCreatingExtensions
                 .IsRequired()
                 .HasDefaultValue(CarouselEntityConsts.DefaultIsActive);
             b.Property(x => x.UpdatedAt).IsRequired();
-            b.Property(x => x.StartDate).IsRequired();
-            b.Property(x => x.EndDate).IsRequired();
+            b.Property(x => x.StartTime).IsRequired();
+            b.Property(x => x.EndTime).IsRequired();
             b.ToTable("Carousel", t =>
             {
                 t.HasCheckConstraint("CK_Carousel_Position_Range", "[Position] BETWEEN 1 AND 6");

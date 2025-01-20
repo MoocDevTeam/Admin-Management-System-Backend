@@ -4,12 +4,10 @@ namespace Mooc.Application.Contracts.Course.Dto
 {
     public class CreateOrUpdateCourseInstanceBaseDto : BaseEntityDto
     {
+        [Required(ErrorMessage = "Description is required.")]
+        public string Description { get; set; }
         [Required(ErrorMessage = "MoocCourseId is required.")]
         public long MoocCourseId { get; set; }
-
-        [Required(ErrorMessage = "TotalSessions is required.")]
-        [Range(1, 100, ErrorMessage = "TotalSessions must be a valid number between 1 to 100.")]
-        public int TotalSessions { get; set; }
 
         [Required(ErrorMessage = "Status is required.")]
         public CourseInstanceStatus Status { get; set; }

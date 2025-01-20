@@ -19,17 +19,17 @@ namespace Mooc.Application.Course
     }
 
     //Override MapToEntity
-    protected override Session MapToEntity(CreateSessionDto input)
-    {
-      var entity = base.MapToEntity(input);
-      entity.CreatedByUserId = 1;//---> need a method (getCurrentUserId)
-      entity.UpdatedByUserId = 1;
-      entity.Order = 10;//---> meed a method (getCurrentOrderNumber)
-      entity.CreatedAt = DateTime.Now; // write here or profile
-      entity.UpdatedAt = DateTime.Now;
-      SetIdForLong(entity);
-      return entity;
-    }
+    //protected override Session MapToEntity(CreateSessionDto input)
+    //{
+    //  var entity = base.MapToEntity(input);
+    //  entity.CreatedByUserId = 1;//---> need a method (getCurrentUserId)
+    //  entity.UpdatedByUserId = 1;
+    //  entity.Order = 10;//---> meed a method (getCurrentOrderNumber)
+    //  entity.CreatedAt = DateTime.Now; // write here or profile
+    //  entity.UpdatedAt = DateTime.Now;
+    //  SetIdForLong(entity);
+    //  return entity;
+    //}
 
     // Verify that the CourseInstanceId exist
     private async Task ValidateCourseInstanceAsync(long courseInstanceId)
@@ -101,9 +101,45 @@ namespace Mooc.Application.Course
       var createSessionDto = await base.CreateAsync(input); 
       return createSessionDto;
     }
+        //// Create session with order
+        //public async Task<ReadSessionDto> CreateWithOrderAsync(CreateSessionDto input)
+        //{
+        //    var orderNumber = await McDBContext.Session.Where(s => s.CourseInstanceId == input.CourseInstanceId).CountAsync()+1;
+        //    input.Order = orderNumber;
+        //    await ValidateCourseInstanceAsync(input.CourseInstanceId);
+        //    var createSessionDto = await base.CreateAsync(input);
+        //    return createSessionDto;
+        //}
 
-    //Update session
-    public override async Task<ReadSessionDto> UpdateAsync(long id, UpdateSessionDto input)
+        // Create order insert session
+        public async Task<ReadSessionDto> CreateWithOrderAsync(CreateSessionDto input)
+        {
+            // 1. Validate CourseInstanceId
+            await ValidateCourseInstanceAsync(input.CourseInstanceId);
+
+            // 2. Check if Order is provided by the input
+            if (input.Order.HasValue)
+            {
+                // Insert in the specified Order position
+                await AdjustOrdersForInsertionAsync(input.CourseInstanceId, input.Order.Value);
+            }
+            else
+            {
+                // Default to the last position if Order is not provided
+                input.Order = await McDBContext.Session
+                    .Where(s => s.CourseInstanceId == input.CourseInstanceId)
+                    .CountAsync() + 1;
+            }
+
+            // 3. Create the session
+            var createSessionDto = await base.CreateAsync(input);
+
+            // 4. Return the result
+            return createSessionDto;
+        }
+
+        //Update session
+        public override async Task<ReadSessionDto> UpdateAsync(long id, UpdateSessionDto input)
     {
       await ValidateSessionIdAsync(id);
       var entity = await GetEntityByIdAsync(id);
@@ -205,15 +241,31 @@ namespace Mooc.Application.Course
       await base.DeleteAsync(id);
     }
 
+        // Adjust orders for insertion at a specific position
+        private async Task AdjustOrdersForInsertionAsync(long courseInstanceId, int order)
+        {
+            // Increment the Order for all sessions after or equal to the provided Order
+            var sessionsToAdjust = await McDBContext.Session
+                .Where(s => s.CourseInstanceId == courseInstanceId && s.Order >= order)
+                .ToListAsync();
 
-  // // Counts the existing sessions for the current CourseInstance and assigns an Order to the new session.
-  // var order = await McDBContext.Session.CountAsync(x => x.CourseInstanceId == input.CourseInstanceId) + 1;
+            foreach (var session in sessionsToAdjust)
+            {
+                session.Order++;
+            }
 
-  // //get current order number
-  // private async Task<int> getCurrentOrderNumber(long courseInstanceId)
-  // {
-  //   return await McDBContext.Session.CountAsync(x => x.Id == courseInstanceId);
-  // }
+            await McDBContext.SaveChangesAsync();
+        }
 
-}
+
+        // // Counts the existing sessions for the current CourseInstance and assigns an Order to the new session.
+        // var order = await McDBContext.Session.CountAsync(x => x.CourseInstanceId == input.CourseInstanceId) + 1;
+
+        // //get current order number
+        // private async Task<int> getCurrentOrderNumber(long courseInstanceId)
+        // {
+        //   return await McDBContext.Session.CountAsync(x => x.Id == courseInstanceId);
+        // }
+
+    }
 }

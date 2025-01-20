@@ -29,6 +29,14 @@ namespace MoocWebApi.Controllers.Course
             return newSession.Id > 0;
         }
 
+        //create with order
+        [HttpPost]
+        public async Task<bool> AddWithOrder([FromBody] CreateSessionDto input)
+        { 
+            var newSession = await (_sessionService.CreateWithOrderAsync(input));
+            return newSession.Id > 0;
+        }
+
         /// <summary>
         /// Updates an existing session based on the provided session details.
         /// </summary>

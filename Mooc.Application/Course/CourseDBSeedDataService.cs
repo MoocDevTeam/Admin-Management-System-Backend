@@ -48,14 +48,14 @@ namespace Mooc.Application.Course
 
         private List<CourseInstance> courseInstances = new List<CourseInstance>()
         {
-            new CourseInstance(){Id=1, Description="Publish-2023-01", MoocCourseId=1, TotalSessions=10, Status=CourseInstanceStatus.Open, Permission=CourseInstancePermission.Private, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(1), CreatedByUserId=1 ,UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
-            new CourseInstance(){Id=2, Description="Publish-2023-03", MoocCourseId=2, TotalSessions=20, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
-            new CourseInstance(){Id=3, Description="Publish-2023-05", MoocCourseId=1, TotalSessions=20, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
-            new CourseInstance(){Id=4, Description="Publish-2023-08", MoocCourseId=2, TotalSessions=20, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
-            new CourseInstance(){Id=5, Description="Publish-2024-01", MoocCourseId=1, TotalSessions=20, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
-            new CourseInstance(){Id=6, Description="Publish-2024-02", MoocCourseId=1, TotalSessions=20, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
-            new CourseInstance(){Id=7, Description="Publish-2024-06", MoocCourseId=1, TotalSessions=20, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
-            new CourseInstance(){Id=8, Description="Publish-2024-06", MoocCourseId=2, TotalSessions=20, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=1, Description="Publish-2023-01", MoocCourseId=1, Status=CourseInstanceStatus.Open, Permission=CourseInstancePermission.Private, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(1), CreatedByUserId=1 ,UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=2, Description="Publish-2023-03", MoocCourseId=2, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=3, Description="Publish-2023-05", MoocCourseId=1, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=4, Description="Publish-2023-08", MoocCourseId=2, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=5, Description="Publish-2024-01", MoocCourseId=1, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=6, Description="Publish-2024-02", MoocCourseId=1, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=7, Description="Publish-2024-06", MoocCourseId=1, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=8, Description="Publish-2024-06", MoocCourseId=2, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
         };
 
 
@@ -83,7 +83,8 @@ namespace Mooc.Application.Course
                 UserId=2,
                 IsActive = false,
                 CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                UpdatedAt = DateTime.Now,
+                DisplayName = "Jack"
             },
             new Teacher()
             {
@@ -99,7 +100,8 @@ namespace Mooc.Application.Course
                 UserId=2,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddYears(-2),
-                UpdatedAt = DateTime.Now.AddMonths(-3)
+                UpdatedAt = DateTime.Now.AddMonths(-3),
+                DisplayName = "Joe"
             },
             new Teacher()
             {
@@ -115,7 +117,8 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddMonths(-8),
-                UpdatedAt = DateTime.Now.AddMonths(-2)
+                UpdatedAt = DateTime.Now.AddMonths(-2),
+                DisplayName = "Jacob"
             },
             new Teacher()
             {
@@ -131,7 +134,8 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddYears(-1),
-                UpdatedAt = DateTime.Now
+                UpdatedAt = DateTime.Now,
+                DisplayName = "Josh"
             },
             new Teacher()
             {
@@ -147,7 +151,8 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddYears(-10),
-                UpdatedAt = DateTime.Now.AddMonths(-1)
+                UpdatedAt = DateTime.Now.AddMonths(-1),
+                DisplayName = "John"
             },
             new Teacher()
             {
@@ -163,7 +168,8 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddYears(-3),
-                UpdatedAt = DateTime.Now.AddMonths(-4)
+                UpdatedAt = DateTime.Now.AddMonths(-4),
+                DisplayName = "James"
             },
             new Teacher()
             {
@@ -179,7 +185,8 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = false,
                 CreatedAt = DateTime.Now.AddYears(-5),
-                UpdatedAt = DateTime.Now.AddMonths(-2)
+                UpdatedAt = DateTime.Now.AddMonths(-2),
+                DisplayName = "Jordan"
             },
             new Teacher()
             {
@@ -195,7 +202,8 @@ namespace Mooc.Application.Course
                 UserId=2,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddMonths(-6),
-                UpdatedAt = DateTime.Now.AddDays(-15)
+                UpdatedAt = DateTime.Now.AddDays(-15),
+                DisplayName = "Jason"
             },
             new Teacher()
             {
@@ -211,7 +219,8 @@ namespace Mooc.Application.Course
                 UserId=2,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddYears(-8),
-                UpdatedAt = DateTime.Now
+                UpdatedAt = DateTime.Now,
+                DisplayName = "Jackson"
             },
             new Teacher()
             {
@@ -227,7 +236,8 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = false,
                 CreatedAt = DateTime.Now.AddMonths(-12),
-                UpdatedAt = DateTime.Now.AddDays(-10)
+                UpdatedAt = DateTime.Now.AddDays(-10),
+                DisplayName = "Jenny"
             }
         };
 

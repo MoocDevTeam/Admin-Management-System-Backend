@@ -12,9 +12,5 @@ public class ExamPublishDto : BaseEntityDto
 
     public DateTime? UpdatedAt { get; set; }
 
-    /*    public DateTime PublishedAt { get; set; }
-
-        public long PublishedByUserId { get; set; }*/
-
     public DateTime? CloseAt { get; set; }
 }

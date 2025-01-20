@@ -158,6 +158,8 @@ namespace MoocWebApi
 
                 var app = builder.Build();
 
+
+
                 app.UseRouting();
                 app.UseCors(defaultPolicy);
                 app.UseMiddleware<ExceptionHandlingMiddleware>();

@@ -10,33 +10,37 @@ using Mooc.Model.Entity;
 
 namespace MoocWebApi.Controllers.Admin
 {
-    [Route("api/[controller]")]
+    [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.BaseService))]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly MoocDBContext _context;
+        private readonly IAuthenticationService _authenticationService;
         private readonly IConfiguration _configuration;
 
-        public AuthController(MoocDBContext context, IConfiguration configuration)
+        public AuthController(
+            IAuthenticationService authenticationService,
+            IConfiguration configuration
+        )
         {
-            _context = context;
+            _authenticationService = authenticationService;
             _configuration = configuration;
         }
 
         //POST: api/authcontroller/login
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        [HttpPost]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequest)
         {
-            // search user
-            var user = await _context.Users.SingleOrDefaultAsync(u =>
-                u.UserName == request.UserName
+            var user = await _authenticationService.ValidateUserAsync(
+                loginRequest.UserName,
+                loginRequest.Password
             );
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            if (user == null)
             {
-                return Unauthorized(new { message = "Invalid username or password" });
+                HttpContext.Response.StatusCode = 404;
             }
-
+        
             var token = GenerateJwtToken(user);
 
             return Ok(new { Token = token });
@@ -67,36 +71,24 @@ namespace MoocWebApi.Controllers.Admin
         }
 
         //POST: api/authcontroller/register
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest model)
-        {
-            if (await _context.Users.AnyAsync(u => u.UserName == model.UserName))
-            {
-                return BadRequest("Username already exists.");
-            }
+        // [HttpPost("register")]
+        // public async Task<IActionResult> Register([FromBody] RegisterRequest model)
+        // {
+        //     if (await _context.Users.AnyAsync(u => u.UserName == model.UserName))
+        //     {
+        //         return BadRequest("Username already exists.");
+        //     }
 
-            var user = new User
-            {
-                UserName = model.UserName,
-                Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
-            };
+        //     var user = new User
+        //     {
+        //         UserName = model.UserName,
+        //         Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
+        //     };
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+        //     _context.Users.Add(user);
+        //     await _context.SaveChangesAsync();
 
-            return Ok("User registered successfully.");
-        }
+        //     return Ok("User registered successfully.");
+        // }
     }
-}
-
-public class LoginRequest
-{
-    public string UserName { get; set; }
-    public string Password { get; set; }
-}
-
-public class RegisterRequest
-{
-    public string UserName { get; set; }
-    public string Password { get; set; }
 }

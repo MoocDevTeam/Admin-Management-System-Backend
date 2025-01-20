@@ -1,6 +1,6 @@
 namespace Mooc.Application.Contracts.Admin;
 
-public class UpdateCarouselDto : BaseEntityDto
+public class UpdateCarouselDto : CreateOrUpdateCarouselBaseDto
 {
 
 }

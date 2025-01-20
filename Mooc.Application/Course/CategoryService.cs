@@ -12,6 +12,15 @@ public class CategoryService : CrudService<Category, CategoryDto, CategoryDto, l
     {
         
     }
+    
+    public async Task<List<CategoryDto>> GetAllMainCategoriesAsync()
+    {
+        var mainCategories = await this.McDBContext.Category
+                            .Include(c =>c.ChildrenCategories)
+                            .Where(c => c.ParentId == null)
+                            .ToListAsync();
+        return MapToGetListOutputDtos(mainCategories);
+    }
 
     public async Task<PagedResultDto<CategoryDto>> GetListAsync(FilterPagedResultRequestDto input)
     {

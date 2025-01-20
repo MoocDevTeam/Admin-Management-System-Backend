@@ -32,10 +32,10 @@ public class Carousel : BaseEntityWithAudit
     /// <summary>
     /// The start date for the carousel item's display period.
     /// </summary>
-    public DateTime StartDate { get; set; }
+    public DateTime StartTime { get; set; }
 
     /// <summary>
     /// The end date for the carousel item's display period.
     /// </summary>
-    public DateTime EndDate { get; set; }
+    public DateTime EndTime { get; set; }
 }

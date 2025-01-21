@@ -347,23 +347,25 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(cs => cs.CategoryName).IsRequired().HasMaxLength(CategoryEntityConsts.MaxCategoryNameLength);
             b.Property(cs => cs.Description).IsRequired().HasMaxLength(CategoryEntityConsts.MaxDescriptionLength);
             b.Property(cs => cs.IconUrl).HasMaxLength(CategoryEntityConsts.MaxIconUrlLength);
+            b.Property(x => x.ParentId).IsRequired(false);
             b.ConfigureAudit();
 
             // foreign keys
             b.HasOne(x => x.ParentCategory)
             .WithMany(x =>x.ChildrenCategories)
             .HasForeignKey(x => x.ParentId)
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Restrict);
 
             //foreign keys to User class
             b.HasOne<User>(x => x.CreatedByUser)
              .WithMany()
-             .HasForeignKey(x => x.CreatedByUserId)
+             //.HasForeignKey(x => x.CreatedByUserId)
              .OnDelete(DeleteBehavior.Cascade);
 
             b.HasOne<User>(x => x.UpdatedByUser)
             .WithMany()
-            .HasForeignKey(x => x.UpdatedByUserId)
+            //.HasForeignKey(x => x.UpdatedByUserId)
             .OnDelete(DeleteBehavior.Cascade);
 
             // Explicit relationship to MoocCourse for UpdatedCourses

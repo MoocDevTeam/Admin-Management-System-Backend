@@ -40,17 +40,9 @@ public class CategoryService : CrudService<Category, CategoryDto, CategoryDto, l
         var categories = await base.GetDbSet()
             .Where(c => c.ParentId == id)
             .ToListAsync();
-
         if (!categories.Any())
             return new List<CategoryDto>();
-
-        var categoryDtos = await Task.WhenAll(categories.Select(async category =>
-        {
-            var dto = MapToGetOutputDto(category);
-            dto.ChildrenCategories = await GetChildrenCategoriesAsync(category.Id);
-            return dto;
-        })).ConfigureAwait(false);
-        return categoryDtos.ToList();
+        return MapToGetListOutputDtos(categories);
     }
 
 

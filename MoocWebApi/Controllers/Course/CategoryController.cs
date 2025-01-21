@@ -23,10 +23,10 @@ public class CategoryController : ControllerBase
     /// <remarks>URL: POST api/Category/Add</remarks>
 
     [HttpPost]
-    public async Task<bool> Add([FromBody] CreateCategoryDto input)
+    public async Task<CategoryDto> Add([FromBody] CreateCategoryDto input)
     {
         var categoryDto = await _categoryService.CreateAsync(input);
-        return categoryDto.Id > 0;
+        return categoryDto;
     }
 
     /// <summary>

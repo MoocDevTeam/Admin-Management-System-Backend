@@ -14,12 +14,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Migrations\20250120063519_raymond001.cs" />
-	  <Compile Remove="Migrations\20250120063519_raymond001.Designer.cs" />
-	  <Compile Remove="Migrations\MoocDBContextModelSnapshot.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <None Remove="Entity\Admin\Role.cs~RF26ad0a90.TMP" />
 	  <None Remove="Entity\Admin\RoleMenu.cs~RF2683ab51.TMP" />
 	</ItemGroup>

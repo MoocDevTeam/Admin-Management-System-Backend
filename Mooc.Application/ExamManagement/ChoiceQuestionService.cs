@@ -57,7 +57,7 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
             
             _logger.LogInformation("Choice question created with ID: {Id}", question.Id);
 
-            // 创建选项
+            // Create options
             if (input.Options != null)
             {
                 foreach (var optionDto in input.Options)
@@ -74,7 +74,7 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
                         UpdatedAt = DateTime.UtcNow
                     };
                     
-                    // 使用雪花算法生成ID
+                    // Generate ID using Snowflake algorithm
                     SetIdForLong(option);
                     
                     await _dbContext.Option.AddAsync(option);
@@ -83,7 +83,7 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
                 await _dbContext.SaveChangesAsync();
             }
 
-            // 重新加载完整数据
+            // Reload complete data
             var result = await _dbContext.ChoiceQuestion
                 .Include(q => q.Option)
                 .FirstOrDefaultAsync(q => q.Id == question.Id);
@@ -117,7 +117,7 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
             throw new UserFriendlyException($"Choice question with ID {id} not found");
         }
 
-        // 保留原有的 CourseId 和 QuestionTypeId
+        // Keep original CourseId and QuestionTypeId
         input.CourseId = existingQuestion.CourseId;
         input.QuestionTypeId = existingQuestion.QuestionTypeId;
         
@@ -140,10 +140,10 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
 
     protected virtual DbSet<ChoiceQuestion> GetDbSet()
     {
-        return _dbContext.Set<ChoiceQuestion>();  // 使用 _dbContext 而不是 DbContext
+        return _dbContext.Set<ChoiceQuestion>();  // Use _dbContext instead of DbContext
     }
 
-    // 添加这个辅助方法
+    // Helper method
     private void SetIdForLong(Option option)
     {
         if (option.Id == 0)
@@ -151,5 +151,4 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
             option.Id = SnowflakeIdGeneratorUtil.NextId();
         }
     }
-
 }

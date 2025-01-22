@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mooc.Application.Contracts.Course;
+using Mooc.Application.Contracts.Course.Dto;
 namespace MoocWebApi.Controllers.Course
 {
     /// <summary>
@@ -107,11 +108,16 @@ namespace MoocWebApi.Controllers.Course
         /// </summary>
         /// <returns>A list of all courses.</returns>
         [HttpGet]
-        public async Task<List<CourseDto>> GetAll()
+        public async Task<List<CourseListDto>> GetAll()
         {
-            var courses = await _courseService.GetAllAsync();
-            return courses;
+            var courseList = await _courseService.GetAllAsync();
+            return courseList;
         }
+        //  {
+        //     var courses = await _courseService.GetAllAsync();
+        //     return courses;
+        // }
+
 
         /// <summary>
         /// Gets all course instances for a given course ID.

@@ -138,23 +138,38 @@ namespace Mooc.Application.Course
         /// <summary>
         /// Gets all courses, including related Category.
         /// </summary>
-        public async Task<List<CourseDto>> GetAllAsync()
+        public async Task<List<CourseListDto>> GetAllAsync()
         {
             // Fetch all courses with related data.
             var courses = await this.McDBContext.MoocCourses
                 .Include(c => c.Category) // Include Category to load CategoryName
-                .Include(c => c.CourseInstances) // Include CourseInstances
                 .ToListAsync();
-
             if (courses.Count == 0)
-                return new List<CourseDto>();
+                return new List<CourseListDto>();
             // Map the entities to DTOs and populate additional properties.
-            var courseOutput = this._mapper.Map<List<CourseDto>>(courses);
+            var courseOutput = this._mapper.Map<List<CourseListDto>>(courses);
 
             courseOutput.ForEach(c => c.CategoryName = c.Category?.CategoryName);
 
             return courseOutput;
         }
+        //         public async Task<List<CourseDto>> GetAllAsync()
+        // {
+        //     // Fetch all courses with related data.
+        //     var courses = await this.McDBContext.MoocCourses
+        //         .Include(c => c.Category) // Include Category to load CategoryName
+        //         .Include(c => c.CourseInstances) // Include CourseInstances
+        //         .ToListAsync();
+
+        //     if (courses.Count == 0)
+        //         return new List<CourseDto>();
+        //     // Map the entities to DTOs and populate additional properties.
+        //     var courseOutput = this._mapper.Map<List<CourseDto>>(courses);
+
+        //     courseOutput.ForEach(c => c.CategoryName = c.Category?.CategoryName);
+
+        //     return courseOutput;
+        // }
 
         /// <summary>
         /// Checks if a course with the given title exists.

@@ -2,7 +2,7 @@ namespace Mooc.Application.Contracts.ExamManagement;
 
 public class UpdateChoiceQuestionDto : BaseEntityDto
 {
-    public long CourseId { get; set; }
+    public long? CourseId { get; set; }
 
     public long CreatedByUserId { get; set; }
 

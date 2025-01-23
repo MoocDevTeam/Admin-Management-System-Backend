@@ -10,5 +10,7 @@ public class UpdateCourseDto : BaseEntityDto
     public string CourseCode { get; set; } = string.Empty;
     public string? CoverImage { get; set; }
     public string Description { get; set; } = string.Empty;
+    [Required(ErrorMessage = "CategoryId is null")]
+    public long CategoryId { get; set; } = 1;
 
 }

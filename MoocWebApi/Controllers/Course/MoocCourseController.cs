@@ -92,14 +92,9 @@ namespace MoocWebApi.Controllers.Course
         /// <param name="id">The ID of the course to get.</param>
         /// <returns>The course with the specified ID.</returns>
         [HttpGet("{id}")]
-        public async Task<CourseDto> GetById(long id)
+        public async Task<CourseDto> GetByIdAsync(long id)
         {
-            var course = await _courseService.GetAsync(id);
-            if (course == null)
-            {
-                HttpContext.Response.StatusCode = 404;
-                return null;
-            }
+            var course = await _courseService.GetByIdAsync(id);
             return course;
         }
 

@@ -108,6 +108,37 @@ namespace Mooc.Application.Course
             return courseOutput;
         }
 
+        public async Task<CourseDto> GetByIdAsync(long id)
+        {
+            // Fetch the course with related data based on the course name.
+            var course = await this.McDBContext.MoocCourses
+                .Include(c => c.Category)
+                .Include(c => c.CourseInstances)
+                .ThenInclude(ci => ci.TeacherCourseInstances)
+                        .ThenInclude(tci => tci.Teacher)
+                .Include(c => c.CourseInstances)
+                    .ThenInclude(ci => ci.Sessions)
+                        .ThenInclude(s => s.Sessionmedia)
+                .Include(c => c.CourseInstances)
+                    .ThenInclude(ci => ci.Enrollment)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (course == null)
+            {
+                // Handle course not found (maybe throw an exception)
+                return null;
+            }
+
+            // Map to DTO and populate additional properties
+            var courseDto = this._mapper.Map<CourseDto>(course);
+            courseDto.CategoryName = course.Category?.CategoryName;
+
+            var courseOutput = this.Mapper.Map<CourseDto>(course);
+            courseOutput.CategoryName = course.Category?.CategoryName;
+
+            return courseOutput;
+        }
+
         /// <summary>
         /// Gets a course by its ID, including related data (Category, CourseInstances, TeacherCourseInstances, Teacher).
         /// </summary>

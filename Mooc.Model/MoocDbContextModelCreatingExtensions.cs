@@ -657,7 +657,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.ToTable(TablePrefix + "Option");
             b.HasKey(o => o.Id);
             b.Property(o => o.Id)
-                .ValueGeneratedNever();
+                .ValueGeneratedNever();  // Prevent auto-increment, we'll use UUID/Snowflake
             b.HasOne(o => o.ChoiceQuestion)
                 .WithMany(cq => cq.Option)
                 .HasForeignKey(o => o.ChoiceQuestionId);

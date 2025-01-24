@@ -23,10 +23,10 @@ public class CategoryController : ControllerBase
     /// <remarks>URL: POST api/Category/Add</remarks>
 
     [HttpPost]
-    public async Task<bool> Add([FromBody] CreateCategoryDto input)
+    public async Task<CategoryDto> Add([FromBody] CreateCategoryDto input)
     {
         var categoryDto = await _categoryService.CreateAsync(input);
-        return categoryDto.Id > 0;
+        return categoryDto;
     }
 
     /// <summary>
@@ -96,6 +96,20 @@ public class CategoryController : ControllerBase
     public async Task<PagedResultDto<CategoryDto>> GetList(FilterPagedResultRequestDto input)
     {
         var category = await _categoryService.GetListAsync(input);
+        return category;
+    }
+
+    /// <summary>
+    /// Get Main Category List 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    /// <remarks>URL: POST api/Category/GetMainCategories</remarks>
+
+    [HttpGet]
+    public async Task<List<CategoryDto>> GetMainCategories()
+    {
+        var category = await _categoryService.GetAllMainCategoriesAsync();
         return category;
     }
 

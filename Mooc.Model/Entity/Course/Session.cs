@@ -15,7 +15,7 @@ namespace Mooc.Model.Entity
         public virtual CourseInstance CourseInstance { get; set; }  // Navigation for CourseInstance (many-to-one)
 
         //Navigation for media (one-to-many)
-        public virtual ICollection<Media> Sessionmedia { get; set; } = new List<Media>();
+        public virtual ICollection<Media> Media { get; set; }
 
     }
 }

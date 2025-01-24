@@ -461,7 +461,7 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasForeignKey(s => s.CourseInstanceId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            b.HasMany<Media>(x => x.Sessionmedia)
+            b.HasMany<Media>(x => x.Media)
                 .WithOne(s => s.Session)
                 .HasForeignKey(s => s.SessionId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -570,7 +570,7 @@ public static class MoocDbContextModelCreatingExtensions
                 .OnDelete(DeleteBehavior.Cascade);
 
             b.HasOne<Session>(x => x.Session)
-                .WithMany(x => x.Sessionmedia)
+                .WithMany(x => x.Media)
                 .HasForeignKey(x => x.SessionId)
                 .OnDelete(DeleteBehavior.Cascade);
         });

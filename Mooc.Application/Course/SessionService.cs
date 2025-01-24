@@ -93,7 +93,7 @@ namespace Mooc.Application.Course
             sessionMeidaDto.PendingCount = pendingCount;
             sessionMeidaDto.ApprovedCount = approvedCount;
             sessionMeidaDto.RejectedCount = rejectedCount;
-            sessionMeidaDto.MediaFiles = mediaDetails;
+            sessionMeidaDto.Media = mediaDetails;
         }
 
         private async Task<List<ReadSessionDto>> AddMediaInfoToSessionDtos(List<ReadSessionDto> readSessionDtoList)
@@ -159,7 +159,7 @@ namespace Mooc.Application.Course
                 else
                     readSessionDto.RejectedCount = 0;
 
-                readSessionDto.MediaFiles = mediaDetails;
+                readSessionDto.Media = mediaDetails;
             }
             return readSessionDtoList;
         }

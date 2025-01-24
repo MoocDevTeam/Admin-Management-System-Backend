@@ -13,13 +13,17 @@ public class CourseProfile : Profile
 
         CreateMap<MoocCourse, CourseDto>()
             .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName));
-            //.ForMember(dest => dest.CourseInstances, opt => opt.MapFrom(src => src.CourseInstances));
+        //.ForMember(dest => dest.CourseInstances, opt => opt.MapFrom(src => src.CourseInstances));
+        CreateMap<MoocCourse, CourseListDto>()
+            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName));
+
         CreateMap<CreateCourseDto, MoocCourse>();
         CreateMap<MoocCourse, CreateCourseDto>();
         CreateMap<UpdateCourseDto, MoocCourse>();
 
         CreateMap<Category, CategoryDto>()
-                 .ForMember(dest => dest.Courses, opt => opt.MapFrom(src => src.Courses));
+                 .ForMember(dest => dest.Courses, opt => opt.MapFrom(src => src.Courses))
+                 .ForMember(dest => dest.ChildrenCategories, opt => opt.MapFrom(src => src.ChildrenCategories));
         CreateMap<CreateCategoryDto, Category>();
         CreateMap<UpdateCategoryDto, Category>();
 

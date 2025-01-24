@@ -37,7 +37,10 @@ public class CategoryControllerTest
         var result = await _categoryController.Add(input);
 
         // Assert
-        Assert.IsTrue(result);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(createdCategory.Id, result.Id);
+        Assert.AreEqual(createdCategory.CategoryName, result.CategoryName);
+        Assert.AreEqual(createdCategory.Description, result.Description);
         _categoryServiceMock.Verify(service => service.CreateAsync(input), Times.Once);
     }
 

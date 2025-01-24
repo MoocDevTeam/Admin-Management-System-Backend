@@ -18,12 +18,41 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
 
     public async Task<ChoiceQuestionDto> GetAsync(long id)
     {
-        return await base.GetAsync(id);
+        var entity = await _dbContext.ChoiceQuestion
+            .Include(q => q.Options)
+            .Include(q => q.QuestionType)
+            .FirstOrDefaultAsync(q => q.Id == id);
+
+        if (entity == null)
+        {
+            throw new UserFriendlyException($"Choice question with ID {id} not found");
+        }
+
+        return _mapper.Map<ChoiceQuestionDto>(entity);
     }
 
     public async Task<PagedResultDto<ChoiceQuestionDto>> GetListAsync(FilterPagedResultRequestDto input)
     {
-        return await base.GetListAsync(input);
+        var query = CreateFilteredQuery(input);
+        
+        var totalCount = await query.CountAsync();
+        
+        var entities = new List<ChoiceQuestion>();
+        var entityDtos = new List<ChoiceQuestionDto>();
+
+        if (totalCount > 0)
+        {
+            query = ApplySorting(query, input);
+            query = ApplyPaging(query, input);
+
+            entities = await query.ToListAsync();
+            entityDtos = _mapper.Map<List<ChoiceQuestionDto>>(entities);
+        }
+
+        return new PagedResultDto<ChoiceQuestionDto>(
+            totalCount,
+            entityDtos
+        );
     }
 
     public override async Task<ChoiceQuestionDto> CreateAsync(CreateChoiceQuestionDto input)
@@ -85,7 +114,7 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
 
             // Reload complete data
             var result = await _dbContext.ChoiceQuestion
-                .Include(q => q.Option)
+                .Include(q => q.Options)
                 .FirstOrDefaultAsync(q => q.Id == question.Id);
 
             return _mapper.Map<ChoiceQuestionDto>(result);
@@ -102,14 +131,14 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
     protected override IQueryable<ChoiceQuestion> CreateFilteredQuery(FilterPagedResultRequestDto input)
     {
         return base.CreateFilteredQuery(input)
-            .Include(x => x.Option)
+            .Include(x => x.Options)
             .Include(x => x.QuestionType);
     }
 
     public override async Task<ChoiceQuestionDto> UpdateAsync(long id, UpdateChoiceQuestionDto input)
     {
         var existingQuestion = await _dbContext.ChoiceQuestion
-            .Include(q => q.Option)
+            .Include(q => q.Options)
             .FirstOrDefaultAsync(q => q.Id == id);
 
         if (existingQuestion == null)

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Mooc.Application.Contracts.Course.Dto;
 using Mooc.Model.Entity;
 using Mooc.Shared.Enum;
+using Mooc.Core.Utils;
+
 
 namespace Mooc.Application.Course
 {
@@ -336,6 +338,38 @@ namespace Mooc.Application.Course
         // {
         //   return await McDBContext.Session.CountAsync(x => x.Id == courseInstanceId);
         // }
+
+        public async Task SaveFileUploadInfoAsync(CreateMediaDto createMediaDto)
+        {
+            if (createMediaDto == null)
+            {
+                throw new ArgumentNullException(nameof(createMediaDto));
+            }
+
+            // 验证 SessionId 是否存在
+            await ValidateSessionIdAsync(createMediaDto.SessionId);
+
+            // 构建新的 Media 实体
+            var media = new Media
+            {
+                Id = createMediaDto.Id,
+                FileName = createMediaDto.FileName,
+                FilePath = createMediaDto.FilePath,
+                ThumbnailPath = createMediaDto.ThumbnailPath,
+                FileType = createMediaDto.FileType,
+                ApprovalStatus = createMediaDto.ApprovalStatus,
+                SessionId = createMediaDto.SessionId,
+                CreatedByUserId = createMediaDto.CreatedByUserId,
+                UpdatedByUserId = createMediaDto.UpdatedByUserId,
+                CreatedAt = createMediaDto.CreatedAt,
+                UpdatedAt = createMediaDto.UpdatedAt
+            };
+
+            // 将 Media 保存到数据库
+            await McDBContext.Media.AddAsync(media);
+            await McDBContext.SaveChangesAsync();
+        }
+
 
     }
 }

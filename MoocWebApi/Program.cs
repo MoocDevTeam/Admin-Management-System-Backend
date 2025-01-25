@@ -86,6 +86,7 @@ namespace MoocWebApi
                 };
                 builder.Services.AddSingleton(awsConfig);
                 builder.Services.AddScoped<IFileUploadService, FileUploadService>();//use autofac DI later when having a deeper understanding of other ID methods.
+                builder.Services.AddScoped<ISessionService, SessionService>();
 
                 //Add JWT Authentication
                 builder

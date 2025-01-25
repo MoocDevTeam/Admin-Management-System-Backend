@@ -1,7 +1,11 @@
 ﻿using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
+using Mooc.Shared.Enum;
+using Mooc.Application.Course;
+using Mooc.Application.Contracts.Course.Dto;
 using Microsoft.AspNetCore.Http;
+using Mooc.Core.Utils;
 
 
 namespace Mooc.Application.Course
@@ -10,14 +14,16 @@ namespace Mooc.Application.Course
     {
         private readonly AwsS3Config _awsConfig;
         private readonly IAmazonS3 _s3Client;
+        private readonly ISessionService _sessionService;
 
-        public FileUploadService(AwsS3Config awsConfig)
+        public FileUploadService(AwsS3Config awsConfig, ISessionService sessionService)
         {
             _awsConfig = awsConfig;
             _s3Client = new AmazonS3Client(_awsConfig.AccessKeyId, _awsConfig.SecretAccessKey, RegionEndpoint.GetBySystemName(_awsConfig.Region));
+            _sessionService = sessionService;
         }
 
-        public async Task<string> UploadLargeFileAsync(IFormFile file, string folderName, int partSizeMb = 5, IProgress<int> progress = null)
+        public async Task<string> UploadLargeFileAsync(IFormFile file, string folderName, long sessionId, int partSizeMb = 5, IProgress<int> progress = null)
         {
             if (file == null || file.Length == 0)
                 throw new ArgumentException("No file uploaded");
@@ -94,7 +100,25 @@ namespace Mooc.Application.Course
                 };
 
                 var completeResponse = await _s3Client.CompleteMultipartUploadAsync(completeRequest);
-                return $"https://{_awsConfig.BucketName}.s3.amazonaws.com/{filePath}";
+                var fileUrl = $"https://{_awsConfig.BucketName}.s3.amazonaws.com/{filePath}";
+
+                var createMediaDto  = new CreateMediaDto
+                {
+                    Id = SnowflakeIdGeneratorUtil.NextId(),
+                    FilePath = fileUrl,
+                    FileName = fileName,
+                    FileType = MediaFileType.Video,
+                    SessionId = 1,
+                    ThumbnailPath = "/thumbnails/sessions/1/Introduction_to_.Net_video1.png",
+                    CreatedByUserId = 1,
+                    UpdatedByUserId = 1,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now.AddMinutes(1),
+                    ApprovalStatus = MediaApprovalStatus.Approved,
+                };
+                await _sessionService.SaveFileUploadInfoAsync(createMediaDto);
+
+                return fileUrl;
             }
             catch (Exception ex)
             {

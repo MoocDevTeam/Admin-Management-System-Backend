@@ -38,7 +38,7 @@ namespace MoocWebApi.Controllers.Course
         /// <param name="partSizeMb">The size of each part in MB for chunked uploads (default is 5MB).</param>
         /// <returns>The URL of the uploaded file.</returns>
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadFile([FromForm] IFormFile file, [FromForm] string folderName, [FromForm] int partSizeMb = 5)
+        public async Task<IActionResult> UploadFile([FromForm] IFormFile file, [FromForm] string folderName,[FromForm] long sessionId, [FromForm] int partSizeMb = 5)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace MoocWebApi.Controllers.Course
                 });
 
                 // Call the service to upload the file
-                var fileUrl = await _fileUploadService.UploadLargeFileAsync(file, folderName, partSizeMb, progress);
+                var fileUrl = await _fileUploadService.UploadLargeFileAsync(file, folderName, sessionId, partSizeMb, progress);
 
                 // Return the URL of the uploaded file
                 return Ok(new { FileUrl = fileUrl });

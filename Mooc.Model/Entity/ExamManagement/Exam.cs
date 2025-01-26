@@ -21,7 +21,7 @@ public class Exam : BaseEntityWithAudit
 
   public virtual User? UpdatedByUser { get; set; }
 
-  public virtual ICollection<ExamQuestion>? ExamQuestion { get; set; }
+  public virtual List<ExamQuestion>? ExamQuestions { get; set; }
 
   public virtual  ExamPublish? ExamPublish { get; set; }
 

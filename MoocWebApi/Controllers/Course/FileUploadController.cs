@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using MoocWebApi.Hubs;
+using Mooc.Shared.Hubs;
 
 namespace MoocWebApi.Controllers.Course
 {
@@ -38,7 +38,7 @@ namespace MoocWebApi.Controllers.Course
         /// <param name="partSizeMb">The size of each part in MB for chunked uploads (default is 5MB).</param>
         /// <returns>The URL of the uploaded file.</returns>
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadFile([FromForm] IFormFile file, [FromForm] string folderName, [FromForm] int partSizeMb = 5)
+        public async Task<IActionResult> UploadFile([FromForm] IFormFile file, [FromForm] string folderName,[FromForm] long sessionId, [FromForm] string uploadId, [FromForm] int partSizeMb = 5)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace MoocWebApi.Controllers.Course
                     return BadRequest("No file uploaded");
 
                 // Create progress report callback
-                var progress = new Progress<int>(async percentage =>
+                var progress = new Progress<UploadProgress>(async percentage =>
                 {
                     // Send progress update to clients via SignalR
                     await _hubContext.Clients.All.SendAsync("ReceiveProgressUpdate", percentage);
@@ -54,7 +54,7 @@ namespace MoocWebApi.Controllers.Course
                 });
 
                 // Call the service to upload the file
-                var fileUrl = await _fileUploadService.UploadLargeFileAsync(file, folderName, partSizeMb, progress);
+                var fileUrl = await _fileUploadService.UploadLargeFileAsync(file, folderName, sessionId, uploadId, partSizeMb, progress);
 
                 // Return the URL of the uploaded file
                 return Ok(new { FileUrl = fileUrl });

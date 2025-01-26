@@ -22,12 +22,13 @@ namespace Mooc.Application.Course
         public FileUploadService(
         AwsS3Config awsConfig,
         ISessionService sessionService,
-        IHubContext<FileUploadHub> hubContext) 
+        IHubContext<FileUploadHub> hubContext)
+
         {
             _awsConfig = awsConfig;
             _s3Client = new AmazonS3Client(_awsConfig.AccessKeyId, _awsConfig.SecretAccessKey, RegionEndpoint.GetBySystemName(_awsConfig.Region));
             _sessionService = sessionService;
-            _hubContext = hubContext; 
+            _hubContext = hubContext;
         }
 
         public async Task<string> UploadLargeFileAsync(IFormFile file, string folderName, long sessionId, string uploadId, int partSizeMb = 5, IProgress<UploadProgress> progress = null)
@@ -92,7 +93,7 @@ namespace Mooc.Application.Course
                                 Percentage = percentage
                             });
 
-                            await _hubContext.Clients.All.SendAsync("ReceiveProgressUpdate", new
+                            await _hubContext.Clients.Group(uploadId).SendAsync("ReceiveProgressUpdate", new
                             {
                                 UploadId = uploadId,
                                 Progress = percentage
@@ -116,7 +117,7 @@ namespace Mooc.Application.Course
                 {
                     Id = SnowflakeIdGeneratorUtil.NextId(),
                     FilePath = fileUrl,
-                    FileName = fileName,
+                    FileName = Path.GetFileName(file.FileName),
                     FileType = MediaFileType.Video,
                     SessionId = sessionId,
                     ThumbnailPath = "/thumbnails/sessions/1/Introduction_to_.Net_video1.png",

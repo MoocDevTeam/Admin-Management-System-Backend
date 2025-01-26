@@ -9,13 +9,42 @@ namespace Mooc.Shared.Hubs
     public class FileUploadHub : Hub
     {
         /// <summary>
-        /// Sends a progress update to all connected clients.
+        /// Adds the client to a specific group based on the upload ID.
         /// </summary>
+        /// <param name="uploadId">The unique ID for the file upload.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public async Task JoinGroup(string uploadId)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, uploadId);
+            Console.WriteLine($"Client {Context.ConnectionId} joined group {uploadId}");
+        }
+
+        /// <summary>
+        /// Removes the client from all groups on disconnection.
+        /// </summary>
+        /// <param name="exception">The exception that occurred, if any.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public override async Task OnDisconnectedAsync(Exception exception)
+        {
+            Console.WriteLine($"Client {Context.ConnectionId} disconnected.");
+            await base.OnDisconnectedAsync(exception);
+        }
+
+        /// <summary>
+        /// Sends a progress update to a specific group based on the upload ID.
+        /// </summary>
+        /// <param name="uploadId">The unique ID for the file upload.</param>
         /// <param name="percentage">The percentage of the upload completed.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task SendProgressUpdate(int percentage)
+        public async Task SendProgressUpdate(string uploadId, int percentage)
         {
-            await Clients.All.SendAsync("ReceiveProgressUpdate", percentage);
+            await Clients.Group(uploadId).SendAsync("ReceiveProgressUpdate", new
+            {
+                UploadId = uploadId,
+                Progress = percentage
+            });
+
+            Console.WriteLine($"Progress update sent to group {uploadId}: {percentage}%");
         }
     }
 }

@@ -17,7 +17,7 @@ public class ChoiceQuestion : BaseEntityWithAudit
 
     // Navigation property
 
-    public virtual ICollection<Option>? Option { get; set; }
+    public virtual ICollection<Option>? Options { get; set; }
 
     public QuestionType? QuestionType { get; set; }
 

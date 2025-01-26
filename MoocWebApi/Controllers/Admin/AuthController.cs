@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Mooc.Core.WrapperResult;
 using Mooc.Model.DBContext;
 using Mooc.Model.Entity;
 
@@ -26,10 +27,15 @@ namespace MoocWebApi.Controllers.Admin
             _authenticationService = authenticationService;
             _configuration = configuration;
         }
+        /// <summary>
+        /// User login 
+        /// </summary>
+        /// <param name="loginRequest"></param>
+        /// <returns></returns>
 
         //POST: api/authcontroller/login
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequest)
+        public async Task<ApiResponseResult> Login([FromBody] LoginRequestDto loginRequest)
         {
             var user = await _authenticationService.ValidateUserAsync(
                 loginRequest.UserName,
@@ -38,12 +44,13 @@ namespace MoocWebApi.Controllers.Admin
 
             if (user == null)
             {
-                HttpContext.Response.StatusCode = 404;
+                return new ApiResponseResult(){ IsSuccess = false, Status = 404, Message = "Username or password is not correct, please enter again !", Time = DateTime.Now };
+
             }
         
             var token = GenerateJwtToken(user);
 
-            return Ok(new { Token = token });
+           return new ApiResponseResult() { IsSuccess = true,Status=200, Message=token, Time = DateTime.Now};
         }
 
         private string GenerateJwtToken(User user)
@@ -54,10 +61,19 @@ namespace MoocWebApi.Controllers.Admin
                 new Claim(ClaimTypes.Name, user.UserName),
             };
 
-            var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_configuration["JwtSetting:SecurityKey"])
-            );
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            // get key from configuration
+            var key = _configuration["JwtSetting:SecurityKey"];
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new InvalidOperationException("JWT SecurityKey is not configured.");
+            }
+
+            //var key = new SymmetricSecurityKey(
+            //    Encoding.UTF8.GetBytes(_configuration["JwtSetting:SecurityKey"])
+            //);
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            var creds = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["JwtSetting:Issuer"],

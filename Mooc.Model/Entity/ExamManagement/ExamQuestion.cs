@@ -4,7 +4,7 @@ public class ExamQuestion : BaseEntityWithAudit
 { 
   public long? ExamId { get; set; }
 
-  public Exam? Exam { get; set; }
+  public virtual Exam? Exam { get; set; }
 
   public long? ChoiceQuestionId { get; set; }
 

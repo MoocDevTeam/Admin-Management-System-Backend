@@ -24,7 +24,7 @@ using System.Text.Json;
 using MoocWebApi.Config;
 using Microsoft.OpenApi.Models;
 using DotNetEnv;
-using MoocWebApi.Hubs;
+using Mooc.Shared.Hubs;
 
 
 namespace MoocWebApi

@@ -7,12 +7,12 @@ namespace MoocWebApi.Controllers.ExamManagement;
 [Route("api/[controller]/[action]")]
 [ApiController]
 [RequestFormLimits(MultipartBodyLengthLimit = 52428800)]
-public class ChoiceQustionController : ControllerBase
+public class ChoiceQuestionController : ControllerBase
 {
 
     private readonly IChoiceQuestionService _choiceQuestionService;
 
-    public ChoiceQustionController(IChoiceQuestionService choiceQuestionService)
+    public ChoiceQuestionController(IChoiceQuestionService choiceQuestionService)
     {
         _choiceQuestionService = choiceQuestionService;
     }

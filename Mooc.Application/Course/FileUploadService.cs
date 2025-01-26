@@ -29,7 +29,6 @@ namespace Mooc.Application.Course
             _s3Client = new AmazonS3Client(_awsConfig.AccessKeyId, _awsConfig.SecretAccessKey, RegionEndpoint.GetBySystemName(_awsConfig.Region));
             _sessionService = sessionService;
             _hubContext = hubContext;
-
         }
 
         public async Task<string> UploadLargeFileAsync(IFormFile file, string folderName, long sessionId, string uploadId, int partSizeMb = 5, IProgress<UploadProgress> progress = null)

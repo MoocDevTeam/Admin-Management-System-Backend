@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
-namespace MoocWebApi.Hubs
+namespace Mooc.Shared.Hubs
 {
     /// <summary>
     /// SignalR hub for handling file upload progress updates.

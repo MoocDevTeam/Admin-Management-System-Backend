@@ -105,7 +105,7 @@ namespace Mooc.UnitTest.Controller.CourseController
             _courseServiceMock.Verify(service => service.DeleteAsync(courseId), Times.Once);
         }
         [Test]
-        public async Task GetById_ShouldReturnMenuWhenExists()
+        public async Task GetByIdAsync_ShouldReturnCourseWhenExists()
         {
             // Arrange
             var courseId = 1L;
@@ -115,14 +115,18 @@ namespace Mooc.UnitTest.Controller.CourseController
                 Title = "Course1",
                 Description = "Description1",
             };
-            _courseServiceMock.Setup(service => service.GetAsync(courseId)).ReturnsAsync(course);
+
+            _courseServiceMock.Setup(service => service.GetByIdAsync(courseId)).ReturnsAsync(course);
+
             // Act
-            var result = await _controller.GetById(courseId);
+            var result = await _controller.GetByIdAsync(courseId);
+
             // Assert
             Assert.NotNull(result);
             Assert.AreEqual(courseId, result.Id);
             Assert.AreEqual("Course1", result.Title);
-            _courseServiceMock.Verify(service => service.GetAsync(courseId), Times.Once);
+
+            _courseServiceMock.Verify(service => service.GetByIdAsync(courseId), Times.Once);
         }
 
     }

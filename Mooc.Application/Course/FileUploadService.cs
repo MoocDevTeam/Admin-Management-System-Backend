@@ -6,42 +6,44 @@ using Mooc.Application.Course;
 using Mooc.Application.Contracts.Course.Dto;
 using Microsoft.AspNetCore.Http;
 using Mooc.Core.Utils;
-
+using Microsoft.AspNetCore.SignalR;
+using Mooc.Shared.Hubs;
 
 namespace Mooc.Application.Course
 {
+
     public class FileUploadService : IFileUploadService
     {
         private readonly AwsS3Config _awsConfig;
         private readonly IAmazonS3 _s3Client;
         private readonly ISessionService _sessionService;
+        private readonly IHubContext<FileUploadHub> _hubContext;
 
-        public FileUploadService(AwsS3Config awsConfig, ISessionService sessionService)
+        public FileUploadService(
+        AwsS3Config awsConfig,
+        ISessionService sessionService,
+        IHubContext<FileUploadHub> hubContext) 
         {
             _awsConfig = awsConfig;
             _s3Client = new AmazonS3Client(_awsConfig.AccessKeyId, _awsConfig.SecretAccessKey, RegionEndpoint.GetBySystemName(_awsConfig.Region));
             _sessionService = sessionService;
+            _hubContext = hubContext; 
         }
 
-        public async Task<string> UploadLargeFileAsync(IFormFile file, string folderName, long sessionId, int partSizeMb = 5, IProgress<int> progress = null)
+        public async Task<string> UploadLargeFileAsync(IFormFile file, string folderName, long sessionId, string uploadId, int partSizeMb = 5, IProgress<UploadProgress> progress = null)
         {
             if (file == null || file.Length == 0)
                 throw new ArgumentException("No file uploaded");
 
-            // Validate file extension
             var allowedExtensions = new[] { ".mp4", ".avi" };
             var extension = Path.GetExtension(file.FileName).ToLower();
             if (!allowedExtensions.Contains(extension))
                 throw new ArgumentException("Invalid file type");
 
-            // Regenerate the file name
             var fileName = $"{Path.GetRandomFileName()}{extension}";
             var filePath = Path.Combine(folderName, fileName).Replace("\\", "/");
-
-            // Convert part size to bytes
             var partSize = partSizeMb * 1024 * 1024;
 
-            // Initialize multipart upload
             var initiateRequest = new InitiateMultipartUploadRequest
             {
                 BucketName = _awsConfig.BucketName,
@@ -50,7 +52,7 @@ namespace Mooc.Application.Course
             };
 
             var initiateResponse = await _s3Client.InitiateMultipartUploadAsync(initiateRequest);
-            var uploadId = initiateResponse.UploadId;
+            var s3UploadId = initiateResponse.UploadId;
 
             var partETags = new List<PartETag>();
             long totalBytes = file.Length;
@@ -58,7 +60,6 @@ namespace Mooc.Application.Course
 
             try
             {
-                // Upload parts
                 using (var fileStream = file.OpenReadStream())
                 {
                     var partNumber = 1;
@@ -72,7 +73,7 @@ namespace Mooc.Application.Course
                             {
                                 BucketName = _awsConfig.BucketName,
                                 Key = filePath,
-                                UploadId = uploadId,
+                                UploadId = s3UploadId,
                                 PartNumber = partNumber,
                                 PartSize = bytesRead,
                                 InputStream = partStream
@@ -82,55 +83,62 @@ namespace Mooc.Application.Course
                             partETags.Add(new PartETag(partNumber, uploadPartResponse.ETag));
                             partNumber++;
 
-                            // Update the uploaded bytes and progress
                             uploadedBytes += bytesRead;
                             var percentage = (int)((uploadedBytes * 100) / totalBytes);
-                            progress?.Report(percentage); // Report progress to the front-end
+
+                            progress?.Report(new UploadProgress
+                            {
+                                UploadId = uploadId,
+                                Percentage = percentage
+                            });
+
+                            await _hubContext.Clients.All.SendAsync("ReceiveProgressUpdate", new
+                            {
+                                UploadId = uploadId,
+                                Progress = percentage
+                            });
                         }
                     }
                 }
 
-                // Complete multipart upload
                 var completeRequest = new CompleteMultipartUploadRequest
                 {
                     BucketName = _awsConfig.BucketName,
                     Key = filePath,
-                    UploadId = uploadId,
+                    UploadId = s3UploadId,
                     PartETags = partETags
                 };
 
                 var completeResponse = await _s3Client.CompleteMultipartUploadAsync(completeRequest);
                 var fileUrl = $"https://{_awsConfig.BucketName}.s3.amazonaws.com/{filePath}";
 
-                var createMediaDto  = new CreateMediaDto
+                await _sessionService.SaveFileUploadInfoAsync(new CreateMediaDto
                 {
                     Id = SnowflakeIdGeneratorUtil.NextId(),
                     FilePath = fileUrl,
                     FileName = fileName,
                     FileType = MediaFileType.Video,
-                    SessionId = 1,
+                    SessionId = sessionId,
                     ThumbnailPath = "/thumbnails/sessions/1/Introduction_to_.Net_video1.png",
                     CreatedByUserId = 1,
                     UpdatedByUserId = 1,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now.AddMinutes(1),
                     ApprovalStatus = MediaApprovalStatus.Approved,
-                };
-                await _sessionService.SaveFileUploadInfoAsync(createMediaDto);
+                });
 
                 return fileUrl;
             }
             catch (Exception ex)
             {
-                // Abort multipart upload on failure
                 await _s3Client.AbortMultipartUploadAsync(new AbortMultipartUploadRequest
                 {
                     BucketName = _awsConfig.BucketName,
                     Key = filePath,
-                    UploadId = uploadId
+                    UploadId = s3UploadId
                 });
 
-                throw new Exception($"Error uploading file: {ex.Message}", ex);
+                throw new Exception($"Error uploading file (UploadId: {uploadId}): {ex.Message}", ex);
             }
         }
     }

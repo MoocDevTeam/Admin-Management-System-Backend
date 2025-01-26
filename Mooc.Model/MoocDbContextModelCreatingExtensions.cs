@@ -756,9 +756,9 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(e => e.TimePeriod)
                 .IsRequired()
                 .HasMaxLength(ExamEntityConsts.MaxTimePeriodLength);
-            b.HasMany<ExamQuestion>()
-               .WithOne(eq => eq.Exam)
-               .HasForeignKey(e => e.ExamId);
+            b.HasMany(e => e.ExamQuestions)
+              .WithOne(eq => eq.Exam)
+              .HasForeignKey(e => e.ExamId);
             b.ConfigureAudit();
         });
     }
@@ -770,7 +770,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasKey(eq => eq.Id);
             b.Property(eq => eq.Id).ValueGeneratedNever();
             b.HasOne(eq => eq.Exam)
-                .WithMany(e => e.ExamQuestion)
+                .WithMany(e => e.ExamQuestions)
                 .HasForeignKey(eq => eq.ExamId);
 
             b.HasOne(m => m.ChoiceQuestion)

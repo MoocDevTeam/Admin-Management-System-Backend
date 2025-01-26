@@ -45,6 +45,7 @@ namespace Mooc.Shared.Hubs
             });
 
             Console.WriteLine($"Progress update sent to group {uploadId}: {percentage}%");
+
         }
     }
 }

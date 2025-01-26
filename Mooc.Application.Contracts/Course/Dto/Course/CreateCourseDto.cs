@@ -10,12 +10,18 @@ namespace Mooc.Application.Contracts.Course
 {
     public class CreateCourseDto : BaseEntityDto
     {
-        // [JsonIgnore]
-        // public long id { get; set; }
+        [JsonIgnore]
+        public new long Id { get; set; }
+        [Required(ErrorMessage = "Title is null")]
+        [StringLength(100, ErrorMessage = "Title must be less than 100 characters")]
         public string Title { get; set; }
+        [Required(ErrorMessage = "CourseCode is null")]
+        [StringLength(100, ErrorMessage = "CourseCode must be less than 100 characters")]
         public string CourseCode { get; set; }
+
         public string? CoverImage { get; set; }
         public string Description { get; set; } = "Description";
+        [Required(ErrorMessage = "CategoryId is null")]
         public long CategoryId { get; set; } = 1;
         [JsonIgnore]
         public long? CreatedByUserId { get; set; } = 1;

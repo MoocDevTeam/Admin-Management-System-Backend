@@ -599,28 +599,30 @@ public static class MoocDbContextModelCreatingExtensions
                     $"Marks >= {BaseQuestionEntityConsts.MinMarksValue} AND Marks <= {BaseQuestionEntityConsts.MaxMarksValue}");
             });
 
-            b.HasKey(cq => cq.Id);
-            b.Property(cq => cq.Id).ValueGeneratedNever();
-            b.Property(cq => cq.QuestionBody)
+            b.HasKey(x => x.Id);
+            b.Property(x => x.Id).ValueGeneratedNever();
+            
+            b.Property(x => x.QuestionBody)
                 .IsRequired()
                 .HasMaxLength(BaseQuestionEntityConsts.MaxQuestionBodyLength);
-            b.Property(cq => cq.QuestionTitle)
+            b.Property(x => x.QuestionTitle)
                 .IsRequired()
                 .HasMaxLength(BaseQuestionEntityConsts.MaxQuestionTitleLength);
-            b.Property(cq => cq.CorrectAnswer)
+            b.Property(x => x.CorrectAnswer)
                 .IsRequired()
                 .HasMaxLength(ChoiceQuestionEntityConsts.MaxCorrectAnswerLength);
-            b.Property(cq => cq.Marks)
-               .IsRequired();
-            b.HasOne(cq => cq.QuestionType)
-                 .WithMany(qt => qt.ChoiceQuestions)
-                 .HasForeignKey(cq => cq.QuestionTypeId);
-            b.HasMany<Option>()
-                 .WithOne(o => o.ChoiceQuestion)
-                 .HasForeignKey(o => o.ChoiceQuestionId);
-            b.HasOne(cq => cq.CourseInstance)
-                   .WithMany()
-                   .HasForeignKey(cq => cq.CourseId);
+            
+            b.HasOne(x => x.QuestionType)
+                .WithMany(qt => qt.ChoiceQuestions)
+                .HasForeignKey(x => x.QuestionTypeId);
+            b.HasMany(x => x.Options)
+                .WithOne(o => o.ChoiceQuestion)
+                .HasForeignKey(o => o.ChoiceQuestionId)
+                .OnDelete(DeleteBehavior.Cascade);
+            b.HasOne(x => x.CourseInstance)
+                .WithMany()
+                .HasForeignKey(x => x.CourseId);
+            
             b.ConfigureAudit();
         });
     }
@@ -634,7 +636,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(o => o.Id)
                 .ValueGeneratedNever();  // Prevent auto-increment, we'll use UUID/Snowflake
             b.HasOne(o => o.ChoiceQuestion)
-                .WithMany(cq => cq.Option)
+                .WithMany(cq => cq.Options)
                 .HasForeignKey(o => o.ChoiceQuestionId);
 
             b.Property(o => o.OptionOrder)
@@ -760,9 +762,9 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(e => e.TimePeriod)
                 .IsRequired()
                 .HasMaxLength(ExamEntityConsts.MaxTimePeriodLength);
-            b.HasMany<ExamQuestion>()
-               .WithOne(eq => eq.Exam)
-               .HasForeignKey(e => e.ExamId);
+            b.HasMany(e => e.ExamQuestions)
+              .WithOne(eq => eq.Exam)
+              .HasForeignKey(e => e.ExamId);
             b.ConfigureAudit();
         });
     }
@@ -774,7 +776,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasKey(eq => eq.Id);
             b.Property(eq => eq.Id).ValueGeneratedNever();
             b.HasOne(eq => eq.Exam)
-                .WithMany(e => e.ExamQuestion)
+                .WithMany(e => e.ExamQuestions)
                 .HasForeignKey(eq => eq.ExamId);
 
             b.HasOne(m => m.ChoiceQuestion)

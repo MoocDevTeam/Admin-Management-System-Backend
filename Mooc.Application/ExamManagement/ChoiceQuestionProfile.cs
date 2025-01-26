@@ -8,10 +8,10 @@ public class ChoiceQuestionProfile : Profile
         // ChoiceQuestion mappings
         CreateMap<ChoiceQuestion, ChoiceQuestionDto>()
             .ForMember(dest => dest.Options, 
-                opt => opt.MapFrom(src => src.Option));
+                opt => opt.MapFrom(src => src.Options));
 
         CreateMap<CreateChoiceQuestionDto, ChoiceQuestion>()
-            .ForMember(dest => dest.Option, opt => opt.MapFrom(src => src.Options))
+            .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options))
             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
         CreateMap<UpdateChoiceQuestionDto, ChoiceQuestion>();

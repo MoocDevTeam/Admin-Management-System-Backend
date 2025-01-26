@@ -1,4 +1,5 @@
-﻿namespace Mooc.Application.Contracts.ExamManagement;
+﻿using Mooc.Model.Entity;
+namespace Mooc.Application.Contracts.ExamManagement;
 
 public class ExamDto : BaseEntityDto
 {
@@ -25,6 +26,8 @@ public class ExamDto : BaseEntityDto
 
     public int TimePeriod { get; set; }
 
-    public List<ExamQuestionDto>? ExamQuestion { get; set; }
+    public List<ExamQuestionDto>? ExamQuestions { get; set; }
+
+    public ExamPublishDto? ExamPublish { get; set; }
 
 }

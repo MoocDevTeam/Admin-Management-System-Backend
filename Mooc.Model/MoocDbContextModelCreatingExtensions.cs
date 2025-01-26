@@ -347,22 +347,25 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(cs => cs.CategoryName).IsRequired().HasMaxLength(CategoryEntityConsts.MaxCategoryNameLength);
             b.Property(cs => cs.Description).IsRequired().HasMaxLength(CategoryEntityConsts.MaxDescriptionLength);
             b.Property(cs => cs.IconUrl).HasMaxLength(CategoryEntityConsts.MaxIconUrlLength);
+            b.Property(x => x.ParentId).IsRequired(false);
+            b.ConfigureAudit();
 
             // foreign keys
             b.HasOne(x => x.ParentCategory)
             .WithMany(x =>x.ChildrenCategories)
             .HasForeignKey(x => x.ParentId)
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Restrict);
 
             //foreign keys to User class
             b.HasOne<User>(x => x.CreatedByUser)
              .WithMany()
-             .HasForeignKey(x => x.CreatedByUserId)
+             //.HasForeignKey(x => x.CreatedByUserId)
              .OnDelete(DeleteBehavior.Cascade);
 
             b.HasOne<User>(x => x.UpdatedByUser)
             .WithMany()
-            .HasForeignKey(x => x.UpdatedByUserId)
+            //.HasForeignKey(x => x.UpdatedByUserId)
             .OnDelete(DeleteBehavior.Cascade);
 
             // Explicit relationship to MoocCourse for UpdatedCourses
@@ -390,6 +393,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(e => e.MaxStudents)
                 .IsRequired()
                 .HasMaxLength(300);
+            b.ConfigureAudit();
 
             b.HasOne<User>(x => x.CreatedByUser)
              .WithMany()
@@ -457,7 +461,7 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasForeignKey(s => s.CourseInstanceId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            b.HasMany<Media>(x => x.Sessionmedia)
+            b.HasMany<Media>(x => x.Media)
                 .WithOne(s => s.Session)
                 .HasForeignKey(s => s.SessionId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -566,7 +570,7 @@ public static class MoocDbContextModelCreatingExtensions
                 .OnDelete(DeleteBehavior.Cascade);
 
             b.HasOne<Session>(x => x.Session)
-                .WithMany(x => x.Sessionmedia)
+                .WithMany(x => x.Media)
                 .HasForeignKey(x => x.SessionId)
                 .OnDelete(DeleteBehavior.Cascade);
         });

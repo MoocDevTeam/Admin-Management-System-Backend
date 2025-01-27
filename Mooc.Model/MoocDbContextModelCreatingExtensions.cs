@@ -583,6 +583,7 @@ public static class MoocDbContextModelCreatingExtensions
         ConfigureExam(modelBuilder);
         ConfigureExamQuestion(modelBuilder);
         ConfigureExamPublish(modelBuilder);
+        ConfigureMultipleChoiceQuestion(modelBuilder);
     }
 
     private static void ConfigureChoiceQuestion(ModelBuilder modelBuilder)
@@ -806,6 +807,44 @@ public static class MoocDbContextModelCreatingExtensions
                 .HasForeignKey<ExamPublish>(x => x.ExamId); // ExamPublish.ExamId is the FK to Exam.Id
             b.Property(ep => ep.CloseAt)
                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            b.ConfigureAudit();
+        });
+    }
+
+    private static void ConfigureMultipleChoiceQuestion(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<MultipleChoiceQuestion>(b =>
+        {
+            b.ToTable(TablePrefix + "MultipleChoiceQuestion");
+            b.HasKey(x => x.Id);
+            b.Property(x => x.Id).ValueGeneratedNever();
+            
+            b.Property(x => x.QuestionBody)
+                .IsRequired()
+                .HasMaxLength(BaseQuestionEntityConsts.MaxQuestionBodyLength);
+            
+            b.Property(x => x.QuestionTitle)
+                .IsRequired()
+                .HasMaxLength(BaseQuestionEntityConsts.MaxQuestionTitleLength);
+            
+            b.Property(x => x.CorrectAnswers)
+                .IsRequired()
+                .HasMaxLength(MultipleChoiceQuestionEntityConsts.MaxCorrectAnswersLength);
+            
+            // implement the relationship
+            b.HasOne(x => x.QuestionType)
+                .WithMany()
+                .HasForeignKey(x => x.QuestionTypeId);
+            
+            b.HasMany(x => x.Options)
+                .WithOne(o => o.MultipleChoiceQuestion)
+                .HasForeignKey(o => o.MultipleChoiceQuestionId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            b.HasOne(x => x.CourseInstance)
+                .WithMany()
+                .HasForeignKey(x => x.CourseId);
+            
             b.ConfigureAudit();
         });
     }

@@ -29,15 +29,14 @@ namespace Mooc.Application.Course
             _s3Client = new AmazonS3Client(_awsConfig.AccessKeyId, _awsConfig.SecretAccessKey, RegionEndpoint.GetBySystemName(_awsConfig.Region));
             _sessionService = sessionService;
             _hubContext = hubContext;
-
         }
 
-        public async Task<string> UploadLargeFileAsync(IFormFile file, string folderName, long sessionId, string uploadId, int partSizeMb = 5, IProgress<UploadProgress> progress = null)
+        public async Task<string> UploadLargeFileAsync(IFormFile file, string folderName, long sessionId, string uploadId, int partSizeMb = 5)
         {
             if (file == null || file.Length == 0)
                 throw new ArgumentException("No file uploaded");
 
-            var allowedExtensions = new[] { ".mp4", ".avi" };
+            var allowedExtensions = new[] { ".mp4" };
             var extension = Path.GetExtension(file.FileName).ToLower();
             if (!allowedExtensions.Contains(extension))
                 throw new ArgumentException("Invalid file type");
@@ -87,12 +86,6 @@ namespace Mooc.Application.Course
 
                             uploadedBytes += bytesRead;
                             var percentage = (int)((uploadedBytes * 100) / totalBytes);
-
-                            progress?.Report(new UploadProgress
-                            {
-                                UploadId = uploadId,
-                                Percentage = percentage
-                            });
 
                             await _hubContext.Clients.Group(uploadId).SendAsync("ReceiveProgressUpdate", new
                             {

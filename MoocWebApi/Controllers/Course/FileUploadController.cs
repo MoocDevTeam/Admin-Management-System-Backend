@@ -45,16 +45,8 @@ namespace MoocWebApi.Controllers.Course
                 if (file == null || file.Length == 0)
                     return BadRequest("No file uploaded");
 
-                // Create progress report callback
-                var progress = new Progress<UploadProgress>(async percentage =>
-                {
-                    // Send progress update to clients via SignalR
-                    await _hubContext.Clients.All.SendAsync("ReceiveProgressUpdate", percentage);
-                    Console.WriteLine($"Upload Progress: {percentage}%");
-                });
-
                 // Call the service to upload the file
-                var fileUrl = await _fileUploadService.UploadLargeFileAsync(file, folderName, sessionId, uploadId, partSizeMb, progress);
+                var fileUrl = await _fileUploadService.UploadLargeFileAsync(file, folderName, sessionId, uploadId, partSizeMb);
 
                 // Return the URL of the uploaded file
                 return Ok(new { FileUrl = fileUrl });

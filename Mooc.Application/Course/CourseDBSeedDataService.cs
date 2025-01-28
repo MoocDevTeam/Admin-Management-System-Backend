@@ -364,13 +364,12 @@ namespace Mooc.Application.Course
                 ApprovalStatus = MediaApprovalStatus.Pending
             },
 
-            // SessionId=2,have two pdf files
             new Media()
             {
                 Id = 3,
                 SessionId = 2,
-                FileType = MediaFileType.Pdf,
-                FileName = "Setting_up_the_Development_Environment_doc1.pdf",
+                FileType = MediaFileType.Video,
+                FileName = "Setting_up_the_Development_Environment_doc1.mp4",
                 FilePath = "https://moocmedia.s3.amazonaws.com/video/edubfhzc.asz.mp4",
                 ThumbnailPath = "/thumbnails/sessions/2/Setting_up_the_Development_Environment_doc1.png",
                 CreatedByUserId = 1,
@@ -383,8 +382,8 @@ namespace Mooc.Application.Course
             {
                 Id = 4,
                 SessionId = 2,
-                FileType = MediaFileType.Pdf,
-                FileName = "Setting_up_the_Development_Environment_doc2.pdf",
+                FileType = MediaFileType.Video,
+                FileName = "Setting_up_the_Development_Environment_doc2.mp4",
                 FilePath = "https://moocmedia.s3.amazonaws.com/video/edubfhzc.asz.mp4",
                 ThumbnailPath = "/thumbnails/sessions/2/Setting_up_the_Development_Environment_doc2.png",
                 CreatedByUserId = 1,
@@ -396,7 +395,6 @@ namespace Mooc.Application.Course
 
             // SessionId=3, none meida files
 
-            // SessionId=4, one vedio and one pdf file
             new Media()
             {
                 Id = 5,
@@ -415,9 +413,9 @@ namespace Mooc.Application.Course
             {
                 Id = 6,
                 SessionId = 4,
-                FileType = MediaFileType.Pdf,
-                FileName = "Basic_Syntax_and_Data_Types_doc.pdf",
-                FilePath = "/files/sessions/4/Basic_Syntax_and_Data_Types_doc.pdf",
+                FileType = MediaFileType.Video,
+                FileName = "Basic_Syntax_and_Data_Types_doc.mp4",
+                FilePath = "https://moocmedia.s3.amazonaws.com/video/edubfhzc.asz.mp4",
                 ThumbnailPath = "/thumbnails/sessions/4/Basic_Syntax_and_Data_Types_doc.png",
                 CreatedByUserId = 1,
                 UpdatedByUserId = 1,

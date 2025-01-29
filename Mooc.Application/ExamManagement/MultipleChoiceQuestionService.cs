@@ -74,10 +74,8 @@ public class MultipleChoiceQuestionService : CrudService<MultipleChoiceQuestion,
             
             var question = new MultipleChoiceQuestion
             {
-                Id = SnowflakeIdGeneratorUtil.NextId(),
                 CourseId = input.CourseId,
                 CreatedByUserId = currentUser.Id,
-                UpdatedByUserId = currentUser.Id,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 QuestionBody = input.QuestionBody,
@@ -87,6 +85,7 @@ public class MultipleChoiceQuestionService : CrudService<MultipleChoiceQuestion,
                 CorrectAnswers = input.CorrectAnswers
             };
             
+            base.SetIdForLong(question);
             await _dbContext.MultipleChoiceQuestion.AddAsync(question);
             await _dbContext.SaveChangesAsync();
             
@@ -103,12 +102,11 @@ public class MultipleChoiceQuestionService : CrudService<MultipleChoiceQuestion,
                         OptionValue = optionDto.OptionValue,
                         ErrorExplanation = correctAnswers.Contains(optionDto.OptionValue) ? "" : optionDto.ErrorExplanation,
                         CreatedByUserId = currentUser.Id,
-                        UpdatedByUserId = currentUser.Id,
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow
                     };
                     
-                    SetIdForLong(option);
+                    base.SetIdForLong(option);
                     await _dbContext.Option.AddAsync(option);
                 }
                 
@@ -166,6 +164,51 @@ public class MultipleChoiceQuestionService : CrudService<MultipleChoiceQuestion,
             existingQuestion.UpdatedAt = DateTime.UtcNow;
 
             _dbContext.MultipleChoiceQuestion.Update(existingQuestion);
+
+            if (input.Options != null && input.Options.Any())
+            {
+                var correctAnswers = input.CorrectAnswers?.Split(',').Select(x => x.Trim()).ToList();
+                
+                foreach (var optionDto in input.Options)
+                {
+                    var existingOption = existingQuestion.Options.FirstOrDefault(o => o.Id == optionDto.Id);
+                    if (existingOption != null)
+                    {
+                        // update existing option
+                        existingOption.OptionOrder = optionDto.OptionOrder;
+                        existingOption.OptionValue = optionDto.OptionValue;
+                        existingOption.ErrorExplanation = correctAnswers.Contains(optionDto.OptionValue) ? "" : optionDto.ErrorExplanation;
+                        existingOption.UpdatedByUserId = currentUser.Id;
+                        existingOption.UpdatedAt = DateTime.UtcNow;
+
+                        _dbContext.Option.Update(existingOption);
+                    }
+                    else
+                    {
+                        // create new option
+                        var newOption = new Option
+                        {
+                            MultipleChoiceQuestionId = id,
+                            OptionOrder = optionDto.OptionOrder,
+                            OptionValue = optionDto.OptionValue,
+                            ErrorExplanation = correctAnswers.Contains(optionDto.OptionValue) ? "" : optionDto.ErrorExplanation,
+                            CreatedByUserId = currentUser.Id,
+                            CreatedAt = DateTime.UtcNow,
+                            UpdatedAt = DateTime.UtcNow
+                        };
+                        
+                        base.SetIdForLong(newOption);
+                        await _dbContext.Option.AddAsync(newOption);
+                    }
+                }
+
+                // delete unnecessary options
+                var optionIdsToKeep = input.Options.Select(o => o.Id).ToList();
+                await _dbContext.Option
+                    .Where(o => o.MultipleChoiceQuestionId == id && !optionIdsToKeep.Contains(o.Id))
+                    .ExecuteDeleteAsync();
+            }
+
             await _dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
 
@@ -182,13 +225,5 @@ public class MultipleChoiceQuestionService : CrudService<MultipleChoiceQuestion,
     protected virtual DbSet<MultipleChoiceQuestion> GetDbSet()
     {
         return _dbContext.Set<MultipleChoiceQuestion>();
-    }
-
-    private void SetIdForLong(Option option)
-    {
-        if (option.Id == 0)
-        {
-            option.Id = SnowflakeIdGeneratorUtil.NextId();
-        }
     }
 }

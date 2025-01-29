@@ -93,7 +93,6 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
             
             var question = new ChoiceQuestion
             {
-                Id = SnowflakeIdGeneratorUtil.NextId(),
                 CourseId = input.CourseId,
                 CreatedByUserId = currentUser.Id,
                 CreatedAt = DateTime.UtcNow,
@@ -105,12 +104,12 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
                 CorrectAnswer = input.CorrectAnswer
             };
             
+            base.SetIdForLong(question);
             await _dbContext.ChoiceQuestion.AddAsync(question);
             await _dbContext.SaveChangesAsync();
             
             _logger.LogInformation("Choice question created with ID: {Id}", question.Id);
 
-            // Create options
             if (input.Options != null)
             {
                 foreach (var optionDto in input.Options)
@@ -126,16 +125,13 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
                         UpdatedAt = DateTime.UtcNow
                     };
                     
-                    // Generate ID using Snowflake algorithm
-                    SetIdForLong(option);
-                    
+                    base.SetIdForLong(option);
                     await _dbContext.Option.AddAsync(option);
                 }
                 
                 await _dbContext.SaveChangesAsync();
             }
 
-            // Reload complete data
             var result = await _dbContext.ChoiceQuestion
                 .Include(q => q.Options)
                 .FirstOrDefaultAsync(q => q.Id == question.Id);
@@ -201,7 +197,6 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
                         existingOption.ErrorExplanation = optionDto.OptionValue == input.CorrectAnswer ? "" : optionDto.ErrorExplanation;
                         existingOption.UpdatedByUserId = currentUser.Id;
                         existingOption.UpdatedAt = DateTime.UtcNow;
-                        
 
                         _dbContext.Option.Update(existingOption);
                     }
@@ -210,18 +205,16 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
                         // create new option
                         var newOption = new Option
                         {
-                            Id = SnowflakeIdGeneratorUtil.NextId(),
-
                             ChoiceQuestionId = id,
                             OptionOrder = optionDto.OptionOrder,
                             OptionValue = optionDto.OptionValue,
                             ErrorExplanation = optionDto.OptionValue == input.CorrectAnswer ? "" : optionDto.ErrorExplanation,
                             CreatedByUserId = currentUser.Id,
                             CreatedAt = DateTime.UtcNow,
-                            UpdatedByUserId = currentUser.Id,
                             UpdatedAt = DateTime.UtcNow
                         };
-
+                        
+                        base.SetIdForLong(newOption);
                         await _dbContext.Option.AddAsync(newOption);
                     }
                 }
@@ -230,7 +223,6 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
                 var optionIdsToKeep = input.Options.Select(o => o.Id).ToList();
                 await _dbContext.Option
                     .Where(o => o.ChoiceQuestionId == id && !optionIdsToKeep.Contains(o.Id))
-
                     .ExecuteDeleteAsync();
             }
 
@@ -254,15 +246,6 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
 
     protected virtual DbSet<ChoiceQuestion> GetDbSet()
     {
-        return _dbContext.Set<ChoiceQuestion>();  // Use _dbContext instead of DbContext
-    }
-
-    // Helper method
-    private void SetIdForLong(Option option)
-    {
-        if (option.Id == 0)
-        {
-            option.Id = SnowflakeIdGeneratorUtil.NextId();
-        }
+        return _dbContext.Set<ChoiceQuestion>();
     }
 }

@@ -22,15 +22,23 @@ namespace Mooc.Application.Course
         private static List<Category> categories = new List<Category>()
         {
             new Category(){Id=1, CategoryName="Engineer",Description="The practical and innovative application of maths and sciences will be used to design, develop and maintain infrastructures, products and systems on a large scale.",IconUrl="https://upload.wikimedia.org/wikipedia/commons/8/88/MarCO_CubeSat.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
-            new Category(){Id=2, CategoryName="Software Engineer",Description="Computing, information systems and software engineering",ParentId=1,IconUrl="https://upload.wikimedia.org/wikipedia/commons/5/51/Computer_Science_Word_Cloud.png",CreatedByUserId=1,CreatedAt= DateTime.Now },
-            new Category(){Id=3, CategoryName="Business and Accounting",Description="Covering finance, accounting, marketing, HR management and administrative studies",IconUrl="https://upload.wikimedia.org/wikipedia/commons/3/31/Business_man.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
-            new Category(){Id=4, CategoryName="Arts",Description="You’ll study the creation of visual work, from painting to computer graphics and video games, including fine art and product design.",IconUrl="https://upload.wikimedia.org/wikipedia/commons/1/19/Bundaberg_School_of_Arts_Building_184_Bourbong_St_Bundaberg_P1130021.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
-            new Category(){Id=5, CategoryName="Law",Description="International law and related areas are popular among international students looking for opportunities worldwide",IconUrl="https://upload.wikimedia.org/wikipedia/commons/0/02/Symbol_for_Psychology_%26_Law_Original.png",CreatedByUserId=1,CreatedAt= DateTime.Now },
-            new Category(){Id=6, CategoryName="Education",Description="Education and Training",IconUrl="https://upload.wikimedia.org/wikipedia/commons/9/99/Schoolgirls_in_Bamozai.JPG",CreatedByUserId=1,CreatedAt= DateTime.Now },
-            new Category(){Id=7, CategoryName="Accounting",Description="Accounting and Audit",ParentId=3,IconUrl="https://upload.wikimedia.org/wikipedia/commons/d/de/Young_%26_Dedicated_Accountant_at_Work.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
-            new Category(){Id=8, CategoryName="Mechanical engineering",Description="Mechanical engineering is the study of machines and how they move and use force.",ParentId=1,IconUrl="https://upload.wikimedia.org/wikipedia/commons/1/1a/B.Tech._Mechanical_Engineering.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
-            new Category(){Id=9, CategoryName="Creative Arts",Description="Creative Arts is the study of creating and performing works of art, music, dance and drama.",ParentId=6,IconUrl="https://upload.wikimedia.org/wikipedia/commons/e/ef/Christchurch_Arts_Centre%2C_Christchurch%2C_New_Zealand.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
-        };
+            new Category(){Id=11, CategoryName="Software Engineer",Description="Computing, information systems and software engineering",ParentId=1,IconUrl="https://upload.wikimedia.org/wikipedia/commons/5/51/Computer_Science_Word_Cloud.png",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=111, CategoryName="Cloud Engineer",Description="In Cloud engineering, an engineer is responsible for designing, deploying, maintaining, and managing the cloud-based applications",ParentId=11,IconUrl="https://upload.wikimedia.org/wikipedia/commons/a/a4/Butchy_Fuego_%28audio_engineer%29_-_Com_Truise%2C_Room_205%2C_2012-11-07.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=112, CategoryName="Data Engineer",Description="Data engineers are responsible for tasks such as statistical analysis",ParentId=11,IconUrl="https://upload.wikimedia.org/wikipedia/commons/0/0d/Malcolm_Macdonald_%28engineer%29_July_2018_headshot.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=12, CategoryName="Mechanical engineering",Description="Mechanical engineering is the study of machines and how they move and use force.",ParentId=1,IconUrl="https://upload.wikimedia.org/wikipedia/commons/1/1a/B.Tech._Mechanical_Engineering.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=13, CategoryName="Agricultural engineering",Description="Agricultural engineering spans many disciplines, but is generally broken into a few subfields.",ParentId=1,IconUrl="https://upload.wikimedia.org/wikipedia/commons/a/a2/Agricultural_Engineering.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=131, CategoryName="Food engineering",Description="Food process engineering focuses on how food is processed after it is harvested.",ParentId=13,IconUrl="https://upload.wikimedia.org/wikipedia/commons/2/22/Factory_Automation_Robotics_Palettizing_Bread.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=132, CategoryName="Agricultural Machinery",Description="Agricultural Machinery. When people think of agricultural engineers, designing and producing.",ParentId=13,IconUrl="https://upload.wikimedia.org/wikipedia/commons/0/09/The_JCB_agricultural_range_of_farm_machinery_-_geograph.org.uk_-_4025980.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=2, CategoryName="Business and Accounting",Description="Covering finance, accounting, marketing, HR management and administrative studies",IconUrl="https://upload.wikimedia.org/wikipedia/commons/3/31/Business_man.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=21, CategoryName="Accounting",Description="Accounting and Audit",ParentId=2,IconUrl="https://upload.wikimedia.org/wikipedia/commons/d/de/Young_%26_Dedicated_Accountant_at_Work.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=3, CategoryName="Arts",Description="You’ll study the creation of visual work, from painting to computer graphics and video games, including fine art and product design.",IconUrl="https://upload.wikimedia.org/wikipedia/commons/1/19/Bundaberg_School_of_Arts_Building_184_Bourbong_St_Bundaberg_P1130021.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=31, CategoryName="Creative Arts",Description="Creative Arts is the study of creating and performing works of art, music, dance and drama.",ParentId=3,IconUrl="https://upload.wikimedia.org/wikipedia/commons/e/ef/Christchurch_Arts_Centre%2C_Christchurch%2C_New_Zealand.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=4, CategoryName="Law",Description="International law and related areas are popular among international students looking for opportunities worldwide",IconUrl="https://upload.wikimedia.org/wikipedia/commons/0/02/Symbol_for_Psychology_%26_Law_Original.png",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=41, CategoryName="Criminal law",Description="Criminal Law. This field of law is probably the most well-known because of its prevalence in television shows and movies.",ParentId=4,IconUrl="https://upload.wikimedia.org/wikipedia/commons/1/14/ANSELEM.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=5, CategoryName="Education",Description="Education and Training",IconUrl="https://upload.wikimedia.org/wikipedia/commons/9/99/Schoolgirls_in_Bamozai.JPG",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            };
+
+
 
         private static List<MoocCourse> courses = new List<MoocCourse>()
         {
@@ -462,10 +470,10 @@ namespace Mooc.Application.Course
 
             if (!_dbContext.Teachers.Any())
             {
-            {
-                await this._dbContext.Teachers.AddRangeAsync(teachers);
-                await this._dbContext.SaveChangesAsync();
-            }
+                {
+                    await this._dbContext.Teachers.AddRangeAsync(teachers);
+                    await this._dbContext.SaveChangesAsync();
+                }
             }
 
             if (!_dbContext.TeacherCourseInstances.Any())

@@ -1,16 +1,22 @@
+using System.Text.Json.Serialization;
+
 namespace Mooc.Application.Contracts.ExamManagement;
 
 public class UpdateChoiceQuestionDto : BaseEntityDto
 {
     public long? CourseId { get; set; }
 
-    public long CreatedByUserId { get; set; }
+    [JsonIgnore]
+    public long? CreatedByUserId { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    [JsonIgnore]
+    public DateTime? CreatedAt { get; set; }
 
-    public long UpdatedByUserId { get; set; }
+    [JsonIgnore]
+    public long? UpdatedByUserId { get; set; }
 
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    [JsonIgnore]
+    public DateTime? UpdatedAt { get; set; }
 
     public string? QuestionBody { get; set; }
 
@@ -21,4 +27,6 @@ public class UpdateChoiceQuestionDto : BaseEntityDto
     public long QuestionTypeId { get; set; }
 
     public string? CorrectAnswer { get; set; }
+
+    public List<UpdateOptionDto>? Options { get; set; }
 }

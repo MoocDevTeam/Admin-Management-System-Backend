@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Mooc.Core.Utils;
+using Mooc.Shared.Constants.ExamManagement;
 namespace Mooc.Application.ExamManagement;
 
 public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionDto, ChoiceQuestionDto, long, FilterPagedResultRequestDto, CreateChoiceQuestionDto, UpdateChoiceQuestionDto>, IChoiceQuestionService, ITransientDependency
 {
-    private const int REQUIRED_OPTIONS_COUNT = 4;
     private readonly MoocDBContext _dbContext;
     private readonly ILogger<ChoiceQuestionService> _logger;
     private readonly IMapper _mapper;
@@ -57,9 +57,9 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
 
     public override async Task<ChoiceQuestionDto> CreateAsync(CreateChoiceQuestionDto input)
     {
-        if (input.Options?.Count != REQUIRED_OPTIONS_COUNT)
+        if (input.Options?.Count != ChoiceQuestionConsts.REQUIRED_OPTIONS_COUNT)
         {
-            throw new UserFriendlyException($"Choice question must have exactly {REQUIRED_OPTIONS_COUNT} options");
+            throw new UserFriendlyException($"Choice question must have exactly {ChoiceQuestionConsts.REQUIRED_OPTIONS_COUNT} options");
         }
 
         try 

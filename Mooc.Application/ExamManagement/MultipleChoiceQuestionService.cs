@@ -1,11 +1,11 @@
 using Microsoft.Extensions.Logging;
 using Mooc.Core.Utils;
+using Mooc.Shared.Constants.ExamManagement;
 
 namespace Mooc.Application.ExamManagement;
 
 public class MultipleChoiceQuestionService : CrudService<MultipleChoiceQuestion, MultipleChoiceQuestionDto, MultipleChoiceQuestionDto, long, FilterPagedResultRequestDto, CreateMultipleChoiceQuestionDto, UpdateMultipleChoiceQuestionDto>, IMultipleChoiceQuestionService, ITransientDependency
 {
-    private const int MINIMUM_OPTIONS_COUNT = 2;  // at least 2 options
     private readonly MoocDBContext _dbContext;
     private readonly ILogger<MultipleChoiceQuestionService> _logger;
     private readonly IMapper _mapper;
@@ -34,9 +34,9 @@ public class MultipleChoiceQuestionService : CrudService<MultipleChoiceQuestion,
 
     public override async Task<MultipleChoiceQuestionDto> CreateAsync(CreateMultipleChoiceQuestionDto input)
     {
-        if (input.Options?.Count < MINIMUM_OPTIONS_COUNT)
+        if (input.Options?.Count < MultipleChoiceQuestionConsts.MINIMUM_OPTIONS_COUNT)
         {
-            throw new UserFriendlyException($"Multiple choice question must have at least {MINIMUM_OPTIONS_COUNT} options");
+            throw new UserFriendlyException($"Multiple choice question must have at least {MultipleChoiceQuestionConsts.MINIMUM_OPTIONS_COUNT} options");
         }
 
         // validate the correct answer format

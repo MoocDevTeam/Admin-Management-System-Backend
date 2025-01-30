@@ -38,11 +38,10 @@ namespace MoocWebApi.Controllers.Admin
 
             if (user == null)
             {
-                HttpContext.Response.StatusCode = 404;
+                return NotFound("Invalid username or password");
             }
-        
-            var token = GenerateJwtToken(user);
 
+            var token = GenerateJwtToken(user);
             return Ok(new { Token = token });
         }
 

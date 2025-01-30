@@ -157,6 +157,8 @@ namespace MoocWebApi
 
                 builder.Services.AddSignalR();
 
+                builder.Services.AddHttpContextAccessor();
+
                 var app = builder.Build();
 
 
@@ -174,6 +176,7 @@ namespace MoocWebApi
                     app.UseSwaggerMooc();
                 }
                 app.UseAuthentication();
+                app.UseMiddleware<AuthLoggingMiddleware>();
                 app.UseAuthorization();
 
 

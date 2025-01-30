@@ -1,19 +1,28 @@
 ﻿using Microsoft.Extensions.Logging;
 using Mooc.Core.Utils;
+using Mooc.Shared.Constants.ExamManagement;
+using Mooc.Application.Admin;
+using Microsoft.AspNetCore.Http;
 namespace Mooc.Application.ExamManagement;
+
 
 public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionDto, ChoiceQuestionDto, long, FilterPagedResultRequestDto, CreateChoiceQuestionDto, UpdateChoiceQuestionDto>, IChoiceQuestionService, ITransientDependency
 {
-    private const int REQUIRED_OPTIONS_COUNT = 4;
     private readonly MoocDBContext _dbContext;
     private readonly ILogger<ChoiceQuestionService> _logger;
     private readonly IMapper _mapper;
+    private readonly IUserService _userService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IOptionService _optionService;
 
-    public ChoiceQuestionService(MoocDBContext dbContext, IMapper mapper, ILogger<ChoiceQuestionService> logger) : base(dbContext, mapper)
+    public ChoiceQuestionService(MoocDBContext dbContext, IMapper mapper, ILogger<ChoiceQuestionService> logger, IUserService userService, IHttpContextAccessor httpContextAccessor, IOptionService optionService) : base(dbContext, mapper)
     {
         _dbContext = dbContext;
         _logger = logger;
         _mapper = mapper;
+        _userService = userService;
+        _httpContextAccessor = httpContextAccessor;
+        _optionService = optionService;
     }
 
     public async Task<ChoiceQuestionDto> GetAsync(long id)
@@ -57,21 +66,35 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
 
     public override async Task<ChoiceQuestionDto> CreateAsync(CreateChoiceQuestionDto input)
     {
-        if (input.Options?.Count != REQUIRED_OPTIONS_COUNT)
+        var user = _httpContextAccessor.HttpContext?.User;
+        if (user == null || !user.Identity.IsAuthenticated)
         {
-            throw new UserFriendlyException($"Choice question must have exactly {REQUIRED_OPTIONS_COUNT} options");
+            throw new UserFriendlyException("User is not authenticated");
+        }
+
+        _logger.LogInformation($"User authenticated: {user.Identity.IsAuthenticated}");
+        _logger.LogInformation($"User claims: {string.Join(", ", user.Claims.Select(c => $"{c.Type}: {c.Value}"))}");
+
+        if (input.Options?.Count != ChoiceQuestionConsts.REQUIRED_OPTIONS_COUNT)
+        {
+            throw new UserFriendlyException($"Choice question must have exactly {ChoiceQuestionConsts.REQUIRED_OPTIONS_COUNT} options");
         }
 
         try 
         {
             _logger.LogInformation("Creating choice question: {@Input}", input);
             
+            var userName = _httpContextAccessor.HttpContext?.User?.Identity?.Name;
+            if (string.IsNullOrEmpty(userName))
+            {
+                throw new UserFriendlyException("User is not authenticated");
+            }
+            var currentUser = await _userService.GetByUserNameAsync(userName);
+            
             var question = new ChoiceQuestion
             {
-                Id = SnowflakeIdGeneratorUtil.NextId(),
                 CourseId = input.CourseId,
-                CreatedByUserId = input.CreatedByUserId ?? 0,
-                UpdatedByUserId = input.CreatedByUserId ?? 0,
+                CreatedByUserId = currentUser.Id,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 QuestionBody = input.QuestionBody,
@@ -81,12 +104,12 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
                 CorrectAnswer = input.CorrectAnswer
             };
             
+            base.SetIdForLong(question);
             await _dbContext.ChoiceQuestion.AddAsync(question);
             await _dbContext.SaveChangesAsync();
             
             _logger.LogInformation("Choice question created with ID: {Id}", question.Id);
 
-            // Create options
             if (input.Options != null)
             {
                 foreach (var optionDto in input.Options)
@@ -97,22 +120,18 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
                         OptionOrder = optionDto.OptionOrder,
                         OptionValue = optionDto.OptionValue,
                         ErrorExplanation = optionDto.OptionValue == input.CorrectAnswer ? "" : optionDto.ErrorExplanation,
-                        CreatedByUserId = input.CreatedByUserId ?? 0,
-                        UpdatedByUserId = input.CreatedByUserId ?? 0,
+                        CreatedByUserId = currentUser.Id,
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow
                     };
                     
-                    // Generate ID using Snowflake algorithm
-                    SetIdForLong(option);
-                    
+                    base.SetIdForLong(option);
                     await _dbContext.Option.AddAsync(option);
                 }
                 
                 await _dbContext.SaveChangesAsync();
             }
 
-            // Reload complete data
             var result = await _dbContext.ChoiceQuestion
                 .Include(q => q.Options)
                 .FirstOrDefaultAsync(q => q.Id == question.Id);
@@ -137,26 +156,84 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
 
     public override async Task<ChoiceQuestionDto> UpdateAsync(long id, UpdateChoiceQuestionDto input)
     {
-        var existingQuestion = await _dbContext.ChoiceQuestion
-            .Include(q => q.Options)
-            .FirstOrDefaultAsync(q => q.Id == id);
-
-        if (existingQuestion == null)
-        {
-            throw new UserFriendlyException($"Choice question with ID {id} not found");
-        }
-
-        // Keep original CourseId and QuestionTypeId
-        input.CourseId = existingQuestion.CourseId;
-        input.QuestionTypeId = existingQuestion.QuestionTypeId;
-        
+        using var transaction = await _dbContext.Database.BeginTransactionAsync();
         try
         {
-            var result = await base.UpdateAsync(id, input);
-            return result;
+            var existingQuestion = await _dbContext.ChoiceQuestion
+                .Include(q => q.Options)
+                .FirstOrDefaultAsync(q => q.Id == id);
+
+            if (existingQuestion == null)
+            {
+                throw new UserFriendlyException($"Choice question with ID {id} not found");
+            }
+
+            var userName = _httpContextAccessor.HttpContext?.User?.Identity?.Name;
+            if (string.IsNullOrEmpty(userName))
+            {
+                throw new UserFriendlyException("User is not authenticated");
+            }
+            var currentUser = await _userService.GetByUserNameAsync(userName);
+
+            // update question
+            existingQuestion.CorrectAnswer = input.CorrectAnswer;
+            existingQuestion.QuestionBody = input.QuestionBody;
+            existingQuestion.QuestionTitle = input.QuestionTitle;
+            existingQuestion.UpdatedByUserId = currentUser.Id;
+            existingQuestion.UpdatedAt = DateTime.UtcNow;
+
+            _dbContext.ChoiceQuestion.Update(existingQuestion);
+
+            if (input.Options != null && input.Options.Any())
+            {
+                foreach (var optionDto in input.Options)
+                {
+                    var existingOption = existingQuestion.Options.FirstOrDefault(o => o.Id == optionDto.Id);
+                    if (existingOption != null)
+                    {
+                        // update existing option
+                        existingOption.OptionOrder = optionDto.OptionOrder;
+                        existingOption.OptionValue = optionDto.OptionValue;
+                        existingOption.ErrorExplanation = optionDto.OptionValue == input.CorrectAnswer ? "" : optionDto.ErrorExplanation;
+                        existingOption.UpdatedByUserId = currentUser.Id;
+                        existingOption.UpdatedAt = DateTime.UtcNow;
+
+                        _dbContext.Option.Update(existingOption);
+                    }
+                    else
+                    {
+                        // create new option
+                        var newOption = new Option
+                        {
+                            ChoiceQuestionId = id,
+                            OptionOrder = optionDto.OptionOrder,
+                            OptionValue = optionDto.OptionValue,
+                            ErrorExplanation = optionDto.OptionValue == input.CorrectAnswer ? "" : optionDto.ErrorExplanation,
+                            CreatedByUserId = currentUser.Id,
+                            CreatedAt = DateTime.UtcNow,
+                            UpdatedAt = DateTime.UtcNow
+                        };
+                        
+                        base.SetIdForLong(newOption);
+                        await _dbContext.Option.AddAsync(newOption);
+                    }
+                }
+
+                // delete unnecessary options
+                var optionIdsToKeep = input.Options.Select(o => o.Id).ToList();
+                await _dbContext.Option
+                    .Where(o => o.ChoiceQuestionId == id && !optionIdsToKeep.Contains(o.Id))
+                    .ExecuteDeleteAsync();
+            }
+
+            await _dbContext.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return _mapper.Map<ChoiceQuestionDto>(existingQuestion);
         }
         catch (Exception ex)
         {
+            await transaction.RollbackAsync();
             _logger.LogError(ex, "Failed to update choice question. ID: {Id}, Input: {@Input}", id, input);
             throw;
         }
@@ -169,15 +246,6 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
 
     protected virtual DbSet<ChoiceQuestion> GetDbSet()
     {
-        return _dbContext.Set<ChoiceQuestion>();  // Use _dbContext instead of DbContext
-    }
-
-    // Helper method
-    private void SetIdForLong(Option option)
-    {
-        if (option.Id == 0)
-        {
-            option.Id = SnowflakeIdGeneratorUtil.NextId();
-        }
+        return _dbContext.Set<ChoiceQuestion>();
     }
 }

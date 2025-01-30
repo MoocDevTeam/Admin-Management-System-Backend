@@ -9,16 +9,17 @@ public class CreateMultipleChoiceQuestionDto : BaseEntityDto
     
     public long? CourseId { get; set; }
     
+    [JsonIgnore]
     public long? CreatedByUserId { get; set; }
     
     [JsonIgnore]
-    public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? CreatedAt { get; set; }
     
     [JsonIgnore]
     public long? UpdatedByUserId { get; set; }
     
     [JsonIgnore]
-    public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
     
     public string? QuestionBody { get; set; }
     

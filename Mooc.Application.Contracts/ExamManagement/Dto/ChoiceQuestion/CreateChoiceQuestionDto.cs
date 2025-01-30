@@ -9,6 +9,7 @@ public class CreateChoiceQuestionDto : BaseEntityDto
 
     public long? CourseId { get; set; }
 
+    [JsonIgnore]
     public long? CreatedByUserId { get; set; }
 
     [JsonIgnore]
@@ -25,8 +26,6 @@ public class CreateChoiceQuestionDto : BaseEntityDto
     public string? QuestionTitle { get; set; }
 
     public int Marks { get; set; }
-
-
 
     public long QuestionTypeId { get; set; }
 

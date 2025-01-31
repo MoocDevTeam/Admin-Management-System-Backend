@@ -39,6 +39,7 @@ public class CategoryService : CrudService<Category, CategoryDto, CategoryDto, l
     {
         var categories = await base.GetDbSet()
             .Where(c => c.ParentId == id)
+            .Include(c => c.ChildrenCategories)
             .ToListAsync();
         if (!categories.Any())
             return new List<CategoryDto>();
@@ -75,6 +76,28 @@ public class CategoryService : CrudService<Category, CategoryDto, CategoryDto, l
         await ValidateCategoryIdAsync(input.Id);
         await ValidateCategoryNameAsync(input.CategoryName);
         return await base.UpdateAsync(input.Id,input);
+    }
+
+    public virtual async Task<List<CategoryDto>> GetAllCategoriesAsync()
+    {
+        var allCategories = await this.McDBContext.Category
+                                      .AsNoTracking()
+                                      .ToListAsync();
+        var categoryDtos = MapToGetListOutputDtos(allCategories);
+
+        return BuildCategoryTree(categoryDtos, null);
+    }
+
+    private List<CategoryDto>BuildCategoryTree(List<CategoryDto> allCategories,long? parentId)
+    {
+        return allCategories
+            .Where(c => c.ParentId == parentId)
+            .Select(c =>
+            {
+                c.ChildrenCategories = BuildCategoryTree(allCategories, c.Id);
+                return c;
+            })
+            .ToList();
     }
 
 

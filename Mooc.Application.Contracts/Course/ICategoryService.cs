@@ -7,4 +7,5 @@ public interface ICategoryService:ICrudService<CategoryDto,CategoryDto,long, Fil
     Task<List<CategoryDto>> GetAllMainCategoriesAsync();
     Task<CategoryDto> GetByCategoryNameAsync(string categoryName);
     Task<List<CategoryDto>> GetChildrenCategoriesAsync(long parentId);
+    Task<List<CategoryDto>> GetAllCategoriesAsync();
 };

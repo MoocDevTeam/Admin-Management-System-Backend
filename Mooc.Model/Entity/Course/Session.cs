@@ -8,11 +8,6 @@ namespace Mooc.Model.Entity
 
         //Foreign keys
         public long CourseInstanceId { get; set;}
-        //public long CreatedByUserId { get; set; }
-        //public long? UpdatedByUserId { get; set; }  
-       
-        //public DateTime CreatedAt { get; set; }  
-        //public DateTime UpdatedAt { get; set; }
 
         // Navigation user 
         public virtual User CreatedByUser { get; set; }
@@ -20,7 +15,7 @@ namespace Mooc.Model.Entity
         public virtual CourseInstance CourseInstance { get; set; }  // Navigation for CourseInstance (many-to-one)
 
         //Navigation for media (one-to-many)
-        public virtual ICollection<Media> Sessionmedia { get; set; } = new List<Media>();
+        public virtual ICollection<Media> Media { get; set; }
 
     }
 }

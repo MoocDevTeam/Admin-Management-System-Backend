@@ -44,13 +44,13 @@ namespace MoocWebApi.Controllers.Admin
 
             if (user == null)
             {
-                return new ApiResponseResult(){ IsSuccess = false, Status = 404, Message = "Username or password is not correct, please enter again !", Time = DateTime.Now };
+                return new ApiResponseResult() { IsSuccess = false, Status = 404, Message = "Username or password is not correct, please enter again !", Time = DateTime.Now };
 
             }
-        
+
             var token = GenerateJwtToken(user);
 
-           return new ApiResponseResult() { IsSuccess = true,Status=200, Message=token, Time = DateTime.Now};
+            return new ApiResponseResult() { IsSuccess = true, Status = 200, Message = token, Time = DateTime.Now };
         }
 
         private string GenerateJwtToken(User user)

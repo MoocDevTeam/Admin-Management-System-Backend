@@ -42,11 +42,11 @@
         /// </summary>
         /// <param name="moocCourseTitle">The title of the mooc course.</param>
         /// <remarks>URL: GET api/CourseInstance/GetByMoocCourseTitleAsync/{moocCourseTitle}</remarks>
-        [HttpGet("{moocCourseTitle}")]
-        public async Task<List<CourseInstanceDto>> GetByMoocCourseTitleAsync(string moocCourseTitle)
-        {
-            return await this._courseInstanceService.GetByMoocCourseTtileAsync(moocCourseTitle);
-        }
+        //[HttpGet("{moocCourseTitle}")]
+        //public async Task<List<CourseInstanceDto>> GetByMoocCourseTitleAsync(string moocCourseTitle)
+        //{
+        //    return await this._courseInstanceService.GetByMoocCourseTtileAsync(moocCourseTitle);
+        //}
 
         /// <summary>
         /// Add courseInstance

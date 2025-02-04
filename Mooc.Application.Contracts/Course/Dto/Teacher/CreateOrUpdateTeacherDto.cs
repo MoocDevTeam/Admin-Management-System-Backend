@@ -29,6 +29,7 @@
 
         //To show if this teacher is still hired or has course assigned
         public bool IsActive { get; set; }
-        public object CourseInstanceId { get; set; }
+        //public object CourseInstanceId { get; set; } ????
+        public string? DisplayName { get; set; }
     }
 }

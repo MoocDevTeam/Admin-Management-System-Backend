@@ -7,15 +7,19 @@ public class CreateExamQuestionDto : BaseEntityDto
     [JsonIgnore]
     public override long Id { get; set; }
 
+    [JsonIgnore]
     public long CreatedByUserId { get; set; }
 
+    [JsonIgnore]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    [JsonIgnore]
     public long? UpdatedByUserId { get; set; }
 
+    [JsonIgnore]
     public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
 
-
+    [JsonIgnore]
     public long? ExamId { get; set; }
 
     public long? ChoiceQuestionId { get; set; }

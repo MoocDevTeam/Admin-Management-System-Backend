@@ -15,6 +15,8 @@ public class CreateExamDto : BaseEntityDto
 
     public long? UpdatedByUserId { get; set; }
 
+    public bool? WithExamQuestion { get; set; } = true;
+
     public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
 
     public string ExamTitle { get; set; }
@@ -28,4 +30,6 @@ public class CreateExamDto : BaseEntityDto
     public int TotalScore { get; set; }
 
     public int TimePeriod { get; set; }
+
+    public List<CreateExamQuestionDto>? ExamQuestions { get; set; }
 }

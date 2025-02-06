@@ -52,7 +52,7 @@ namespace MoocWebApi.Controllers.ExamManagement
         /// <returns>Returns true if the exam was successfully added; otherwise, false.</returns>
         /// <remarks></remarks>
         [HttpPost]
-        public async Task<bool> CreateExamAsync([FromBody] CreateExamDto input)
+        public async Task<bool> CreateCustomExamAsync([FromBody] CreateExamDto input)
         {
             var examDto = await _examService.CreateAsync(input);
             return examDto.Id > 0;

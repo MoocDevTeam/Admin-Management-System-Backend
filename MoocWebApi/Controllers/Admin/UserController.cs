@@ -5,8 +5,7 @@ using Mooc.Model.Entity;
 namespace MoocWebApi.Controllers.Admin
 {
 
-    [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.BaseService))]
-   // [Authorize]
+    [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.AdminService))]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [RequestFormLimits(MultipartBodyLengthLimit = 52428800)]
@@ -87,14 +86,7 @@ namespace MoocWebApi.Controllers.Admin
         [HttpGet("{userName}")]
         public async Task<UserDto> Get(string userName)
         {
-            var user = await _userService.GetByUserNameAsync(userName);
-            if (user == null)
-            {
-                HttpContext.Response.StatusCode = 404;
-                return null;
-            }
-
-            return user;
+            return await _userService.GetByUserNameAsync(userName);
         }
 
     }

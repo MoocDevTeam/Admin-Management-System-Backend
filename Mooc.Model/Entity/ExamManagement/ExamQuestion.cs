@@ -12,6 +12,8 @@ public class ExamQuestion : BaseEntityWithAudit
 
   public long? ShortAnsQuestionId { get; set; }
 
+  public long? MultipleChoiceQuestionId { get; set; }
+
   public int Marks { get; set; }
 
   public int QuestionOrder { get; set; }
@@ -36,4 +38,6 @@ public class ExamQuestion : BaseEntityWithAudit
   public virtual JudgementQuestion? JudgementQuestion { get; set; }
 
   public virtual ShortAnsQuestion? ShortAnsQuestion { get; set; }
+
+  public virtual MultipleChoiceQuestion? MultipleChoiceQuestion { get; set; }
 }

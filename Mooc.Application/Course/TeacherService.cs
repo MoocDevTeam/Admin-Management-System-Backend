@@ -30,10 +30,6 @@ namespace Mooc.Application.Course
         /// <exception cref="ArgumentNullException"></exception>
         public override async Task<TeacherReadDto> CreateAsync(CreateOrUpdateTeacherDto input)
         {
-            if (input == null)
-            { 
-                throw new ArgumentNullException(nameof(input));
-            }
             //validate id 
             await ValidateIdAsync(input.UserId);
 
@@ -78,12 +74,6 @@ namespace Mooc.Application.Course
             var teacherOutput = this.Mapper.Map<TeacherReadDto>(teacher);
             return teacherOutput;
         }
-        //GetAsync
-        //public new async Task<TeacherReadDto> GetAsync(long id)
-        //{
-        //    await this.ValidateIdAsync(id);
-        //    return await base.GetAsync(id);
-        //}
 
         //Validate teacher
         protected virtual async Task ValidateIdAsync(long userId)
@@ -95,14 +85,5 @@ namespace Mooc.Application.Course
             }
         }
 
-        //Override MapToEntity
-        //protected override Teacher MapToEntity(CreateOrUpdateTeacherDto input)
-        //{
-        //    var entity = base.MapToEntity(input);
-        //    entity.CreatedByUserId = 1;//---> need a method (getCurrentUserId)get your jwt read your token to get the specific id and store 
-        //    entity.UpdatedByUserId = 1;
-        //    SetIdForLong(entity);
-        //    return entity;
-        //}
     }
 }

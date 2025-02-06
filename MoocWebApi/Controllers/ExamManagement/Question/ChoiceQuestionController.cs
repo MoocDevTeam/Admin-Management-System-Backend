@@ -1,5 +1,6 @@
 ﻿using Mooc.Application.Contracts.ExamManagement;
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MoocWebApi.Controllers.ExamManagement;
 
@@ -7,12 +8,13 @@ namespace MoocWebApi.Controllers.ExamManagement;
 [Route("api/[controller]/[action]")]
 [ApiController]
 [RequestFormLimits(MultipartBodyLengthLimit = 52428800)]
-public class ChoiceQustionController : ControllerBase
+[Authorize]
+public class ChoiceQuestionController : ControllerBase
 {
 
     private readonly IChoiceQuestionService _choiceQuestionService;
 
-    public ChoiceQustionController(IChoiceQuestionService choiceQuestionService)
+    public ChoiceQuestionController(IChoiceQuestionService choiceQuestionService)
     {
         _choiceQuestionService = choiceQuestionService;
     }

@@ -7,15 +7,19 @@ public class CreateChoiceQuestionDto : BaseEntityDto
     [JsonIgnore]
     public override long Id { get; set; }
 
-    public long CourseId { get; set; }
+    public long? CourseId { get; set; }
 
-    public long CreatedByUserId { get; set; }
+    [JsonIgnore]
+    public long? CreatedByUserId { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    [JsonIgnore]
+    public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public long UpdatedByUserId { get; set; }
+    [JsonIgnore]
+    public long? UpdatedByUserId { get; set; }
 
-    public DateTime UpdatedAt { get; set; }
+    [JsonIgnore]
+    public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
 
     public string? QuestionBody { get; set; }
 
@@ -23,9 +27,9 @@ public class CreateChoiceQuestionDto : BaseEntityDto
 
     public int Marks { get; set; }
 
-
-
     public long QuestionTypeId { get; set; }
 
     public string? CorrectAnswer { get; set; }
+
+    public List<CreateOptionDto>? Options { get; set; }
 }

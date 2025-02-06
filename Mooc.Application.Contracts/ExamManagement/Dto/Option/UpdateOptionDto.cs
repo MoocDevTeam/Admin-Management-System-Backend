@@ -1,4 +1,5 @@
 namespace Mooc.Application.Contracts.ExamManagement;
+using System.Text.Json.Serialization;
 
 public class UpdateOptionDto : BaseEntityDto
 {
@@ -8,13 +9,17 @@ public class UpdateOptionDto : BaseEntityDto
 
     public string? OptionValue { get; set; }
 
-    public long CreatedByUserId { get; set; }
+    [JsonIgnore]
+    public long? CreatedByUserId { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    [JsonIgnore]
+    public DateTime? CreatedAt { get; set; }
 
-    public long UpdatedByUserId { get; set; }
+    [JsonIgnore]
+    public long? UpdatedByUserId { get; set; }
 
-    public DateTime UpdatedAt { get; set; }
+    [JsonIgnore]
+    public DateTime? UpdatedAt { get; set; }
 
     public string? ErrorExplanation { get; set; }
 }

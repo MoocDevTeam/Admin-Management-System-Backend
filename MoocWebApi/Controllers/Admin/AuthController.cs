@@ -4,10 +4,13 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Mooc.Core.WrapperResult;
 using Mooc.Model.DBContext;
 using Mooc.Model.Entity;
+using Mooc.Shared.SharedConfig;
+using Sprache;
 
 namespace MoocWebApi.Controllers.Admin
 {
@@ -18,14 +21,16 @@ namespace MoocWebApi.Controllers.Admin
     {
         private readonly IAuthenticationService _authenticationService;
         private readonly IConfiguration _configuration;
-
+        private readonly IOptions<JwtSettingConfig> _settingConfig;
         public AuthController(
             IAuthenticationService authenticationService,
-            IConfiguration configuration
+            IConfiguration configuration,
+            IOptions<JwtSettingConfig> settingConfig
         )
         {
             _authenticationService = authenticationService;
             _configuration = configuration;
+            _settingConfig = settingConfig;
         }
         /// <summary>
         /// User login 
@@ -63,7 +68,9 @@ namespace MoocWebApi.Controllers.Admin
 
 
             // get key from configuration
-            var key = _configuration["JwtSetting:SecurityKey"];
+            //var key = _configuration["JwtSetting:SecurityKey"];
+
+            var key = _settingConfig.Value.SecurityKey;
             if (string.IsNullOrEmpty(key))
             {
                 throw new InvalidOperationException("JWT SecurityKey is not configured.");

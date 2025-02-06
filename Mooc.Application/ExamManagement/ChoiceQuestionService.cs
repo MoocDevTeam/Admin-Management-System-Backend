@@ -66,29 +66,11 @@ public class ChoiceQuestionService : CrudService<ChoiceQuestion, ChoiceQuestionD
 
     public override async Task<ChoiceQuestionDto> CreateAsync(CreateChoiceQuestionDto input)
     {
-        var user = _httpContextAccessor.HttpContext?.User;
-        if (user == null || !user.Identity.IsAuthenticated)
-        {
-            throw new UserFriendlyException("User is not authenticated");
-        }
-
-        _logger.LogInformation($"User authenticated: {user.Identity.IsAuthenticated}");
-        _logger.LogInformation($"User claims: {string.Join(", ", user.Claims.Select(c => $"{c.Type}: {c.Value}"))}");
-
-        if (input.Options?.Count != ChoiceQuestionConsts.REQUIRED_OPTIONS_COUNT)
-        {
-            throw new UserFriendlyException($"Choice question must have exactly {ChoiceQuestionConsts.REQUIRED_OPTIONS_COUNT} options");
-        }
-
         try 
         {
             _logger.LogInformation("Creating choice question: {@Input}", input);
             
             var userName = _httpContextAccessor.HttpContext?.User?.Identity?.Name;
-            if (string.IsNullOrEmpty(userName))
-            {
-                throw new UserFriendlyException("User is not authenticated");
-            }
             var currentUser = await _userService.GetByUserNameAsync(userName);
             
             var question = new ChoiceQuestion

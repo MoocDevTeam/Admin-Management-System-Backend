@@ -31,7 +31,8 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
     /// <returns></returns>
     public override async Task<UserDto> CreateAsync(CreateUserDto input)
     {
-        await ValidateNameAsync(input.UserName, 0);
+        //await ValidateNameAsync(input.UserName, 0);
+        await ValidateNameAsync(input.UserName);
 
         input.Password = BCryptUtil.HashPassword(input.Password);
 
@@ -44,10 +45,11 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
             user.UserRoles = input.RoleIds.Select(roleId => new UserRole { RoleId = roleId, User = user }).ToList();
         }
 
-        await this.McDBContext.Users.AddAsync(user);
-        await this.McDBContext.SaveChangesAsync();
+        //await this.McDBContext.Users.AddAsync(user);
+        //await this.McDBContext.SaveChangesAsync();
+        var userDto = await base.CreateAsync(input);
 
-        var userDto = this.Mapper.Map<UserDto>(user);
+        //var userDto = this.Mapper.Map<UserDto>(user);
         return userDto;
 
     }
@@ -114,12 +116,12 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
             user.UserRoles = user.UserRoles.Where(ur => !rolesToRemove.Contains(ur.RoleId)).ToList();
         }
 
-            await this.McDBContext.SaveChangesAsync();
+           await this.McDBContext.SaveChangesAsync();
 
-            var userDto = this.Mapper.Map<UserDto>(user);
+           var userDto = this.Mapper.Map<UserDto>(user);
+
+        
             return userDto;
-
-
 
     }
 
@@ -136,7 +138,9 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
     {
         var user = await this.McDBContext.Users.FirstOrDefaultAsync(x => x.UserName == userName);
         if (user == null)
-            return null;
+        {
+            throw new EntityNotFoundException($"User {userName} not found", $"{userName} not found");
+        }
 
         var userOutput = this.Mapper.Map<UserDto>(user);
         return userOutput;

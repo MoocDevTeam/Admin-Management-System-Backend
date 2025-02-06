@@ -4,12 +4,6 @@ namespace Mooc.Model.Entity
     public class TeacherCourseInstance : BaseEntityWithAudit
     {
         public TeacherCourseInstancePermissionType PermissionType { get; set; }
-        //public DateTime CreatedAt { get; set; }
-        //public DateTime? UpdatedAt { get; set; }
-
-        //foreign keys
-        //public long CreatedByUserId { get; set; }
-        //public long UpdatedByUserId { get; set;}
         public long TeacherId { get; set;}
         
         //Change this to CourseInstanceId when Kwon updates his part

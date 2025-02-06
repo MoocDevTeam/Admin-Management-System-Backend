@@ -23,4 +23,6 @@ public class ChoiceQuestionDto : BaseEntityDto
     public long QuestionTypeId { get; set; }
 
     public string? CorrectAnswer { get; set; }
+
+    public List<OptionDto>? Options { get; set; }
 }

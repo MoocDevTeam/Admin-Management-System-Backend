@@ -137,13 +137,6 @@ namespace Mooc.Application.Admin
             return entity;
         }
 
-        protected override void SetCreatedAudit(Menu entity)
-        {
-            if (entity is BaseEntityWithAudit baseEntityWithAudit && !baseEntityWithAudit.CreatedByUserId.HasValue)
-            {
-                baseEntityWithAudit.CreatedByUserId = 1;
-                baseEntityWithAudit.CreatedAt = DateTime.Now;
-            }
-        }
+ 
     }
 }

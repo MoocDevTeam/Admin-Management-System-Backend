@@ -41,19 +41,6 @@ namespace Mooc.Application.Course
         }
 
         /// <summary>
-        /// Update
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public override async Task<TeacherReadDto> UpdateAsync(long id, CreateOrUpdateTeacherDto input)
-        {
-            await ValidateIdAsync(id);
-            return await base.UpdateAsync(id, input);
-        }
-
-
-        /// <summary>
         /// GetByName
         /// </summary>
         /// <param name="input"></param>

@@ -24,7 +24,7 @@ using System.Text.Json;
 using MoocWebApi.Config;
 using Microsoft.OpenApi.Models;
 using DotNetEnv;
-using Mooc.Shared.Hubs;
+using Mooc.Application.Admin;
 
 
 namespace MoocWebApi
@@ -86,7 +86,8 @@ namespace MoocWebApi
                 };
                 builder.Services.AddSingleton(awsConfig);
                 builder.Services.AddScoped<IFileUploadService, FileUploadService>();//use autofac DI later when having a deeper understanding of other ID methods.
-                builder.Services.AddScoped<ISessionService, SessionService>();
+                // Config AWS S3 service to Avatar
+                builder.Services.AddScoped<IAvatarService,AvatarService>();
 
                 //Add JWT Authentication
                 builder

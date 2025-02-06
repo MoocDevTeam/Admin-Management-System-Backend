@@ -1,5 +1,6 @@
-﻿using Mooc.Application.Contracts.Course.Dto;
-
+﻿using Microsoft.AspNetCore.Authorization;
+using Mooc.Application.Contracts.Course.Dto;
+using Mooc.Application.Contracts.Course.Dto;
 
 namespace MoocWebApi.Controllers.Course
 {
@@ -16,6 +17,11 @@ namespace MoocWebApi.Controllers.Course
             _teacherService = teacherService;
         }
 
+        /// <summary>
+        /// Retrieves a paginated list of teachers based on the specified filter criteria.
+        /// </summary>
+        /// <param name="input">The pagination and filtering criteria.</param>
+        /// <returns>A paginated result containing teacher information.</returns>
         [HttpGet]
         public async Task<PagedResultDto<TeacherReadDto>> GetByPageAsync([FromQuery] FilterPagedResultRequestDto input)
         {
@@ -30,6 +36,11 @@ namespace MoocWebApi.Controllers.Course
             return pagedResult;
         }
 
+        /// <summary>
+        /// Retrieves details of a teacher by their unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the teacher.</param>
+        /// <returns>The teacher details.</returns>
         [HttpGet("{id}")]
         public async Task<TeacherReadDto> GetAsync(long id)
         {
@@ -37,6 +48,11 @@ namespace MoocWebApi.Controllers.Course
             return teacherDto;
         }
 
+        /// <summary>
+        /// Retrieves details of a teacher by their name.
+        /// </summary>
+        /// <param name="name">The name of the teacher.</param>
+        /// <returns>The teacher details.</returns>
         [HttpGet("{name}")]
         public async Task<TeacherReadDto> GetTeacherByName(string name)
         {
@@ -44,13 +60,24 @@ namespace MoocWebApi.Controllers.Course
             return teacherDto;
         }
 
+        /// <summary>
+        /// Adds a new teacher to the system.
+        /// </summary>
+        /// <param name="input">The details of the teacher to be added.</param>
+        /// <returns>True if the operation is successful, otherwise false.</returns>
         [HttpPost]
+        [Authorize]
         public async Task<bool> Add([FromBody] CreateOrUpdateTeacherDto input)
         {
             var teacherDto = await _teacherService.CreateAsync(input);
             return teacherDto.Id > 0;
         }
 
+        /// <summary>
+        /// Updates the details of an existing teacher.
+        /// </summary>
+        /// <param name="input">The updated details of the teacher.</param>
+        /// <returns>True if the operation is successful, otherwise false.</returns>
         [HttpPost]
         public async Task<bool> Update([FromBody] CreateOrUpdateTeacherDto input)
         {
@@ -58,6 +85,11 @@ namespace MoocWebApi.Controllers.Course
             return teacherDto.Id > 0;
         }
 
+        /// <summary>
+        /// Deletes a teacher from the system by their unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the teacher to be deleted.</param>
+        /// <returns>True if the operation is successful, otherwise false.</returns>
         [HttpDelete("{id}")]
         public async Task<bool> Delete(long id)
         {

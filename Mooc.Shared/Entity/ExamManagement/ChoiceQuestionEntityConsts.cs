@@ -2,6 +2,6 @@
 
 public class ChoiceQuestionEntityConsts
 {
-    public const int MaxCorrectAnswerLength = 100;
+    public const int MaxCorrectAnswerLength = 10;
 }
 

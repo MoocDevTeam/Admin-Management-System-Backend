@@ -29,8 +29,11 @@ public class ExamManagementProfile : Profile
         CreateMap<UpdateExamQuestionDto, ExamQuestion>();
 
         CreateMap<Exam, ExamDto>()
-         .ForMember(dest => dest.ExamQuestion, opt => opt.MapFrom(src => src.ExamQuestion));
-        CreateMap<CreateExamDto, Exam>();
+              .ForMember(dest => dest.ExamQuestions, opt => opt.MapFrom(src => src.ExamQuestions))
+              .ForMember(dest => dest.ExamPublish, opt => opt.MapFrom(src => src.ExamPublish));
+        CreateMap<CreateExamDto, Exam>()
+              .ForMember(dest => dest.ExamQuestions, opt => opt.MapFrom(src => src.ExamQuestions))
+              .ForMember(dest => dest.Id, opt => opt.Ignore());
         CreateMap<UpdateExamDto, Exam>();
 
         CreateMap<ExamPublish, ExamPublishDto>();

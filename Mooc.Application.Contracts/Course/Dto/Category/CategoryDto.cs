@@ -1,6 +1,8 @@
-﻿namespace Mooc.Application.Contracts.Course;
+﻿using Mooc.Model.Entity;
 
-public class CategoryDto:BaseEntityDto
+namespace Mooc.Application.Contracts.Course.Dto;
+
+public class CategoryDto: BaseEntityDto
 {
     public string CategoryName { get; set; }= string.Empty;
     public string Description { get; set; } = string.Empty;
@@ -9,10 +11,5 @@ public class CategoryDto:BaseEntityDto
     public long? ParentId { get; set; }
 
     public ICollection<CourseDto> Courses { get; set; } = new List<CourseDto>();
-
-    public long CreatedByUserId { get; set; }
-    public long UpdatedByUserId { get; set; }
-
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public ICollection<CategoryDto> ChildrenCategories {  get; set; } = new List<CategoryDto>();
 }

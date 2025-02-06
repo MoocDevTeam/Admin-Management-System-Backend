@@ -2,9 +2,11 @@ namespace Mooc.Model.Entity;
 
 public class Option : BaseEntityWithAudit
 {
-    public long ChoiceQuestionId { get; set; }
+    public long? ChoiceQuestionId { get; set; }
+    public long? MultipleChoiceQuestionId { get; set; }
 
     public ChoiceQuestion? ChoiceQuestion { get; set; }
+    public MultipleChoiceQuestion? MultipleChoiceQuestion { get; set; }
 
     public long OptionOrder { get; set; }
 

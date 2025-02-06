@@ -24,6 +24,8 @@ using System.Text.Json;
 using MoocWebApi.Config;
 using Microsoft.OpenApi.Models;
 using DotNetEnv;
+using Mooc.Shared.Hubs;
+
 
 namespace MoocWebApi
 {
@@ -84,6 +86,7 @@ namespace MoocWebApi
                 };
                 builder.Services.AddSingleton(awsConfig);
                 builder.Services.AddScoped<IFileUploadService, FileUploadService>();//use autofac DI later when having a deeper understanding of other ID methods.
+                builder.Services.AddScoped<ISessionService, SessionService>();
 
                 //Add JWT Authentication
                 builder
@@ -145,20 +148,27 @@ namespace MoocWebApi
                         builder =>
                         {
                             builder
-                            .AllowAnyOrigin()
+                            .WithOrigins("http://localhost:9008") 
+                            .AllowAnyHeader()
                             .AllowAnyMethod()
-                            .AllowAnyHeader();
+                            .AllowCredentials();
                         });
                 });
 
-                //
+                builder.Services.AddSignalR();
+
+                builder.Services.AddHttpContextAccessor();
 
                 var app = builder.Build();
 
 
 
+                app.UseRouting();
                 app.UseCors(defaultPolicy);
                 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+                app.MapHub<FileUploadHub>("/fileUploadHub");  
+
                 // Configure the HTTP request pipeline.
                 app.UseSwaggerMooc();
                 if (app.Environment.IsDevelopment())
@@ -166,6 +176,7 @@ namespace MoocWebApi
                     app.UseSwaggerMooc();
                 }
                 app.UseAuthentication();
+                app.UseMiddleware<AuthLoggingMiddleware>();
                 app.UseAuthorization();
 
 
@@ -180,7 +191,7 @@ namespace MoocWebApi
                     foreach (var dbSeedDataSevice in dbSeedDataSevices)
                     {
                         var orderAttri = dbSeedDataSevice.GetType().GetCustomAttribute<DBSeedDataOrderAttribute>();
-                        if (orderAttri!=null)
+                        if (orderAttri != null)
                         {
                             sdSeedData.Add(orderAttri.Order, dbSeedDataSevice);
                         }

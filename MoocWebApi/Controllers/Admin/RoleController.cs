@@ -3,14 +3,25 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MoocWebApi.Controllers.Admin
 {
-    [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.BaseService))]
+   
+    /// <summary>
+    /// Admin controller
+    /// </summary>
+    [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.AdminService))]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [RequestFormLimits(MultipartBodyLengthLimit = 52428800)]
+
+    
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;
 
+
+        /// <summary>
+        /// RoleController
+        /// </summary>
+        /// <param name="roleService"></param>
         public RoleController(IRoleService roleService)
         {
             _roleService = roleService;
@@ -24,7 +35,9 @@ namespace MoocWebApi.Controllers.Admin
         [HttpGet]
         public async Task<PagedResultDto<RoleDto>> GetByPageAsync([FromQuery] FilterPagedResultRequestDto input)
         {
-            var pagedResult = await _roleService.GetListAsync(input);
+           var pagedResult = await _roleService.GetListAsync(input);
+           // var pagedResult = await _roleService.GetAllRolesAsync(input);
+
             return pagedResult;
         }
 

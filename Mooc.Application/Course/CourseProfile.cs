@@ -92,8 +92,8 @@ public class CourseProfile : Profile
             .ForMember(dest => dest.Enrollment, opt => opt.MapFrom(src => src.Enrollment))
             .ForMember(dest => dest.CreatedUserName, opt => opt.MapFrom(src => src.CreatedByUser.UserName))
             .ForMember(dest => dest.UpdatedUserName, opt => opt.MapFrom(src => src.UpdatedByUser.UserName))
-            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
-            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt ));
         CreateMap<CreateCourseInstanceDto, CourseInstance>();
         CreateMap<UpdateCourseInstanceDto, CourseInstance>();
         #endregion

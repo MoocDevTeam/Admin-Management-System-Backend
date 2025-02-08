@@ -148,7 +148,7 @@ namespace MoocWebApi
                         builder =>
                         {
                             builder
-                            .WithOrigins("http://localhost:9008") 
+                            .WithOrigins("http://localhost:3000")
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .AllowCredentials();
@@ -167,7 +167,7 @@ namespace MoocWebApi
                 app.UseCors(defaultPolicy);
                 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-                app.MapHub<FileUploadHub>("/fileUploadHub");  
+                app.MapHub<FileUploadHub>("/fileUploadHub");
 
                 // Configure the HTTP request pipeline.
                 app.UseSwaggerMooc();

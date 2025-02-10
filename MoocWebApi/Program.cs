@@ -151,10 +151,10 @@ namespace MoocWebApi
                         builder =>
                         {
                             builder
-                            .WithOrigins("http://localhost:3000")
+                            .AllowAnyOrigin()
                             .AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .AllowCredentials();
+                            .AllowAnyMethod();
+                            
                         });
                 });
 

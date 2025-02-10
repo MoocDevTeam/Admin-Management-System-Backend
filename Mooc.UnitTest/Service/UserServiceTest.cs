@@ -15,7 +15,7 @@ namespace Mooc.UnitTest.Service
 {
     public class UserServiceTest
     {
-       
+
 
         private readonly IMapper _mapper;
         private readonly Mock<IWebHostEnvironment> _mockWebHostEnvironment;
@@ -57,7 +57,7 @@ namespace Mooc.UnitTest.Service
                 new Role { Id = 3, RoleName = "Manager", Description = "zzz" }
             };
             var options = new DbContextOptionsBuilder<MoocDBContext>().UseInMemoryDatabase("InMemoryDB_POST").Options;
-          //var options = new DbContextOptionsBuilder<MoocDBContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+            //var options = new DbContextOptionsBuilder<MoocDBContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
 
             var newUser = new CreateUserDto()
             {
@@ -139,11 +139,11 @@ namespace Mooc.UnitTest.Service
             {
                 Id = 5,
                 UserName = "A6",
-                Password = "123",
+
                 Age = 1,
                 Email = "abc@uow.edu.au",
                 Gender = Gender.Male,
-                Avatar = "123",
+
             };
             using (var context = new MoocDBContext(options))
             {
@@ -154,7 +154,7 @@ namespace Mooc.UnitTest.Service
                 var updatedResult = await service.UpdateAsync(5, updatedUser);
                 //Assert
                 Assert.NotNull(updatedResult);
-                Assert.That( updatedResult.UserName, Is.EqualTo(updatedUser.UserName));
+                Assert.That(updatedResult.UserName, Is.EqualTo(updatedUser.UserName));
             }
         }
 
@@ -177,11 +177,11 @@ namespace Mooc.UnitTest.Service
             {
                 Id = 2, // Id=2 exists in users.json
                 UserName = "UpdatedUser",
-                Password = "NewSecurePassword",
+
                 Age = 28,
                 Email = "updateduser@uow.edu.au",
                 Gender = Gender.Male,
-                Avatar = "new_avatar.png",
+
                 RoleIds = new List<long> { 2, 4 }
             };
 
@@ -270,11 +270,11 @@ namespace Mooc.UnitTest.Service
             {
                 Id = 3, //  Id=3 exists in users.json
                 UserName = "UpdateInvalidRolesUser",
-                Password = "NewPassword456",
+
                 Age = 30,
                 Email = "updateinvalid@uow.edu.au",
                 Gender = Gender.Male,
-                Avatar = "updated_avatar_invalid.png",
+
                 RoleIds = new List<long> { 2, 100 } // 100 does not exist
             };
 
@@ -283,10 +283,10 @@ namespace Mooc.UnitTest.Service
                 context.Users.AddRange(users);
                 context.Roles.AddRange(roles);
                 context.SaveChanges();
-                
+
                 var service = new UserService(context, _mapper, _mockWebHostEnvironment.Object);
 
-                var ex = Assert.ThrowsAsync<InvalidOperationException>(async() => await service.UpdateAsync(3, updatedUser));
+                var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await service.UpdateAsync(3, updatedUser));
                 Assert.That(ex.Message, Does.Contain("the following role ids are invalid:100"));
             }
         }
@@ -317,7 +317,7 @@ namespace Mooc.UnitTest.Service
 
             using (var context = new MoocDBContext(options))
             {
-               var deletedUser = await context.Users.FindAsync(deleteUserId);
+                var deletedUser = await context.Users.FindAsync(deleteUserId);
                 Assert.IsNull(deletedUser, "Expected the user to be deleted from the database.");
             }
         }
@@ -331,8 +331,8 @@ namespace Mooc.UnitTest.Service
                 .Options;
 
             long deleteUserId = 99;
-            
-            using(var context = new MoocDBContext(options))
+
+            using (var context = new MoocDBContext(options))
             {
                 context.Users.AddRange(users);
                 context.SaveChanges();

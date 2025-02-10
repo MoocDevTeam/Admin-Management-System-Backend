@@ -89,7 +89,6 @@ public class CategoryServiceTest
 
             var input = new CreateCategoryDto
             {
-                Id = 3,
                 CategoryName = "NewCategory",
                 Description = "Description"
             };

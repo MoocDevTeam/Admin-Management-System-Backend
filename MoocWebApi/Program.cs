@@ -25,6 +25,7 @@ using MoocWebApi.Config;
 using Microsoft.OpenApi.Models;
 using DotNetEnv;
 using Mooc.Shared.Hubs;
+using Mooc.Shared.SharedConfig;
 
 
 namespace MoocWebApi
@@ -51,6 +52,8 @@ namespace MoocWebApi
                 {
                     containerBuilder.RegisterModule<AutofacModule>();
                 });
+
+                builder.Services.AddOptions<JwtSettingConfig>().Bind(builder.Configuration.GetSection(JwtSettingConfig.Section)).ValidateDataAnnotations().ValidateOnStart();
 
                 // Configure response headers to use UTF-8 encoding(non-English)  
                 builder.Services.Configure<WebEncoderOptions>(options =>

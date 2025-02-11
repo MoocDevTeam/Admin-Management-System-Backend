@@ -5,6 +5,6 @@ namespace Mooc.Application.Contracts.Admin
 {
     public interface IRoleService : ICrudService<RoleDto, RoleDto, long, FilterPagedResultRequestDto, CreateRoleDto, UpdateRoleDto>
     {
-        Task<PagedResultDto<RoleDto>> GetAllRolesAsync(FilterPagedResultRequestDto input);
+     //   Task<PagedResultDto<RoleDto>> GetAllRolesAsync(FilterPagedResultRequestDto input);
     }
 }

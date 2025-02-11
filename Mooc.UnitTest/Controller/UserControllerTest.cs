@@ -107,7 +107,7 @@ namespace Mooc.UnitTest.Controller
                 Avatar = "123",
             };
             _userServiceMock.Setup(s => s.CreateAsync(input)).Returns(Task.FromResult(inputIncomplete));
-           
+
             //Act
             _controller.ModelState.AddModelError("Gender", "Gender is a requried field");
             var badResponse = await _userServiceMock.Object.CreateAsync(input);
@@ -124,11 +124,11 @@ namespace Mooc.UnitTest.Controller
             {
                 Id = 1,
                 UserName = "A5",
-                Password = "123",
+
                 Age = 1,
                 Email = "abc@uow.edu.au",
                 Gender = Gender.Male,
-                Avatar = "123",
+
                 RoleIds = new List<long>() { 1, 2, 3 }
             };
             var output = new UserDto()
@@ -161,11 +161,11 @@ namespace Mooc.UnitTest.Controller
             {
                 Id = 1,
                 UserName = "A5",
-                Password = "",
+
                 Age = 1,
                 Email = "abc@uow.edu.au",
                 Gender = Gender.Male,
-                Avatar = "123",
+
                 RoleIds = new List<long>() { 1, 2, 3 }
             };
             var output = new UserDto()

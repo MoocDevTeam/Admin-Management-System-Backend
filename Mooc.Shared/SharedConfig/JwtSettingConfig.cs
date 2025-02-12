@@ -10,7 +10,7 @@ namespace Mooc.Shared.SharedConfig
 {
     public class JwtSettingConfig
     {
-        public const string Section= "JwtSetting";
+        public const string Section = "JwtSetting";
 
         [Required]
         public string Issuer { get; set; }
@@ -19,13 +19,14 @@ namespace Mooc.Shared.SharedConfig
         public string Audience { get; set; }
 
         [Required]
-        public string ExpireSeconds { get; set; }
+        public double ExpireSeconds { get; set; }
 
         [Required]
         public string ENAlgorithm { get; set; }
 
         [Required]
-        public string SecurityKey { get; set; }
+        public string SecurityKey { get; set;}
+
     }
 }
 

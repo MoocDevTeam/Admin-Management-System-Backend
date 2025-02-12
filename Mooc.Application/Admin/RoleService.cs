@@ -43,6 +43,10 @@ namespace Mooc.Application.Admin
             //return await base.GetListAsync(input);
         }
 
+        protected override IQueryable<Role> CreateFilteredQuery(FilterPagedResultRequestDto input)
+        {
+            return base.CreateFilteredQuery(input);
+        }
         public async Task<PagedResultDto<RoleDto>> GetListAsync(FilterPagedResultRequestDto input)
         {
            

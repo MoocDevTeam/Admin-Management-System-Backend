@@ -151,7 +151,7 @@ namespace MoocWebApi
                         builder =>
                         {
                             builder
-                            .WithOrigins("http://localhost:3000")
+                            .WithOrigins("http://localhost:9008")
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .AllowCredentials();

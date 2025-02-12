@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 
 namespace MoocWebApi.Controllers.Admin
 {
@@ -75,6 +76,22 @@ namespace MoocWebApi.Controllers.Admin
         {
             await _roleService.DeleteAsync(id);
             return true;
+        }
+
+        /// <summary>
+        /// Delete several roles
+        /// </summary>
+        /// <param name="ids"></param>
+        [HttpDelete]
+        public async Task<bool> BatchDelete([FromBody] long[] ids)
+        {
+            Console.WriteLine("get a array from client:", ids);
+            List<long> idList = new List<long>();
+            foreach (var item in ids)
+            {
+               idList.Add(item);
+            }
+            return await _roleService.BulkDelete(idList);
         }
 
         /// <summary>

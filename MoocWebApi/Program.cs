@@ -53,12 +53,7 @@ namespace MoocWebApi
                     containerBuilder.RegisterModule<AutofacModule>();
                 });
 
-                // 绑定配置并启用校验
-                builder.Services.AddOptions<JwtSettingConfig>()
-                    .Bind(builder.Configuration.GetSection(JwtSettingConfig.Section))
-                    .ValidateDataAnnotations()
-                    .ValidateOnStart(); // 启动时进行校验
-
+                builder.Services.AddOptions<JwtSettingConfig>().Bind(builder.Configuration.GetSection(JwtSettingConfig.Section)).ValidateDataAnnotations().ValidateOnStart();
 
                 // Configure response headers to use UTF-8 encoding(non-English)  
                 builder.Services.Configure<WebEncoderOptions>(options =>
@@ -156,10 +151,10 @@ namespace MoocWebApi
                         builder =>
                         {
                             builder
-                            .WithOrigins("http://localhost:9008") 
+                            .AllowAnyOrigin()
                             .AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .AllowCredentials();
+                            .AllowAnyMethod();
+                            
                         });
                 });
 
@@ -175,7 +170,7 @@ namespace MoocWebApi
                 app.UseCors(defaultPolicy);
                 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-                app.MapHub<FileUploadHub>("/fileUploadHub");  
+                app.MapHub<FileUploadHub>("/fileUploadHub");
 
                 // Configure the HTTP request pipeline.
                 app.UseSwaggerMooc();

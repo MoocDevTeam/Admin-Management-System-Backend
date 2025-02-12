@@ -149,5 +149,73 @@ namespace Mooc.Application.Course
             }
             return true;
         }
+
+        ///check if any teacher exist in the teacherCourseInstance table
+        public async Task<List<TeacherReadDto>> FindTeacherAssigned(List<long> ids)
+        {
+            var dbSet = this.GetDbSet();
+            var teacherIds = await this.McDBContext.TeacherCourseInstances
+                .Where(x => ids.Contains(x.TeacherId))
+                .Select(x => x.TeacherId)
+                .Distinct()
+                .ToListAsync();
+
+            if (!teacherIds.Any())
+            { 
+                return new List<TeacherReadDto> ();
+            }
+
+            var teachers =await dbSet.Where(x => teacherIds.Contains(x.Id)).ToListAsync();
+            return MapToGetOutputDtoList(teachers);
+        }
+
+        // delete method for teachers not assigned any courseInstances
+
+        public async Task<bool> BulkDeleteTeacherWithNoCourseAssigned(List<long> ids)
+        {
+            try
+            {
+                var dbSet = this.GetDbSet();
+
+                var teacherList = await dbSet.Where(t => ids.Contains(t.Id)).ToListAsync();
+                dbSet.RemoveRange(teacherList);
+
+                await this.McDBContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        // delete method for teachers assigned course
+        public async Task<bool> BulkDeleteTeacherWithAssignedCourses(List<long> ids)
+        {
+            using var transaction = await this.McDBContext.Database.BeginTransactionAsync();
+            try
+            {
+                var teacherCourseInstances = await this.McDBContext.TeacherCourseInstances
+                    .Where(tci => ids.Contains(tci.TeacherId))
+                    .ToListAsync();
+
+                this.McDBContext.TeacherCourseInstances.RemoveRange(teacherCourseInstances);
+
+                var teachers = await this.GetDbSet()
+                    .Where(t => ids.Contains(t.Id))
+                    .ToListAsync();
+
+                this.McDBContext.RemoveRange(teachers);
+                await this.McDBContext.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                return false;
+            }
+        }
     }
 }

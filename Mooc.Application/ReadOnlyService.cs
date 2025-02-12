@@ -1,4 +1,5 @@
-﻿using AutoMapper.Internal.Mappers;
+﻿
+using AutoMapper.Internal.Mappers;
 using Mooc.Application.Contracts;
 using Mooc.Application.Contracts.Dto;
 using Mooc.Core.ExceptionHandling;
@@ -84,6 +85,18 @@ public abstract class ReadOnlyService<TEntity, TGetOutputDto, TGetListOutputDto,
     protected virtual TGetOutputDto MapToGetOutputDto(TEntity entity)
     {
         return this.Mapper.Map<TEntity, TGetOutputDto>(entity);
+    }
+
+    /// <summary>
+    /// Maps a list of entities to a list of output DTOs.
+    /// </summary>
+    /// <typeparam name="TEntity">The type of the entity being mapped.</typeparam>
+    /// <typeparam name="TGetOutputDto">The type of the output DTO.</typeparam>
+    /// <param name="entities">The list of entities to be mapped.</param>
+    /// <returns>A list of mapped output DTOs.</returns>
+    protected virtual List<TGetOutputDto> MapToGetOutputDtoList(List<TEntity> entities)
+    {
+        return this.Mapper.Map<List<TEntity>, List<TGetOutputDto>>(entities);
     }
 
     /// <summary>

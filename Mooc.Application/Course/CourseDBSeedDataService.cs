@@ -254,7 +254,9 @@ namespace Mooc.Application.Course
         private static List<TeacherCourseInstance> teacherCourseInstances = new List<TeacherCourseInstance>()
         {
             new TeacherCourseInstance() { Id = 1, PermissionType = TeacherCourseInstancePermissionType.CanEdit, CourseInstanceId = 1, TeacherId = 1, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now, CreatedByUserId= 1, UpdatedByUserId= 1 },
-            new TeacherCourseInstance() { Id = 2, PermissionType = TeacherCourseInstancePermissionType.NoAutherization, CourseInstanceId = 1, TeacherId = 2, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now,CreatedByUserId= 1, UpdatedByUserId= 1}
+            new TeacherCourseInstance() { Id = 2, PermissionType = TeacherCourseInstancePermissionType.NoAutherization, CourseInstanceId = 1, TeacherId = 2, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now,CreatedByUserId= 1, UpdatedByUserId= 2},
+            new TeacherCourseInstance() { Id = 3, PermissionType = TeacherCourseInstancePermissionType.NoAutherization, CourseInstanceId = 2, TeacherId = 2, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now,CreatedByUserId= 2, UpdatedByUserId= 3},
+
         };
 
         //Session Data seeding
@@ -468,10 +470,8 @@ namespace Mooc.Application.Course
 
             if (!_dbContext.Teachers.Any())
             {
-                {
-                    await this._dbContext.Teachers.AddRangeAsync(teachers);
-                    await this._dbContext.SaveChangesAsync();
-                }
+                await this._dbContext.Teachers.AddRangeAsync(teachers);
+                await this._dbContext.SaveChangesAsync();
             }
 
             if (!_dbContext.TeacherCourseInstances.Any())

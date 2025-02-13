@@ -43,25 +43,47 @@ namespace Mooc.Application.Admin
             //return await base.GetListAsync(input);
         }
 
-        public async Task<PagedResultDto<RoleDto>> GetListAsync(FilterPagedResultRequestDto input)
+        protected override IQueryable<Role> CreateFilteredQuery(FilterPagedResultRequestDto input)
         {
-           
-            return await base.GetListAsync(input);
+            return base.CreateFilteredQuery(input);
         }
 
-        override public async Task<RoleDto> CreateAsync(CreateRoleDto input)
+
+        public override async Task<RoleDto> CreateAsync(CreateRoleDto input)
+
         {
             return await base.CreateAsync(input);
         }
 
-        override public async Task<RoleDto> UpdateAsync(long id, UpdateRoleDto input)
+        public override async Task<RoleDto> UpdateAsync(long id, UpdateRoleDto input)
         {
             return await base.UpdateAsync(id, input);
         }
 
-        override public async Task DeleteAsync(long id)
+        public override async Task DeleteAsync(long id)
+
         {
             await base.DeleteAsync(id);
         }
+        /// <summary>
+        /// bulk detele role ids
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public async Task<bool> BulkDelete(List<long> ids)
+        {
+            var dbSet = this.GetDbSet();
+            var roleList = await this.McDBContext.Roles.Where(x => ids.Contains(x.Id)).ToListAsync();
+            if (roleList.Any())
+                this.McDBContext.Roles.RemoveRange(roleList);
+            var deleteList = await dbSet.Where(x => ids.Contains(x.Id)).ToListAsync();
+            if (deleteList.Any())
+                dbSet.RemoveRange(deleteList);
+            await this.McDBContext.SaveChangesAsync();
+            return true;
+        }
+
+
+
     }
 }

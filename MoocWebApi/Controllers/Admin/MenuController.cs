@@ -48,15 +48,15 @@ namespace MoocWebApi.Controllers.Admin
         [HttpPost]
         public async Task<bool> Update([FromBody] UpdateMenuDto input)
         {
-            try
-            {
+            //try
+            //{
                 await _menuService.UpdateAsync(input.Id, input);
-            }
-            catch (EntityNotFoundException)
-            {
-                HttpContext.Response.StatusCode = 404;
-                return false;
-            }
+            //}
+            //catch (EntityNotFoundException)
+            //{
+            //    HttpContext.Response.StatusCode = 404;
+            //    return false;
+            //}
 
             return true;
         }
@@ -69,20 +69,20 @@ namespace MoocWebApi.Controllers.Admin
         [HttpDelete("{id}")]
         public async Task<bool> Delete(long id)
         {
-            try
-            {
+            //try
+            //{
                 await _menuService.DeleteAsync(id);
-            }
-            catch(EntityNotFoundException)
-            {
-                HttpContext.Response.StatusCode = 404;
-                return false;
-            }
-            catch (MoocValidationException)
-            {
-                HttpContext.Response.StatusCode = 400;
-                return false;
-            }
+            //}
+            //catch(EntityNotFoundException)
+            //{
+            //    HttpContext.Response.StatusCode = 404;
+            //    return false;
+            //}
+            //catch (MoocValidationException)
+            //{
+            //    HttpContext.Response.StatusCode = 400;
+            //    return false;
+            //}
             return true;
         }
 
@@ -95,14 +95,14 @@ namespace MoocWebApi.Controllers.Admin
         public async Task<MenuDto> GetById(long id)
         {
             var menu = new MenuDto();
-            try
-            {
+            //try
+            //{
               menu =  await _menuService.GetAsync(id);
-            }
-            catch(EntityNotFoundException)
-            {
-                HttpContext.Response.StatusCode = 404;
-            }
+            //}
+            //catch(EntityNotFoundException)
+            //{
+            //    HttpContext.Response.StatusCode = 404;
+            //}
             return menu;
         }
 

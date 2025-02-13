@@ -26,7 +26,7 @@ public class CategoryControllerTest
     public async Task Add_ShouldReturnTrueWhenCategoryIsAddedSuccessfully()
     {
         // Arrange
-        var input = new CreateCategoryDto { Id = 1,CategoryName = "Engineer", Description = "Test Description" };
+        var input = new CreateCategoryDto { CategoryName = "Engineer", Description = "Test Description" };
         var createdCategory = new CategoryDto { Id = 1, CategoryName = "Engineer", Description = "Test Description" };
 
         _categoryServiceMock
@@ -51,7 +51,6 @@ public class CategoryControllerTest
         // Arrange
         var input = new CreateCategoryDto
         {
-            Id = 5,
             CategoryName = "Engineer", 
             Description = "Descriptions"
         };

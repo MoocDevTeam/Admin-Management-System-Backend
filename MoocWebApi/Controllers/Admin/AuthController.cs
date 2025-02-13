@@ -53,8 +53,10 @@ namespace MoocWebApi.Controllers.Admin
             {
                 return new ApiResponseResult() { IsSuccess = false, Status = 404, Message = "Username or password is not correct, please enter again !", Time = DateTime.Now };
 
+
             }
             var token = GenerateJwtToken(user);
+
             return new ApiResponseResult() { IsSuccess = true, Status = 200, Message = token, Time = DateTime.Now };
         }
 
@@ -65,8 +67,6 @@ namespace MoocWebApi.Controllers.Admin
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
             };
-
-           // get key from configuration
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._settingConfig.Value.SecurityKey));
          

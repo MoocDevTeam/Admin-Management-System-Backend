@@ -1,16 +1,28 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 
 namespace MoocWebApi.Controllers.Admin
 {
-    [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.BaseService))]
+   
+    /// <summary>
+    /// Admin controller
+    /// </summary>
+    [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.AdminService))]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [RequestFormLimits(MultipartBodyLengthLimit = 52428800)]
+
+    
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;
 
+
+        /// <summary>
+        /// RoleController
+        /// </summary>
+        /// <param name="roleService"></param>
         public RoleController(IRoleService roleService)
         {
             _roleService = roleService;
@@ -24,7 +36,9 @@ namespace MoocWebApi.Controllers.Admin
         [HttpGet]
         public async Task<PagedResultDto<RoleDto>> GetByPageAsync([FromQuery] FilterPagedResultRequestDto input)
         {
-            var pagedResult = await _roleService.GetListAsync(input);
+           var pagedResult = await _roleService.GetListAsync(input);
+           // var pagedResult = await _roleService.GetAllRolesAsync(input);
+
             return pagedResult;
         }
 
@@ -45,7 +59,7 @@ namespace MoocWebApi.Controllers.Admin
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPost]
         public async Task<bool> Update( [FromBody] UpdateRoleDto input)
         {
             await _roleService.UpdateAsync(input.Id, input);
@@ -62,6 +76,22 @@ namespace MoocWebApi.Controllers.Admin
         {
             await _roleService.DeleteAsync(id);
             return true;
+        }
+
+        /// <summary>
+        /// Delete several roles
+        /// </summary>
+        /// <param name="ids"></param>
+        [HttpDelete]
+        public async Task<bool> BatchDelete([FromBody] long[] ids)
+        {
+            Console.WriteLine("get a array from client:", ids);
+            List<long> idList = new List<long>();
+            foreach (var item in ids)
+            {
+               idList.Add(item);
+            }
+            return await _roleService.BulkDelete(idList);
         }
 
         /// <summary>

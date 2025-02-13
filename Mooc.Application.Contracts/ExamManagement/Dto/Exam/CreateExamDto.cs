@@ -1,15 +1,23 @@
+using System.Text.Json.Serialization;
+
 namespace Mooc.Application.Contracts.ExamManagement;
 
 public class CreateExamDto : BaseEntityDto
 {
+    [JsonIgnore]
+    public override long Id { get; set; }
+
+    public long CourseId { get; set; }
+
     public long CreatedByUserId { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
 
     public long? UpdatedByUserId { get; set; }
 
-    public DateTime? UpdatedAt { get; set; }
+    public bool? WithExamQuestion { get; set; } = true;
 
+    public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
 
     public string ExamTitle { get; set; }
 
@@ -22,4 +30,6 @@ public class CreateExamDto : BaseEntityDto
     public int TotalScore { get; set; }
 
     public int TimePeriod { get; set; }
+
+    public List<CreateExamQuestionDto>? ExamQuestions { get; set; }
 }

@@ -1,6 +1,4 @@
-﻿using Mooc.Model.Entity.ExamManagement;
-
-namespace Mooc.Model.DBContext;
+﻿namespace Mooc.Model.DBContext;
 
 public class MoocDBContext : DbContext
 {
@@ -26,6 +24,7 @@ public class MoocDBContext : DbContext
 
 
     public DbSet<ChoiceQuestion> ChoiceQuestion { get; set; }
+    public DbSet<MultipleChoiceQuestion> MultipleChoiceQuestion { get; set; }
     public DbSet<JudgementQuestion> JudgementQuestion { get; set; }
     public DbSet<ShortAnsQuestion> ShortAnsQuestion { get; set; }
     public DbSet<Option> Option { get; set; }

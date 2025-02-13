@@ -1,7 +1,6 @@
 ﻿using Mooc.Application.Contracts.ExamManagement;
-using Mooc.Application.Contracts.ExamManagement.Dto.QuestionType;
 
-namespace MoocWebApi.Controllers.ExamManagement.Question
+namespace MoocWebApi.Controllers.ExamManagement
 {
 
     [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.ExamManagement))]

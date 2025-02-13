@@ -24,6 +24,10 @@ using System.Text.Json;
 using MoocWebApi.Config;
 using Microsoft.OpenApi.Models;
 using DotNetEnv;
+using Mooc.Shared.Hubs;
+using Mooc.Application.Admin;
+using Mooc.Shared.SharedConfig;
+
 
 namespace MoocWebApi
 {
@@ -50,6 +54,8 @@ namespace MoocWebApi
                     containerBuilder.RegisterModule<AutofacModule>();
                 });
 
+                builder.Services.AddOptions<JwtSettingConfig>().Bind(builder.Configuration.GetSection(JwtSettingConfig.Section)).ValidateDataAnnotations().ValidateOnStart();
+
                 // Configure response headers to use UTF-8 encoding(non-English)  
                 builder.Services.Configure<WebEncoderOptions>(options =>
                 {
@@ -74,6 +80,7 @@ namespace MoocWebApi
                 });
 
                 //Config AWS S3 Service
+                //Config AWS S3 Service
                 DotNetEnv.Env.Load();
                 var awsConfig = new AwsS3Config
                 {
@@ -84,6 +91,8 @@ namespace MoocWebApi
                 };
                 builder.Services.AddSingleton(awsConfig);
                 builder.Services.AddScoped<IFileUploadService, FileUploadService>();//use autofac DI later when having a deeper understanding of other ID methods.
+                // Config AWS S3 service to Avatar
+                builder.Services.AddScoped<IAvatarService, AvatarService>();
 
                 //Add JWT Authentication
                 builder
@@ -146,17 +155,25 @@ namespace MoocWebApi
                         {
                             builder
                             .AllowAnyOrigin()
+                            .AllowAnyHeader()
                             .AllowAnyMethod()
-                            .AllowAnyHeader();
                         });
                 });
 
-                //
+                builder.Services.AddSignalR();
+
+                builder.Services.AddHttpContextAccessor();
 
                 var app = builder.Build();
 
+
+
+                app.UseRouting();
                 app.UseCors(defaultPolicy);
                 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+                app.MapHub<FileUploadHub>("/fileUploadHub");
+
                 // Configure the HTTP request pipeline.
                 app.UseSwaggerMooc();
                 if (app.Environment.IsDevelopment())
@@ -164,6 +181,7 @@ namespace MoocWebApi
                     app.UseSwaggerMooc();
                 }
                 app.UseAuthentication();
+                app.UseMiddleware<AuthLoggingMiddleware>();
                 app.UseAuthorization();
 
 
@@ -178,7 +196,7 @@ namespace MoocWebApi
                     foreach (var dbSeedDataSevice in dbSeedDataSevices)
                     {
                         var orderAttri = dbSeedDataSevice.GetType().GetCustomAttribute<DBSeedDataOrderAttribute>();
-                        if (orderAttri!=null)
+                        if (orderAttri != null)
                         {
                             sdSeedData.Add(orderAttri.Order, dbSeedDataSevice);
                         }

@@ -21,28 +21,57 @@ namespace Mooc.Application.Course
         // Add father table first. Example: MoocCourse has two foreign table: User, Category. Add User table -> Add Category table -> Add MoocCourse table
         private static List<Category> categories = new List<Category>()
         {
-            new Category(){Id=1, CategoryName="Category1",Description="",IconUrl="xxx@demo.com",CreatedByUserId=1,CreatedAt= DateTime.Now },
-            new Category(){Id=2, CategoryName="Category2",Description="", ParentId=1,IconUrl="xxx@demo.com",CreatedByUserId=1,CreatedAt= DateTime.Now },
-        };
+            new Category(){Id=1, CategoryName="Engineer",Description="The practical and innovative application of maths and sciences will be used to design, develop and maintain infrastructures, products and systems on a large scale.",IconUrl="https://upload.wikimedia.org/wikipedia/commons/8/88/MarCO_CubeSat.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=11, CategoryName="Software Engineer",Description="Computing, information systems and software engineering",ParentId=1,IconUrl="https://upload.wikimedia.org/wikipedia/commons/5/51/Computer_Science_Word_Cloud.png",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=111, CategoryName="Cloud Engineer",Description="In Cloud engineering, an engineer is responsible for designing, deploying, maintaining, and managing the cloud-based applications",ParentId=11,IconUrl="https://upload.wikimedia.org/wikipedia/commons/a/a4/Butchy_Fuego_%28audio_engineer%29_-_Com_Truise%2C_Room_205%2C_2012-11-07.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=112, CategoryName="Data Engineer",Description="Data engineers are responsible for tasks such as statistical analysis",ParentId=11,IconUrl="https://upload.wikimedia.org/wikipedia/commons/0/0d/Malcolm_Macdonald_%28engineer%29_July_2018_headshot.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=12, CategoryName="Mechanical engineering",Description="Mechanical engineering is the study of machines and how they move and use force.",ParentId=1,IconUrl="https://upload.wikimedia.org/wikipedia/commons/1/1a/B.Tech._Mechanical_Engineering.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=13, CategoryName="Agricultural engineering",Description="Agricultural engineering spans many disciplines, but is generally broken into a few subfields.",ParentId=1,IconUrl="https://upload.wikimedia.org/wikipedia/commons/a/a2/Agricultural_Engineering.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=131, CategoryName="Food engineering",Description="Food process engineering focuses on how food is processed after it is harvested.",ParentId=13,IconUrl="https://upload.wikimedia.org/wikipedia/commons/2/22/Factory_Automation_Robotics_Palettizing_Bread.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=132, CategoryName="Agricultural Machinery",Description="Agricultural Machinery. When people think of agricultural engineers, designing and producing.",ParentId=13,IconUrl="https://upload.wikimedia.org/wikipedia/commons/0/09/The_JCB_agricultural_range_of_farm_machinery_-_geograph.org.uk_-_4025980.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=2, CategoryName="Business and Accounting",Description="Covering finance, accounting, marketing, HR management and administrative studies",IconUrl="https://upload.wikimedia.org/wikipedia/commons/3/31/Business_man.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=21, CategoryName="Accounting",Description="Accounting and Audit",ParentId=2,IconUrl="https://upload.wikimedia.org/wikipedia/commons/d/de/Young_%26_Dedicated_Accountant_at_Work.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=3, CategoryName="Arts",Description="You’ll study the creation of visual work, from painting to computer graphics and video games, including fine art and product design.",IconUrl="https://upload.wikimedia.org/wikipedia/commons/1/19/Bundaberg_School_of_Arts_Building_184_Bourbong_St_Bundaberg_P1130021.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=31, CategoryName="Creative Arts",Description="Creative Arts is the study of creating and performing works of art, music, dance and drama.",ParentId=3,IconUrl="https://upload.wikimedia.org/wikipedia/commons/e/ef/Christchurch_Arts_Centre%2C_Christchurch%2C_New_Zealand.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=4, CategoryName="Law",Description="International law and related areas are popular among international students looking for opportunities worldwide",IconUrl="https://upload.wikimedia.org/wikipedia/commons/0/02/Symbol_for_Psychology_%26_Law_Original.png",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=41, CategoryName="Criminal law",Description="Criminal Law. This field of law is probably the most well-known because of its prevalence in television shows and movies.",ParentId=4,IconUrl="https://upload.wikimedia.org/wikipedia/commons/1/14/ANSELEM.jpg",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            new Category(){Id=5, CategoryName="Education",Description="Education and Training",IconUrl="https://upload.wikimedia.org/wikipedia/commons/9/99/Schoolgirls_in_Bamozai.JPG",CreatedByUserId=1,CreatedAt= DateTime.Now },
+            };
+
+
 
         private static List<MoocCourse> courses = new List<MoocCourse>()
         {
-            new MoocCourse() { Id = 1, Title = "React", CourseCode = "100", CoverImage = "xxx.png", Description = "React", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
-            new MoocCourse() { Id = 2, Title = ".Net", CourseCode = "101", CoverImage = "xxx.png", Description = ".Net", CreatedByUserId = 1, UpdatedByUserId = 1, CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
-            new MoocCourse() { Id = 3, Title = "Nodejs", CourseCode = "102", CoverImage = "xxx.png", Description = "Nodejs", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 1, Title = "React.js", CourseCode = "100", CoverImage = "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg", Description = "For Frontend Developer", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 2, Title = ".Net", CourseCode = "101", CoverImage = "https://upload.wikimedia.org/wikipedia/commons/7/7d/Microsoft_.NET_logo.svg", Description = "For Backend Developer", CreatedByUserId = 1, UpdatedByUserId = 1, CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 3, Title = "Advanced Node.js", CourseCode = "102", CoverImage = "https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg", Description = "Everything can be build in js will be build in js", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 4, Title = "Java", CourseCode = "103", CoverImage = "https://upload.wikimedia.org/wikipedia/en/3/30/Java_programming_language_logo.svg", Description = "Java", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 5, Title = "C++", CourseCode = "104", CoverImage = "https://upload.wikimedia.org/wikipedia/commons/1/18/ISO_C%2B%2B_Logo.svg", Description = "C++", CreatedByUserId = 1, UpdatedByUserId = 2, CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 6, Title = "Python", CourseCode = "105", CoverImage = "https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg", Description = "Python", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 7, Title = "Financial Statement", CourseCode = "106", CoverImage = "https://upload.wikimedia.org/wikipedia/commons/3/34/Microsoft_Office_Excel_%282019%E2%80%93present%29.svg", Description = "Business Analysis", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=2, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 8, Title = "Cost Management", CourseCode = "107", CoverImage = "https://upload.wikimedia.org/wikipedia/commons/3/34/Microsoft_Office_Excel_%282019%E2%80%93present%29.svg", Description = "For Senior Accounting", CreatedByUserId = 1, UpdatedByUserId = 2, CategoryId=2, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 9, Title = "Teamworking Principles", CourseCode = "108", CoverImage = "https://upload.wikimedia.org/wikipedia/commons/6/68/Monts-merveilles.fr_teambuilding.jpg", Description = "Soft Skills", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=3, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+            new MoocCourse() { Id = 10, Title = "Communication SKills at Work", CourseCode = "109", CoverImage = "https://upload.wikimedia.org/wikipedia/commons/1/13/Framework_for_21st_Century_Learning.svg", Description = "Soft Skills", CreatedByUserId = 1, UpdatedByUserId = 1,CategoryId=3, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now.AddMinutes(1) },
+
         };
 
         private List<CourseInstance> courseInstances = new List<CourseInstance>()
         {
-            new CourseInstance(){Id=1, MoocCourseId=1, TotalSessions=10, Status=CourseInstanceStatus.Open, Permission=CourseInstancePermission.Private, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(1), CreatedByUserId=1 ,UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
-            new CourseInstance(){Id=2, MoocCourseId=2, TotalSessions=20, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=1, Description="Publish-2023-01", MoocCourseId=1, Status=CourseInstanceStatus.Open, Permission=CourseInstancePermission.Private, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(1), CreatedByUserId=1 ,UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=2, Description="Publish-2023-03", MoocCourseId=2, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=3, Description="Publish-2023-05", MoocCourseId=1, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=4, Description="Publish-2023-08", MoocCourseId=2, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=5, Description="Publish-2024-01", MoocCourseId=1, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=6, Description="Publish-2024-02", MoocCourseId=1, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=7, Description="Publish-2024-06", MoocCourseId=1, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new CourseInstance(){Id=8, Description="Publish-2024-06", MoocCourseId=2, Status=CourseInstanceStatus.Close, Permission=CourseInstancePermission.Public, StartDate=DateTime.Now, EndDate=DateTime.Now.AddMonths(2), CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
         };
 
 
         private List<Enrollment> enrollments = new List<Enrollment>()
         {
-            new Enrollment(){Id=1, CourseInstanceId=1, MaxStudents=200, EnrollmentStatus=EnrollmentStatus.Open,  EnrollStartDate=DateTime.Now, EnrollEndDate =DateTime.Now.AddMonths(1), CreatedByUserId =1 ,UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
-            new Enrollment(){Id=2, CourseInstanceId=2, MaxStudents=50,  EnrollmentStatus=EnrollmentStatus.Close, EnrollStartDate=DateTime.Now, EnrollEndDate =DateTime.Now.AddMonths(2), CreatedByUserId =2, UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now  },
+            new Enrollment(){Id=1, CourseInstanceId=1, MaxStudents=200, EnrollmentStatus=EnrollmentStatus.Open,  EnrollStartDate=DateTime.Now, EnrollEndDate =DateTime.Now.AddMonths(1),CreatedByUserId=1 ,UpdatedByUserId=1, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now},
+            new Enrollment(){Id=2, CourseInstanceId=2, MaxStudents=50,  EnrollmentStatus=EnrollmentStatus.Close, EnrollStartDate=DateTime.Now, EnrollEndDate =DateTime.Now.AddMonths(2),CreatedByUserId=1 ,UpdatedByUserId=2, CreatedAt=DateTime.Now, UpdatedAt=DateTime.Now},
         };
 
 
@@ -63,7 +92,8 @@ namespace Mooc.Application.Course
                 UserId=2,
                 IsActive = false,
                 CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                UpdatedAt = DateTime.Now,
+                DisplayName = "user2"
             },
             new Teacher()
             {
@@ -79,7 +109,8 @@ namespace Mooc.Application.Course
                 UserId=2,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddYears(-2),
-                UpdatedAt = DateTime.Now.AddMonths(-3)
+                UpdatedAt = DateTime.Now.AddMonths(-3),
+                DisplayName = "user2"
             },
             new Teacher()
             {
@@ -95,7 +126,8 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddMonths(-8),
-                UpdatedAt = DateTime.Now.AddMonths(-2)
+                UpdatedAt = DateTime.Now.AddMonths(-2),
+                DisplayName = "user1"
             },
             new Teacher()
             {
@@ -111,7 +143,8 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddYears(-1),
-                UpdatedAt = DateTime.Now
+                UpdatedAt = DateTime.Now,
+                DisplayName = "user1"
             },
             new Teacher()
             {
@@ -127,7 +160,8 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddYears(-10),
-                UpdatedAt = DateTime.Now.AddMonths(-1)
+                UpdatedAt = DateTime.Now.AddMonths(-1),
+                DisplayName = "user1"
             },
             new Teacher()
             {
@@ -143,7 +177,8 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddYears(-3),
-                UpdatedAt = DateTime.Now.AddMonths(-4)
+                UpdatedAt = DateTime.Now.AddMonths(-4),
+                DisplayName = "user1"
             },
             new Teacher()
             {
@@ -159,7 +194,8 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = false,
                 CreatedAt = DateTime.Now.AddYears(-5),
-                UpdatedAt = DateTime.Now.AddMonths(-2)
+                UpdatedAt = DateTime.Now.AddMonths(-2),
+                DisplayName = "user1"
             },
             new Teacher()
             {
@@ -175,7 +211,8 @@ namespace Mooc.Application.Course
                 UserId=2,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddMonths(-6),
-                UpdatedAt = DateTime.Now.AddDays(-15)
+                UpdatedAt = DateTime.Now.AddDays(-15),
+                DisplayName = "user2"
             },
             new Teacher()
             {
@@ -191,7 +228,8 @@ namespace Mooc.Application.Course
                 UserId=2,
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddYears(-8),
-                UpdatedAt = DateTime.Now
+                UpdatedAt = DateTime.Now,
+                DisplayName = "user2"
             },
             new Teacher()
             {
@@ -207,13 +245,14 @@ namespace Mooc.Application.Course
                 UserId=1,
                 IsActive = false,
                 CreatedAt = DateTime.Now.AddMonths(-12),
-                UpdatedAt = DateTime.Now.AddDays(-10)
+                UpdatedAt = DateTime.Now.AddDays(-10),
+                DisplayName = "user1"
             }
         };
 
         //TeacherCourseInstance Data seeding
         private static List<TeacherCourseInstance> teacherCourseInstances = new List<TeacherCourseInstance>()
-        {    
+        {
             new TeacherCourseInstance() { Id = 1, PermissionType = TeacherCourseInstancePermissionType.CanEdit, CourseInstanceId = 1, TeacherId = 1, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now, CreatedByUserId= 1, UpdatedByUserId= 1 },
             new TeacherCourseInstance() { Id = 2, PermissionType = TeacherCourseInstancePermissionType.NoAutherization, CourseInstanceId = 1, TeacherId = 2, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now,CreatedByUserId= 1, UpdatedByUserId= 1}
         };
@@ -223,8 +262,8 @@ namespace Mooc.Application.Course
         {
             new Session(){
                 Id=1,
-                Title = "Introduction to .Net",
-                Description = "Overview of the .Net framework",
+                Title = "Introduction to React",
+                Description = "Overview of the React framework",
                 Order = 1,
                 CourseInstanceId = 1, // relate to CourseInstanceId 1
                 CreatedByUserId = 1,
@@ -256,8 +295,8 @@ namespace Mooc.Application.Course
                 },
             new Session(){
                 Id=4,
-                Title = "Object-Oriented Programming in .Net",
-                Description = "Dive into OOP concepts",
+                Title = "Thinking in React",
+                Description = "Thinking in React",
                 Order = 4,
                 CourseInstanceId = 1, // relate to CourseInstanceId 1
                 CreatedByUserId = 1,
@@ -310,7 +349,7 @@ namespace Mooc.Application.Course
                 SessionId = 1,
                 FileType = MediaFileType.Video,
                 FileName = "Introduction_to_.Net_video1.mp4",
-                FilePath = "/files/sessions/1/Introduction_to_.Net_video1.mp4",
+                FilePath = "https://moocmedia.s3.amazonaws.com/video/edubfhzc.asz.mp4",
                 ThumbnailPath = "/thumbnails/sessions/1/Introduction_to_.Net_video1.png",
                 CreatedByUserId = 1,
                 UpdatedByUserId = 1,
@@ -323,8 +362,8 @@ namespace Mooc.Application.Course
                 Id = 2,
                 SessionId = 1,
                 FileType = MediaFileType.Video,
-                FileName = "Introduction_to_.Net_video2.mp4",
-                FilePath = "/files/sessions/1/Introduction_to_.Net_video2.mp4",
+                FileName = "Introduction.mp4",
+                FilePath = "https://moocmedia.s3.amazonaws.com/video/edubfhzc.asz.mp4",
                 ThumbnailPath = "/thumbnails/sessions/1/Introduction_to_.Net_video2.png",
                 CreatedByUserId = 1,
                 UpdatedByUserId = 1,
@@ -333,14 +372,13 @@ namespace Mooc.Application.Course
                 ApprovalStatus = MediaApprovalStatus.Pending
             },
 
-            // SessionId=2,have two pdf files
             new Media()
             {
                 Id = 3,
                 SessionId = 2,
-                FileType = MediaFileType.Pdf,
-                FileName = "Setting_up_the_Development_Environment_doc1.pdf",
-                FilePath = "/files/sessions/2/Setting_up_the_Development_Environment_doc1.pdf",
+                FileType = MediaFileType.Video,
+                FileName = "Setting_up_the_Development_Environment_doc1.mp4",
+                FilePath = "https://moocmedia.s3.amazonaws.com/video/edubfhzc.asz.mp4",
                 ThumbnailPath = "/thumbnails/sessions/2/Setting_up_the_Development_Environment_doc1.png",
                 CreatedByUserId = 1,
                 UpdatedByUserId = 1,
@@ -352,9 +390,9 @@ namespace Mooc.Application.Course
             {
                 Id = 4,
                 SessionId = 2,
-                FileType = MediaFileType.Pdf,
-                FileName = "Setting_up_the_Development_Environment_doc2.pdf",
-                FilePath = "/files/sessions/2/Setting_up_the_Development_Environment_doc2.pdf",
+                FileType = MediaFileType.Video,
+                FileName = "Setting_up_the_Development_Environment_doc2.mp4",
+                FilePath = "https://moocmedia.s3.amazonaws.com/video/edubfhzc.asz.mp4",
                 ThumbnailPath = "/thumbnails/sessions/2/Setting_up_the_Development_Environment_doc2.png",
                 CreatedByUserId = 1,
                 UpdatedByUserId = 1,
@@ -365,14 +403,13 @@ namespace Mooc.Application.Course
 
             // SessionId=3, none meida files
 
-            // SessionId=4, one vedio and one pdf file
             new Media()
             {
                 Id = 5,
                 SessionId = 4,
                 FileType = MediaFileType.Video,
                 FileName = "Basic_Syntax_and_Data_Types_video.mp4",
-                FilePath = "/files/sessions/4/Basic_Syntax_and_Data_Types_video.mp4",
+                FilePath = "https://moocmedia.s3.amazonaws.com/video/edubfhzc.asz.mp4",
                 ThumbnailPath = "/thumbnails/sessions/4/Basic_Syntax_and_Data_Types_video.png",
                 CreatedByUserId = 1,
                 UpdatedByUserId = 1,
@@ -384,15 +421,15 @@ namespace Mooc.Application.Course
             {
                 Id = 6,
                 SessionId = 4,
-                FileType = MediaFileType.Pdf,
-                FileName = "Basic_Syntax_and_Data_Types_doc.pdf",
-                FilePath = "/files/sessions/4/Basic_Syntax_and_Data_Types_doc.pdf",
+                FileType = MediaFileType.Video,
+                FileName = "Basic_Syntax_and_Data_Types_doc.mp4",
+                FilePath = "https://moocmedia.s3.amazonaws.com/video/edubfhzc.asz.mp4",
                 ThumbnailPath = "/thumbnails/sessions/4/Basic_Syntax_and_Data_Types_doc.png",
                 CreatedByUserId = 1,
                 UpdatedByUserId = 1,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now.AddMinutes(1),
-                ApprovalStatus = MediaApprovalStatus.Pending
+                ApprovalStatus = MediaApprovalStatus.Rejected
             }
         };
 
@@ -422,7 +459,7 @@ namespace Mooc.Application.Course
                 await this._dbContext.Enrollment.AddRangeAsync(enrollments);
                 await this._dbContext.SaveChangesAsync();
             }
-            
+
             if (!_dbContext.Session.Any())
             {
                 await this._dbContext.Session.AddRangeAsync(sessions);
@@ -430,10 +467,12 @@ namespace Mooc.Application.Course
             }
 
             if (!_dbContext.Teachers.Any())
-             {
-                await this._dbContext.Teachers.AddRangeAsync(teachers);
-                await this._dbContext.SaveChangesAsync();
-            }   
+            {
+                {
+                    await this._dbContext.Teachers.AddRangeAsync(teachers);
+                    await this._dbContext.SaveChangesAsync();
+                }
+            }
 
             if (!_dbContext.TeacherCourseInstances.Any())
             {

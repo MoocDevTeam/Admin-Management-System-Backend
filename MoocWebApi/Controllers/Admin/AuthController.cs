@@ -4,42 +4,60 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Mooc.Core.WrapperResult;
 using Mooc.Model.DBContext;
 using Mooc.Model.Entity;
+using Mooc.Shared.SharedConfig;
+using Sprache;
+using Microsoft.Extensions.Options;
 
 namespace MoocWebApi.Controllers.Admin
 {
-    [Route("api/[controller]")]
+    [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.AdminService))]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly MoocDBContext _context;
+        private readonly IAuthenticationService _authenticationService;
         private readonly IConfiguration _configuration;
+        private readonly IOptions<JwtSettingConfig> _settingConfig;
 
-        public AuthController(MoocDBContext context, IConfiguration configuration)
+        public AuthController(
+            IAuthenticationService authenticationService,
+            IConfiguration configuration,
+            IOptions<JwtSettingConfig> settingConfig
+        )
         {
-            _context = context;
+            _authenticationService = authenticationService;
             _configuration = configuration;
+            _settingConfig = settingConfig;
         }
+        /// <summary>
+        /// User login 
+        /// </summary>
+        /// <param name="loginRequest"></param>
+        /// <returns></returns>
 
         //POST: api/authcontroller/login
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        [HttpPost]
+        public async Task<ApiResponseResult> Login([FromBody] LoginRequestDto loginRequest)
         {
-            // search user
-            var user = await _context.Users.SingleOrDefaultAsync(u =>
-                u.UserName == request.UserName
+            var user = await _authenticationService.ValidateUserAsync(
+                loginRequest.UserName,
+                loginRequest.Password
             );
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            if (user == null)
             {
-                return Unauthorized(new { message = "Invalid username or password" });
-            }
+                return new ApiResponseResult() { IsSuccess = false, Status = 404, Message = "Username or password is not correct, please enter again !", Time = DateTime.Now };
 
+
+            }
             var token = GenerateJwtToken(user);
 
-            return Ok(new { Token = token });
+            return new ApiResponseResult() { IsSuccess = true, Status = 200, Message = token, Time = DateTime.Now };
         }
 
         private string GenerateJwtToken(User user)
@@ -50,16 +68,15 @@ namespace MoocWebApi.Controllers.Admin
                 new Claim(ClaimTypes.Name, user.UserName),
             };
 
-            var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_configuration["JwtSetting:SecurityKey"])
-            );
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._settingConfig.Value.SecurityKey));
+         
+           var creds = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+   
             var token = new JwtSecurityToken(
-                issuer: _configuration["JwtSetting:Issuer"],
-                audience: _configuration["JwtSetting:Audience"],
+                issuer: this._settingConfig.Value.Issuer ,
+                audience: this._settingConfig.Value.Audience,
                 claims: claims,
-                expires: DateTime.Now.AddHours(1),
+                expires: DateTime.UtcNow.AddMinutes(this._settingConfig.Value.ExpireSeconds),
                 signingCredentials: creds
             );
 
@@ -67,36 +84,24 @@ namespace MoocWebApi.Controllers.Admin
         }
 
         //POST: api/authcontroller/register
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest model)
-        {
-            if (await _context.Users.AnyAsync(u => u.UserName == model.UserName))
-            {
-                return BadRequest("Username already exists.");
-            }
+        // [HttpPost("register")]
+        // public async Task<IActionResult> Register([FromBody] RegisterRequest model)
+        // {
+        //     if (await _context.Users.AnyAsync(u => u.UserName == model.UserName))
+        //     {
+        //         return BadRequest("Username already exists.");
+        //     }
 
-            var user = new User
-            {
-                UserName = model.UserName,
-                Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
-            };
+        //     var user = new User
+        //     {
+        //         UserName = model.UserName,
+        //         Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
+        //     };
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+        //     _context.Users.Add(user);
+        //     await _context.SaveChangesAsync();
 
-            return Ok("User registered successfully.");
-        }
+        //     return Ok("User registered successfully.");
+        // }
     }
-}
-
-public class LoginRequest
-{
-    public string UserName { get; set; }
-    public string Password { get; set; }
-}
-
-public class RegisterRequest
-{
-    public string UserName { get; set; }
-    public string Password { get; set; }
 }

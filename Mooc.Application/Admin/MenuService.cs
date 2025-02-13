@@ -1,4 +1,8 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Mooc.Application.Contracts.Admin;
+using Mooc.Model.Entity;
+using static Amazon.S3.Util.S3EventNotification;
 
 namespace Mooc.Application.Admin
 {
@@ -10,14 +14,15 @@ namespace Mooc.Application.Admin
             _dbContext = dbContext;
         }
 
+        // Get menu by id
         public async Task<MenuDto> GetAsync(long id)
         {
-            var menu = await base.GetAsync(id);
-
-            if(menu == null)
+            if (!IsMenuExist(id))
             {
-                return null;
+                throw new EntityNotFoundException($"Menu with ID {id} not found.");
             }
+
+            var menu = await base.GetAsync(id);
 
             var allMenus = await GetAllMenusAsync();
 
@@ -26,27 +31,48 @@ namespace Mooc.Application.Admin
             return menu;
         }
 
+        // Get menus based on pageniation
         public async Task<PagedResultDto<MenuDto>> GetListAsync(FilterPagedResultRequestDto input)
         {
             return await base.GetListAsync(input);
         }
 
-
-        public async Task<MenuDto> CreateAsync(CreateMenuDto input)
+        // Create a new menu
+        public virtual async Task<MenuDto> CreateAsync(CreateMenuDto input)
         {
-            return await base.CreateAsync(input);
+            var entity = MapToEntity(input);
+            GetDbSet().Add(entity);
+            await this.McDBContext.SaveChangesAsync();
+            return MapToGetOutputDto(entity);
         }
 
+        // Update a existing menu
         public async Task<MenuDto> UpdateAsync(long id, UpdateMenuDto input)
         {
+            if (!IsMenuExist(id))
+            {
+                throw new EntityNotFoundException($"Menu with ID {id} not found.");
+            }
+
             return await base.UpdateAsync(id, input);
         }
 
+        // Delete a menu
         public async Task DeleteAsync(long id)
         {
+            if (!IsMenuExist(id))
+            {
+                throw new EntityNotFoundException($"Menu with ID {id} not found.");
+            }
+
+            if (IsAnyChildMenuExist(id))
+            {
+                throw new MoocValidationException($"Menu with ID {id} has child menus");
+            }
             await base.DeleteAsync(id);
         }
 
+        // Get menu tree
         public async Task<List<MenuDto>> GetMenuTreeAsync()
         {
             var allMenus = await GetAllMenusAsync();
@@ -54,12 +80,25 @@ namespace Mooc.Application.Admin
             return BuildMenuTree(allMenus, null);
         }
 
+        // Validate menu existince
+        private bool IsMenuExist(long id)
+        {
+            return _dbContext.Menus.Any(menu => menu.Id == id);
+        }
+
+        // Validate child menu existince
+        private bool IsAnyChildMenuExist(long id)
+        {
+            return _dbContext.Menus.Any(menu => menu.ParentId == id);
+        }
+
+        // Get all menus
         private async Task<List<MenuDto>> GetAllMenusAsync()
         {
            
             var input = new FilterPagedResultRequestDto
             {
-                PageSize = 100, 
+                PageSize = int.MaxValue, 
                 PageIndex = 1
             };
 
@@ -67,6 +106,7 @@ namespace Mooc.Application.Admin
             return result.Items.ToList();
         }
 
+        // Build menu tree
         private List<MenuDto> BuildMenuTree(List<MenuDto> menus, long? parentId)
         {
             return menus
@@ -84,8 +124,19 @@ namespace Mooc.Application.Admin
                     Permission = menu.Permission,
                     Children = BuildMenuTree(menus, menu.Id)
                 })
-                .OrderBy(menu => menu.OrderNum) 
-                .ToList();
+                .OrderBy(menu => menu.OrderNum)
+            .ToList();
         }
+
+        // Override MapToEntity method
+        protected override Menu MapToEntity(CreateMenuDto createInput)
+        {
+            var entity = this.Mapper.Map<CreateMenuDto, Menu>(createInput);
+            SetIdForLong(entity);
+            SetCreatedAudit(entity);
+            return entity;
+        }
+
+ 
     }
 }

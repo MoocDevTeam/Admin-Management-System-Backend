@@ -46,7 +46,8 @@ public static class MoocDbContextModelCreatingExtensions
                 v => v.ToString(),
                 v => (Access)Enum.Parse(typeof(Access), v));
             b.Property(x => x.IsActive).IsRequired().HasDefaultValue(true);
-            b.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");//for SQLite
+            // b.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");//for SQLite
+            b.ConfigureAudit();
         });
     }
 
@@ -107,7 +108,7 @@ public static class MoocDbContextModelCreatingExtensions
         modelBuilder.Entity<UserRole>(b =>
         {
             b.ToTable(TablePrefix + "UserRole");
-           // b.HasKey(x => x.Id);
+            // b.HasKey(x => x.Id);
             b.Property(x => x.Id).ValueGeneratedNever();
             b.HasKey(ur => new { ur.UserId, ur.RoleId });
             b.HasOne(ur => ur.User)
@@ -352,7 +353,7 @@ public static class MoocDbContextModelCreatingExtensions
 
             // foreign keys
             b.HasOne(x => x.ParentCategory)
-            .WithMany(x =>x.ChildrenCategories)
+            .WithMany(x => x.ChildrenCategories)
             .HasForeignKey(x => x.ParentId)
             .IsRequired(false)
             .OnDelete(DeleteBehavior.Restrict);
@@ -602,7 +603,7 @@ public static class MoocDbContextModelCreatingExtensions
 
             b.HasKey(x => x.Id);
             b.Property(x => x.Id).ValueGeneratedNever();
-            
+
             b.Property(x => x.QuestionBody)
                 .IsRequired()
                 .HasMaxLength(BaseQuestionEntityConsts.MaxQuestionBodyLength);
@@ -612,7 +613,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.Property(x => x.CorrectAnswer)
                 .IsRequired()
                 .HasMaxLength(ChoiceQuestionEntityConsts.MaxCorrectAnswerLength);
-            
+
             b.HasOne(x => x.QuestionType)
                 .WithMany(qt => qt.ChoiceQuestions)
                 .HasForeignKey(x => x.QuestionTypeId);
@@ -623,7 +624,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.HasOne(x => x.CourseInstance)
                 .WithMany()
                 .HasForeignKey(x => x.CourseId);
-            
+
             b.ConfigureAudit();
         });
     }
@@ -741,7 +742,7 @@ public static class MoocDbContextModelCreatingExtensions
             b.ToTable(TablePrefix + "Exam");
             b.HasKey(e => e.Id);
             b.Property(e => e.Id).ValueGeneratedNever();
-            b.HasOne(e=>e.CourseInstance)
+            b.HasOne(e => e.CourseInstance)
                 .WithMany()
                 .HasForeignKey(e => e.CourseId);
             b.Property(e => e.ExamTitle)
@@ -822,33 +823,33 @@ public static class MoocDbContextModelCreatingExtensions
             b.ToTable(TablePrefix + "MultipleChoiceQuestion");
             b.HasKey(x => x.Id);
             b.Property(x => x.Id).ValueGeneratedNever();
-            
+
             b.Property(x => x.QuestionBody)
                 .IsRequired()
                 .HasMaxLength(BaseQuestionEntityConsts.MaxQuestionBodyLength);
-            
+
             b.Property(x => x.QuestionTitle)
                 .IsRequired()
                 .HasMaxLength(BaseQuestionEntityConsts.MaxQuestionTitleLength);
-            
+
             b.Property(x => x.CorrectAnswers)
                 .IsRequired()
                 .HasMaxLength(MultipleChoiceQuestionEntityConsts.MaxCorrectAnswersLength);
-            
+
             // implement the relationship
             b.HasOne(x => x.QuestionType)
                 .WithMany()
                 .HasForeignKey(x => x.QuestionTypeId);
-            
+
             b.HasMany(x => x.Options)
                 .WithOne(o => o.MultipleChoiceQuestion)
                 .HasForeignKey(o => o.MultipleChoiceQuestionId)
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
             b.HasOne(x => x.CourseInstance)
                 .WithMany()
                 .HasForeignKey(x => x.CourseId);
-            
+
             b.ConfigureAudit();
         });
     }

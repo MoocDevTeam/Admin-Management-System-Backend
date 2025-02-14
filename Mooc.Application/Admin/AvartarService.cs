@@ -36,7 +36,7 @@ namespace Mooc.Application.Admin
             );
         }
 
-        public async Task<string> UploadAvatarAsync(string userId, IFormFile file)
+        public async Task<string> UploadAvatarAsync(string userName, IFormFile file)
         {
             if (file == null || file.Length == 0)
             {
@@ -57,7 +57,7 @@ namespace Mooc.Application.Admin
                 throw new ArgumentException("Invalid file format. Only JPG, JPEG, PNG are allowed.");
             }
 
-            var key = $"avatars/{userId}/{userId}.jpg";
+            var key = $"avatars/{userName}/{userName}.jpg";
 
             try
             {
@@ -83,9 +83,9 @@ namespace Mooc.Application.Admin
             }
         }
 
-        public async Task DeleteAvatarAsync(string userId)
+        public async Task DeleteAvatarAsync(string userName)
         {
-            var key = $"avatars/{userId}/{userId}.jpg"; // Use fixed key format
+            var key = $"avatars/{userName}/{userName}.jpg"; // Use fixed key format
 
             try
             {
@@ -100,13 +100,13 @@ namespace Mooc.Application.Admin
             catch (Exception ex)
             {
                 // Optionally return a failure response, or handle the exception
-                throw new Exception($"Error deleting avatar for user {userId}: {ex.Message}");
+                throw new Exception($"Error deleting avatar for user {userName}: {ex.Message}");
             }
         }
 
-        public async Task<string> GetAvatarUrlAsync(string userId)
+        public async Task<string> GetAvatarUrlAsync(string userName)
         {
-            var key = $"avatars/{userId}/{userId}.jpg";
+            var key = $"avatars/{userName}/{userName}.jpg";
             var avatarUrl = $"https://{_avatarAwsConfig.BucketName}.s3.{_avatarAwsConfig.Region}.amazonaws.com/{key}";
 
             try
@@ -121,7 +121,7 @@ namespace Mooc.Application.Admin
             catch (Exception ex)
             {
                 // Optionally return a message or handle the error differently
-                throw new Exception($"Error retrieving avatar: {ex.Message}");
+                throw new Exception($"Error retrieving avatar at {avatarUrl}: {ex.Message}");
             }
         }
     }

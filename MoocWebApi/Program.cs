@@ -151,7 +151,7 @@ namespace MoocWebApi
                             .AllowAnyOrigin()
                             .AllowAnyHeader()
                             .AllowAnyMethod();
-                            
+
                         });
                 });
 

@@ -5,6 +5,7 @@ namespace Mooc.Application.Contracts.Course.Dto
     public class CreateOrUpdateCourseInstanceBaseDto : BaseEntityDto
     {
         [Required(ErrorMessage = "Description is required.")]
+        [StringLength(100, ErrorMessage = "Description must be less than 100 characters")]
         public string Description { get; set; }
         [Required(ErrorMessage = "MoocCourseId is required.")]
         public long MoocCourseId { get; set; }

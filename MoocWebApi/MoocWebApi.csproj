@@ -44,5 +44,9 @@
 	  </Content>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="AppData\" />
+	</ItemGroup>
+
 
 </Project>

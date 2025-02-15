@@ -61,6 +61,7 @@ namespace Mooc.Application.Course
                 throw new EntityNotFoundException("No course instance found for this teacher.");
             }
             var courseInstances = await McDBContext.CourseInstances
+                .Include(x => x.MoocCourse)
                 .Where(ci => courseInstanceIds.Contains(ci.Id))
                 .ToListAsync();
 

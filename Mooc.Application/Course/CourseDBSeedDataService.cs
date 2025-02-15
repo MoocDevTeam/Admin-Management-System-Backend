@@ -254,7 +254,15 @@ namespace Mooc.Application.Course
         private static List<TeacherCourseInstance> teacherCourseInstances = new List<TeacherCourseInstance>()
         {
             new TeacherCourseInstance() { Id = 1, PermissionType = TeacherCourseInstancePermissionType.CanEdit, CourseInstanceId = 1, TeacherId = 1, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now, CreatedByUserId= 1, UpdatedByUserId= 1 },
-            new TeacherCourseInstance() { Id = 2, PermissionType = TeacherCourseInstancePermissionType.NoAutherization, CourseInstanceId = 1, TeacherId = 2, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now,CreatedByUserId= 1, UpdatedByUserId= 1}
+            new TeacherCourseInstance() { Id = 2, PermissionType = TeacherCourseInstancePermissionType.NoAutherization, CourseInstanceId = 2, TeacherId = 3, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now,CreatedByUserId= 1, UpdatedByUserId= 1},
+            new TeacherCourseInstance() { Id = 3, PermissionType = TeacherCourseInstancePermissionType.NoAutherization, CourseInstanceId = 2, TeacherId = 4, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now,CreatedByUserId= 1, UpdatedByUserId= 1},
+            new TeacherCourseInstance() { Id = 4, PermissionType = TeacherCourseInstancePermissionType.NoAutherization, CourseInstanceId = 3, TeacherId = 1, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now,CreatedByUserId= 1, UpdatedByUserId= 1},
+            new TeacherCourseInstance() { Id = 5, PermissionType = TeacherCourseInstancePermissionType.CanEdit, CourseInstanceId = 2, TeacherId = 2, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now,CreatedByUserId= 1, UpdatedByUserId= 1},
+            new TeacherCourseInstance() { Id = 6, PermissionType = TeacherCourseInstancePermissionType.NoAutherization, CourseInstanceId = 1, TeacherId = 2, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now,CreatedByUserId= 1, UpdatedByUserId= 1},
+            new TeacherCourseInstance() { Id = 7, PermissionType = TeacherCourseInstancePermissionType.CanEdit, CourseInstanceId = 3, TeacherId = 2, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now,CreatedByUserId= 1, UpdatedByUserId= 1},
+            new TeacherCourseInstance() { Id = 8, PermissionType = TeacherCourseInstancePermissionType.CanEdit, CourseInstanceId = 2, TeacherId = 3, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now,CreatedByUserId= 1, UpdatedByUserId= 1},
+            new TeacherCourseInstance() { Id = 9, PermissionType = TeacherCourseInstancePermissionType.CanEdit, CourseInstanceId = 1, TeacherId = 3, CreatedAt = DateTime.Now, UpdatedAt=DateTime.Now,CreatedByUserId= 1, UpdatedByUserId= 1}
+            
         };
 
         //Session Data seeding

@@ -128,6 +128,21 @@ public class CategoryController : ControllerBase
     }
 
 
+    /// <summary>
+    /// Get Category Tree 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    /// <remarks>URL: POST api/Category/GetAllCategories</remarks>
+    /// 
+    [HttpGet]
+    public async Task<List<CategoryDto>> GetAllCategories()
+    {
+        var category = await _categoryService.GetAllCategoriesAsync();
+        return category;
+    }
+
+
 
 
 

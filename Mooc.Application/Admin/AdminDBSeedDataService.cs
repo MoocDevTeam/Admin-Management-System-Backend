@@ -41,6 +41,8 @@ namespace Mooc.Application.Admin
             new UserRole(){Id=1, UserId=1, RoleId=1},
             new UserRole(){Id=2, UserId=2, RoleId=2},
             new UserRole(){Id=3, UserId=3, RoleId=3},
+            new UserRole(){Id=4, UserId=1, RoleId=2},
+            new UserRole(){Id=5, UserId=1, RoleId=3},
 
         };
 
@@ -63,6 +65,11 @@ namespace Mooc.Application.Admin
             new Menu(){Id=9, Title="Delete",Description="Delete",ParentId=6, MenuType=MenuType.Btn, OrderNum=3, Permission=PermissionConsts.Role.Delete, CreatedByUserId=1,CreatedAt= DateTime.Now},
         };
 
+        private List<RoleMenu> roleMenus = new List<RoleMenu>()
+        {
+
+        };
+
         public async Task<bool> InitAsync()
         {
             if (!this._dbContext.Users.Any())
@@ -73,6 +80,12 @@ namespace Mooc.Application.Admin
             if (!this._dbContext.Roles.Any())
             {
                 await this._dbContext.Roles.AddRangeAsync(roles);
+                await this._dbContext.SaveChangesAsync();
+            }
+
+            if (!this._dbContext.UserRoles.Any())
+            {
+                await this._dbContext.UserRoles.AddRangeAsync(userRoles);
                 await this._dbContext.SaveChangesAsync();
             }
             if (!this._dbContext.Carousels.Any())

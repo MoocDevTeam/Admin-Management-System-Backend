@@ -21,7 +21,7 @@ namespace Mooc.Application.Admin
     //    _awsConfig = awsConfig;
     //    _s3Client = new AmazonS3Client(_awsConfig.AccessKeyId, _awsConfig.SecretAccessKey, RegionEndpoint.GetBySystemName(_awsConfig.Region));
     //}
-    public class AvatarService : IAvatarService
+    public class AvatarService : IAvatarService, IScopedDependency
     {
         private readonly IAmazonS3 _s3Client;
         private readonly AwsS3Config _avatarAwsConfig;

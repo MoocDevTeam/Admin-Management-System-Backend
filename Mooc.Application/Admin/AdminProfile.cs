@@ -1,11 +1,11 @@
 ﻿namespace Mooc.Application.Admin;
 
-public class AdminProfile: Profile
+public class AdminProfile : Profile
 {
     public AdminProfile()
     {
-        CreateMap<User, UserDto>();
-        CreateMap<CreateUserDto, User>();
+        CreateMap<User, UserDto>().ReverseMap();
+        CreateMap<CreateUserDto, User>().ForMember(dest => dest.Id, opt => opt.Ignore());
         CreateMap<UpdateUserDto, User>();
         CreateMap<Menu, MenuDto>();
         CreateMap<CreateMenuDto, Menu>();

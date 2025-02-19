@@ -37,6 +37,7 @@ namespace Mooc.Application.Admin
         }
 
         public async Task<string> UploadAvatarAsync(string userName, IFormFile file)
+
         {
             if (file == null || file.Length == 0)
             {
@@ -57,7 +58,11 @@ namespace Mooc.Application.Admin
                 throw new ArgumentException("Invalid file format. Only JPG, JPEG, PNG are allowed.");
             }
 
+
             var key = $"{userName}.png";
+
+            
+
 
             try
             {
@@ -107,8 +112,8 @@ namespace Mooc.Application.Admin
 
         public async Task<string> GetAvatarUrlAsync(string userName)
         {
+
             var key = $"{userName}.png";
-            var avatarUrl = $"https://{_avatarAwsConfig.BucketName}.s3.{_avatarAwsConfig.Region}.amazonaws.com/{key}";
 
             try
             {

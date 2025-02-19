@@ -44,12 +44,6 @@ public class MultipleChoiceQuestionService : CrudService<MultipleChoiceQuestion,
 
     public override async Task<MultipleChoiceQuestionDto> CreateAsync(CreateMultipleChoiceQuestionDto input)
     {
-        var user = _httpContextAccessor.HttpContext?.User;
-        if (user == null || !user.Identity.IsAuthenticated)
-        {
-            throw new UserFriendlyException("User is not authenticated");
-        }
-
         if (input.Options?.Count < MultipleChoiceQuestionConsts.MINIMUM_OPTIONS_COUNT)
         {
             throw new UserFriendlyException($"Multiple choice question must have at least {MultipleChoiceQuestionConsts.MINIMUM_OPTIONS_COUNT} options");
@@ -66,10 +60,6 @@ public class MultipleChoiceQuestionService : CrudService<MultipleChoiceQuestion,
             _logger.LogInformation("Creating multiple choice question: {@Input}", input);
             
             var userName = _httpContextAccessor.HttpContext?.User?.Identity?.Name;
-            if (string.IsNullOrEmpty(userName))
-            {
-                throw new UserFriendlyException("User is not authenticated");
-            }
             var currentUser = await _userService.GetByUserNameAsync(userName);
             
             var question = new MultipleChoiceQuestion
@@ -150,10 +140,6 @@ public class MultipleChoiceQuestionService : CrudService<MultipleChoiceQuestion,
             }
 
             var userName = _httpContextAccessor.HttpContext?.User?.Identity?.Name;
-            if (string.IsNullOrEmpty(userName))
-            {
-                throw new UserFriendlyException("User is not authenticated");
-            }
             var currentUser = await _userService.GetByUserNameAsync(userName);
 
             existingQuestion.QuestionBody = input.QuestionBody;

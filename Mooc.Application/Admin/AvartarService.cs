@@ -57,7 +57,7 @@ namespace Mooc.Application.Admin
                 throw new ArgumentException("Invalid file format. Only JPG, JPEG, PNG are allowed.");
             }
 
-            var key = $"avatars/{userName}/{userName}.jpg";
+            var key = $"{userName}.png";
 
             try
             {
@@ -68,7 +68,8 @@ namespace Mooc.Application.Admin
                         BucketName = _avatarAwsConfig.BucketName,
                         Key = key,
                         InputStream = stream,
-                        ContentType = "image/jpeg"
+                        ContentType = "image/png",
+                        CannedACL = S3CannedACL.PublicRead
                     };
 
                     await _s3Client.PutObjectAsync(request);
@@ -85,7 +86,7 @@ namespace Mooc.Application.Admin
 
         public async Task DeleteAvatarAsync(string userName)
         {
-            var key = $"avatars/{userName}/{userName}.jpg"; // Use fixed key format
+            var key = $"{userName}.png";
 
             try
             {
@@ -106,7 +107,7 @@ namespace Mooc.Application.Admin
 
         public async Task<string> GetAvatarUrlAsync(string userName)
         {
-            var key = $"avatars/{userName}/{userName}.jpg";
+            var key = $"{userName}.png";
             var avatarUrl = $"https://{_avatarAwsConfig.BucketName}.s3.{_avatarAwsConfig.Region}.amazonaws.com/{key}";
 
             try

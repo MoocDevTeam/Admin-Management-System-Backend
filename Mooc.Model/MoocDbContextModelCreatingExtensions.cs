@@ -46,7 +46,8 @@ public static class MoocDbContextModelCreatingExtensions
                 v => v.ToString(),
                 v => (Access)Enum.Parse(typeof(Access), v));
             b.Property(x => x.IsActive).IsRequired().HasDefaultValue(true);
-            b.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");//for SQLite
+            // b.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");//for SQLite
+            b.ConfigureAudit();
         });
     }
 
@@ -819,33 +820,33 @@ public static class MoocDbContextModelCreatingExtensions
             b.ToTable(TablePrefix + "MultipleChoiceQuestion");
             b.HasKey(x => x.Id);
             b.Property(x => x.Id).ValueGeneratedNever();
-            
+
             b.Property(x => x.QuestionBody)
                 .IsRequired()
                 .HasMaxLength(BaseQuestionEntityConsts.MaxQuestionBodyLength);
-            
+
             b.Property(x => x.QuestionTitle)
                 .IsRequired()
                 .HasMaxLength(BaseQuestionEntityConsts.MaxQuestionTitleLength);
-            
+
             b.Property(x => x.CorrectAnswers)
                 .IsRequired()
                 .HasMaxLength(MultipleChoiceQuestionEntityConsts.MaxCorrectAnswersLength);
-            
+
             // implement the relationship
             b.HasOne(x => x.QuestionType)
                 .WithMany()
                 .HasForeignKey(x => x.QuestionTypeId);
-            
+
             b.HasMany(x => x.Options)
                 .WithOne(o => o.MultipleChoiceQuestion)
                 .HasForeignKey(o => o.MultipleChoiceQuestionId)
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
             b.HasOne(x => x.CourseInstance)
                 .WithMany()
                 .HasForeignKey(x => x.CourseId);
-            
+
             b.ConfigureAudit();
         });
     }

@@ -21,7 +21,7 @@ namespace Mooc.Application.Admin
     //    _awsConfig = awsConfig;
     //    _s3Client = new AmazonS3Client(_awsConfig.AccessKeyId, _awsConfig.SecretAccessKey, RegionEndpoint.GetBySystemName(_awsConfig.Region));
     //}
-    public class AvatarService : IAvatarService
+    public class AvatarService : IAvatarService, IScopedDependency
     {
         private readonly IAmazonS3 _s3Client;
         private readonly AwsS3Config _avatarAwsConfig;
@@ -35,6 +35,8 @@ namespace Mooc.Application.Admin
                 Amazon.RegionEndpoint.GetBySystemName(_avatarAwsConfig.Region)
             );
         }
+
+        public async Task<string> UploadAvatarAsync(string userName, IFormFile file)
 
         public async Task<string> UploadAvatarAsync(string userName, IFormFile file)
 
@@ -57,7 +59,7 @@ namespace Mooc.Application.Admin
             {
                 throw new ArgumentException("Invalid file format. Only JPG, JPEG, PNG are allowed.");
             }
-            
+
             var key = $"avatars/{userName}/{userName}.jpg";
 
             try
@@ -69,7 +71,8 @@ namespace Mooc.Application.Admin
                         BucketName = _avatarAwsConfig.BucketName,
                         Key = key,
                         InputStream = stream,
-                        ContentType = "image/jpeg"
+                        ContentType = "image/png",
+                        CannedACL = S3CannedACL.PublicRead
                     };
 
                     await _s3Client.PutObjectAsync(request);
@@ -84,6 +87,7 @@ namespace Mooc.Application.Admin
             }
         }
 
+        public async Task DeleteAvatarAsync(string userName)
         public async Task DeleteAvatarAsync(string userName)
         {
             var key = $"avatars/{userName}/{userName}.jpg"; // Use fixed key format
@@ -102,9 +106,11 @@ namespace Mooc.Application.Admin
             {
                 // Optionally return a failure response, or handle the exception
                 throw new Exception($"Error deleting avatar for user {userName}: {ex.Message}");
+                throw new Exception($"Error deleting avatar for user {userName}: {ex.Message}");
             }
         }
 
+        public async Task<string> GetAvatarUrlAsync(string userName)
         public async Task<string> GetAvatarUrlAsync(string userName)
         {
             var key = $"avatars/{userName}/{userName}.jpg";
@@ -123,6 +129,7 @@ namespace Mooc.Application.Admin
             catch (Exception ex)
             {
                 // Optionally return a message or handle the error differently
+                throw new Exception($"Error retrieving avatar at {avatarUrl}: {ex.Message}");
                 throw new Exception($"Error retrieving avatar at {avatarUrl}: {ex.Message}");
             }
         }

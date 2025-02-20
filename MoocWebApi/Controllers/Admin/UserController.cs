@@ -12,11 +12,11 @@ namespace MoocWebApi.Controllers.Admin
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-       
+
         public UserController(IUserService userService)
         {
             _userService = userService;
- 
+
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace MoocWebApi.Controllers.Admin
         public async Task<bool> Add([FromBody] CreateUserDto input)
         {
             var userDto = await _userService.CreateAsync(input);
-            return userDto.Id> 0;
+            return userDto.Id > 0;
         }
 
         /// <summary>

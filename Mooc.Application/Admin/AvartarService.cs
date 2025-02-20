@@ -21,7 +21,7 @@ namespace Mooc.Application.Admin
     //    _awsConfig = awsConfig;
     //    _s3Client = new AmazonS3Client(_awsConfig.AccessKeyId, _awsConfig.SecretAccessKey, RegionEndpoint.GetBySystemName(_awsConfig.Region));
     //}
-    public class AvatarService : IAvatarService
+    public class AvatarService : IAvatarService, IScopedDependency
     {
         private readonly IAmazonS3 _s3Client;
         private readonly AwsS3Config _avatarAwsConfig;
@@ -37,6 +37,7 @@ namespace Mooc.Application.Admin
         }
 
         public async Task<string> UploadAvatarAsync(string userName, IFormFile file)
+
         {
             if (file == null || file.Length == 0)
             {
@@ -57,7 +58,11 @@ namespace Mooc.Application.Admin
                 throw new ArgumentException("Invalid file format. Only JPG, JPEG, PNG are allowed.");
             }
 
-            var key = $"avatars/{userName}/{userName}.jpg";
+
+            var key = $"{userName}.png";
+
+            
+
 
             try
             {
@@ -68,7 +73,8 @@ namespace Mooc.Application.Admin
                         BucketName = _avatarAwsConfig.BucketName,
                         Key = key,
                         InputStream = stream,
-                        ContentType = "image/jpeg"
+                        ContentType = "image/png",
+                        CannedACL = S3CannedACL.PublicRead
                     };
 
                     await _s3Client.PutObjectAsync(request);
@@ -85,7 +91,7 @@ namespace Mooc.Application.Admin
 
         public async Task DeleteAvatarAsync(string userName)
         {
-            var key = $"avatars/{userName}/{userName}.jpg"; // Use fixed key format
+            var key = $"{userName}.png";
 
             try
             {
@@ -106,8 +112,8 @@ namespace Mooc.Application.Admin
 
         public async Task<string> GetAvatarUrlAsync(string userName)
         {
-            var key = $"avatars/{userName}/{userName}.jpg";
-            var avatarUrl = $"https://{_avatarAwsConfig.BucketName}.s3.{_avatarAwsConfig.Region}.amazonaws.com/{key}";
+
+            var key = $"{userName}.png";
 
             try
             {

@@ -47,13 +47,10 @@ namespace Mooc.Application.Admin
         {
             return base.CreateFilteredQuery(input);
         }
-        public async Task<PagedResultDto<RoleDto>> GetListAsync(FilterPagedResultRequestDto input)
-        {
-           
-            return await base.GetListAsync(input);
-        }
+
 
         public override async Task<RoleDto> CreateAsync(CreateRoleDto input)
+
         {
             return await base.CreateAsync(input);
         }
@@ -64,6 +61,7 @@ namespace Mooc.Application.Admin
         }
 
         public override async Task DeleteAsync(long id)
+
         {
             await base.DeleteAsync(id);
         }

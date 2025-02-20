@@ -90,7 +90,7 @@ namespace MoocWebApi
                 builder.Services.AddSingleton(awsConfig);
                 builder.Services.AddScoped<IFileUploadService, FileUploadService>();//use autofac DI later when having a deeper understanding of other ID methods.
                 // Config AWS S3 service to Avatar
-                builder.Services.AddScoped<IAvatarService, AvatarService>();
+                // builder.Services.AddScoped<IAvatarService, AvatarService>();
 
                 //Add JWT Authentication
                 builder

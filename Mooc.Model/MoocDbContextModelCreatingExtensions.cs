@@ -222,7 +222,7 @@ public static class MoocDbContextModelCreatingExtensions
             c.ToTable(TablePrefix + "CourseInstances");
             c.HasKey(x => x.Id);
             c.Property(x => x.Id).ValueGeneratedNever();
-            c.Property(x => x.Description).IsRequired();
+            c.Property(x => x.Description).IsRequired().HasMaxLength(CourseInstanceEntityConsts.MaxDescriptionLength);
             c.Property(x => x.MoocCourseId).IsRequired();
             c.Property(x => x.Status).HasConversion(
                 v => v.ToString(),
@@ -236,9 +236,6 @@ public static class MoocDbContextModelCreatingExtensions
             .HasMaxLength(CourseInstanceEntityConsts.MaxPermissionLength);
             c.Property(x => x.StartDate).IsRequired();
             c.Property(x => x.EndDate).IsRequired();
-            c.Property(x => x.CreatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
-            c.Property(x => x.UpdatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
-
             c.ConfigureAudit();
 
             //Many to One

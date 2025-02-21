@@ -12,6 +12,11 @@ using System.Net;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.ComponentModel;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
+using Mooc.Shared.Hubs;
+using Mooc.Application.Course;
+using Mooc.Model.DBContext;
 
 namespace Mooc.Application.Admin
 {
@@ -25,8 +30,13 @@ namespace Mooc.Application.Admin
     {
         private readonly IAmazonS3 _s3Client;
         private readonly AwsS3Config _avatarAwsConfig;
+        private readonly IUserService _userService;
+        private readonly MoocDBContext _dbContext;
 
-        public AvatarService(AwsS3Config avatarAwsConfig)
+
+
+        public AvatarService(AwsS3Config avatarAwsConfig, IUserService userService,
+        MoocDBContext dbContext)
         {
             _avatarAwsConfig = avatarAwsConfig;
             _s3Client = new AmazonS3Client(
@@ -34,6 +44,9 @@ namespace Mooc.Application.Admin
                 _avatarAwsConfig.SecretAccessKey,
                 Amazon.RegionEndpoint.GetBySystemName(_avatarAwsConfig.Region)
             );
+            _userService = userService;
+            _dbContext = dbContext;
+   
         }
 
         public async Task<string> UploadAvatarAsync(string userName, IFormFile file)
@@ -57,7 +70,13 @@ namespace Mooc.Application.Admin
             {
                 throw new ArgumentException("Invalid file format. Only JPG, JPEG, PNG are allowed.");
             }
-            
+
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == userName);
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
+
             var key = $"avatars/{userName}/{userName}.jpg";
 
             try
@@ -69,13 +88,21 @@ namespace Mooc.Application.Admin
                         BucketName = _avatarAwsConfig.BucketName,
                         Key = key,
                         InputStream = stream,
-                        ContentType = "image/jpeg"
+                        ContentType = "image/png",
+                        //CannedACL = S3CannedACL.PublicRead
                     };
 
                     await _s3Client.PutObjectAsync(request);
                 }
 
-                return $"https://{_avatarAwsConfig.BucketName}.s3.{_avatarAwsConfig.Region}.amazonaws.com/{key}";
+                var avatarUrl = $"https://{_avatarAwsConfig.BucketName}.s3.{_avatarAwsConfig.Region}.amazonaws.com/{key}";
+
+                // Update user's avatar URL in the database
+                user.Avatar = avatarUrl;
+                _dbContext.Users.Update(user);
+                await _dbContext.SaveChangesAsync();
+
+                return avatarUrl;
             }
             catch (Exception ex)
             {
@@ -83,7 +110,6 @@ namespace Mooc.Application.Admin
                 return $"Error uploading avatar: {ex.Message}";
             }
         }
-
         public async Task DeleteAvatarAsync(string userName)
         {
             var key = $"avatars/{userName}/{userName}.jpg"; // Use fixed key format
@@ -97,6 +123,15 @@ namespace Mooc.Application.Admin
                 };
 
                 await _s3Client.DeleteObjectAsync(request);
+
+                // Remove avatar URL from user record
+                var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == userName);
+                if (user != null)
+                {
+                    user.Avatar = null;
+                    _dbContext.Users.Update(user);
+                    await _dbContext.SaveChangesAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -108,7 +143,6 @@ namespace Mooc.Application.Admin
         public async Task<string> GetAvatarUrlAsync(string userName)
         {
             var key = $"avatars/{userName}/{userName}.jpg";
-
             var avatarUrl = $"https://{_avatarAwsConfig.BucketName}.s3.{_avatarAwsConfig.Region}.amazonaws.com/{key}";
 
             try

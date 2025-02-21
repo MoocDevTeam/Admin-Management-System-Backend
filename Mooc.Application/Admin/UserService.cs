@@ -36,21 +36,23 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
 
         input.Password = BCryptUtil.HashPassword(input.Password);
 
-        var user = this.Mapper.Map<User>(input);
+        return await base.CreateAsync(input);
 
-        await ValidateRoleIdsAsync(input.RoleIds);
+        // var user = this.Mapper.Map<User>(input);
 
-        if (input.RoleIds != null && input.RoleIds.Count > 0)
-        {
-            user.UserRoles = input.RoleIds.Select(roleId => new UserRole { RoleId = roleId, User = user }).ToList();
-        }
+        // await ValidateRoleIdsAsync(input.RoleIds);
 
-        //await this.McDBContext.Users.AddAsync(user);
-        //await this.McDBContext.SaveChangesAsync();
-        var userDto = await base.CreateAsync(input);
+        // if (input.RoleIds != null && input.RoleIds.Count > 0)
+        // {
+        //     user.UserRoles = input.RoleIds.Select(roleId => new UserRole { RoleId = roleId, User = user }).ToList();
+        // }
 
-        //var userDto = this.Mapper.Map<UserDto>(user);
-        return userDto;
+        // //await this.McDBContext.Users.AddAsync(user);
+        // //await this.McDBContext.SaveChangesAsync();
+        // var userDto = await base.CreateAsync(input);
+
+        // //var userDto = this.Mapper.Map<UserDto>(user);
+        // return userDto;
 
     }
 
@@ -116,12 +118,12 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
             user.UserRoles = user.UserRoles.Where(ur => !rolesToRemove.Contains(ur.RoleId)).ToList();
         }
 
-           await this.McDBContext.SaveChangesAsync();
+        await this.McDBContext.SaveChangesAsync();
 
-           var userDto = this.Mapper.Map<UserDto>(user);
+        var userDto = this.Mapper.Map<UserDto>(user);
 
-        
-            return userDto;
+
+        return userDto;
 
     }
 
@@ -155,7 +157,7 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
     public async Task<bool> DeleteAsync(long id)
     {
         var user = await this.McDBContext.Users.FirstOrDefaultAsync(u => u.Id == id);
-        if(user == null)
+        if (user == null)
         {
             throw new EntityNotFoundException(nameof(User), id.ToString());
         }

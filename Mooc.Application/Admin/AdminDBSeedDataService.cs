@@ -18,12 +18,12 @@ namespace Mooc.Application.Admin
 
         private List<User> users = new List<User>()
         {
-            new User(){Id=1, UserName="user1", Password=BCryptUtil.HashPassword("123456"), Email="admin@demo.com", Age=30, Access=Access.admin, Gender=Gender.Male, Avatar="admin-avatar.png", CreatedAt=DateTime.Now, IsActive=true },
-            new User(){Id=2, UserName="user2", Password=BCryptUtil.HashPassword("123456"), Email="teacher1@demo.com", Age=35, Access=Access.teacher, Gender=Gender.Male, Avatar="teacher1-avatar.png", CreatedAt=DateTime.Now.AddMinutes(1), IsActive=true },
-            new User(){Id=3, UserName="user3", Password=BCryptUtil.HashPassword("123456"), Email="teacher2@demo.com", Age=32, Access=Access.teacher, Gender=Gender.Female, Avatar="teacher2-avatar.png", CreatedAt=DateTime.Now.AddMinutes(2), IsActive=true },
-            new User(){Id=4, UserName="user4", Password=BCryptUtil.HashPassword("123456"), Email="student1@demo.com", Age=20, Access=Access.student, Gender=Gender.Male, Avatar="student1-avatar.png", CreatedAt=DateTime.Now.AddMinutes(3), IsActive=true },
-            new User(){Id=5, UserName="user5", Password=BCryptUtil.HashPassword("123456"), Email="student2@demo.com", Age=21, Access=Access.student, Gender=Gender.Female, Avatar="student2-avatar.png", CreatedAt=DateTime.Now.AddMinutes(4), IsActive=true },
-            new User(){Id=6, UserName="user6", Password=BCryptUtil.HashPassword("123456"), Email="student3@demo.com", Age=22, Access=Access.student, Gender=Gender.Male, Avatar="student3-avatar.png", CreatedAt=DateTime.Now.AddMinutes(5), IsActive=true }
+            new User(){Id=1, UserName="user1", Password=BCryptUtil.HashPassword("123456"), Email="admin@demo.com", Age=30, Access=Access.admin, Gender=Gender.Male, Avatar="https://moocmedia.s3.us-east-1.amazonaws.com/avatars/user4/user4.jpg", CreatedByUserId=1, CreatedAt=DateTime.Now, IsActive=true },
+            new User(){Id=2, UserName="user2", Password=BCryptUtil.HashPassword("123456"), Email="teacher1@demo.com", Age=35, Access=Access.teacher, Gender=Gender.Male, Avatar="https://moocmedia.s3.us-east-1.amazonaws.com/avatars/user4/user4.jpg", CreatedByUserId=1, CreatedAt=DateTime.Now.AddMinutes(1), IsActive=true },
+            new User(){Id=3, UserName="user3", Password=BCryptUtil.HashPassword("123456"), Email="teacher2@demo.com", Age=32, Access=Access.teacher, Gender=Gender.Female, Avatar="https://moocmedia.s3.us-east-1.amazonaws.com/avatars/user4/user4.jpg", CreatedByUserId=1, CreatedAt=DateTime.Now.AddMinutes(2), IsActive=true },
+            new User(){Id=4, UserName="user4", Password=BCryptUtil.HashPassword("123456"), Email="student1@demo.com", Age=20, Access=Access.student, Gender=Gender.Male, Avatar="https://moocmedia.s3.us-east-1.amazonaws.com/avatars/user4/user4.jpg", CreatedByUserId=1, CreatedAt=DateTime.Now.AddMinutes(3), IsActive=true },
+            new User(){Id=5, UserName="user5", Password=BCryptUtil.HashPassword("123456"), Email="student2@demo.com", Age=21, Access=Access.student, Gender=Gender.Female, Avatar="https://moocmedia.s3.us-east-1.amazonaws.com/avatars/user4/user4.jpg", CreatedByUserId=1, CreatedAt=DateTime.Now.AddMinutes(4), IsActive=true },
+            new User(){Id=6, UserName="user6", Password=BCryptUtil.HashPassword("123456"), Email="student3@demo.com", Age=22, Access=Access.student, Gender=Gender.Male, Avatar="https://moocmedia.s3.us-east-1.amazonaws.com/avatars/user4/user4.jpg", CreatedByUserId=1, CreatedAt=DateTime.Now.AddMinutes(5), IsActive=true }
 
         };
         private List<Role> roles = new List<Role>()
@@ -41,6 +41,8 @@ namespace Mooc.Application.Admin
             new UserRole(){Id=1, UserId=1, RoleId=1},
             new UserRole(){Id=2, UserId=2, RoleId=2},
             new UserRole(){Id=3, UserId=3, RoleId=3},
+            new UserRole(){Id=4, UserId=1, RoleId=2},
+            new UserRole(){Id=5, UserId=1, RoleId=3},
 
         };
 
@@ -64,6 +66,11 @@ namespace Mooc.Application.Admin
             new Menu(){Id=10, Title = "Menu", Description="Menu",ParentId=1,MenuType=MenuType.Menu, OrderNum=1,Route="/menu",ComponentPath="./pages/menu/index.jsx", Permission=PermissionConsts.Menu.Default, CreatedByUserId=1,CreatedAt= DateTime.Now  },
         };
 
+        private List<RoleMenu> roleMenus = new List<RoleMenu>()
+        {
+
+        };
+
         public async Task<bool> InitAsync()
         {
             if (!this._dbContext.Users.Any())
@@ -74,6 +81,12 @@ namespace Mooc.Application.Admin
             if (!this._dbContext.Roles.Any())
             {
                 await this._dbContext.Roles.AddRangeAsync(roles);
+                await this._dbContext.SaveChangesAsync();
+            }
+
+            if (!this._dbContext.UserRoles.Any())
+            {
+                await this._dbContext.UserRoles.AddRangeAsync(userRoles);
                 await this._dbContext.SaveChangesAsync();
             }
             if (!this._dbContext.Carousels.Any())

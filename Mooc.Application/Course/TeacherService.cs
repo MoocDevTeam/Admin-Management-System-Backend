@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Mooc.Application.Contracts.Course.Dto;
+using System.Transactions;
 
 namespace Mooc.Application.Course
 {
@@ -30,10 +31,6 @@ namespace Mooc.Application.Course
         /// <exception cref="ArgumentNullException"></exception>
         public override async Task<TeacherReadDto> CreateAsync(CreateOrUpdateTeacherDto input)
         {
-            if (input == null)
-            { 
-                throw new ArgumentNullException(nameof(input));
-            }
             //validate id 
             await ValidateIdAsync(input.UserId);
 
@@ -43,19 +40,6 @@ namespace Mooc.Application.Course
             var teacherDto = await base.CreateAsync(input);
             return teacherDto;
         }
-
-        /// <summary>
-        /// Update
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public override async Task<TeacherReadDto> UpdateAsync(long id, CreateOrUpdateTeacherDto input)
-        {
-            await ValidateIdAsync(id);
-            return await base.UpdateAsync(id, input);
-        }
-
 
         /// <summary>
         /// GetByName
@@ -78,12 +62,6 @@ namespace Mooc.Application.Course
             var teacherOutput = this.Mapper.Map<TeacherReadDto>(teacher);
             return teacherOutput;
         }
-        //GetAsync
-        //public new async Task<TeacherReadDto> GetAsync(long id)
-        //{
-        //    await this.ValidateIdAsync(id);
-        //    return await base.GetAsync(id);
-        //}
 
         //Validate teacher
         protected virtual async Task ValidateIdAsync(long userId)
@@ -95,14 +73,81 @@ namespace Mooc.Application.Course
             }
         }
 
-        //Override MapToEntity
-        //protected override Teacher MapToEntity(CreateOrUpdateTeacherDto input)
-        //{
-        //    var entity = base.MapToEntity(input);
-        //    entity.CreatedByUserId = 1;//---> need a method (getCurrentUserId)get your jwt read your token to get the specific id and store 
-        //    entity.UpdatedByUserId = 1;
-        //    SetIdForLong(entity);
-        //    return entity;
-        //}
+        public async Task<bool> BulkDelete(List<long> ids)
+        {
+            var dbSet = this.GetDbSet();
+
+            var teacherCourseList = await this.McDBContext.TeacherCourseInstances.Where(x => ids.Contains(x.TeacherId)).ToListAsync();
+            if (teacherCourseList.Any())
+                this.McDBContext.TeacherCourseInstances.RemoveRange(teacherCourseList);
+
+            var deleteList = await dbSet.Where(x => ids.Contains(x.Id)).ToListAsync();
+            if (deleteList.Any())
+                dbSet.RemoveRange(deleteList);
+
+            await this.McDBContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> BulkDelete1(List<long> ids)
+        {
+            using (var dbtes = await this.McDBContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var dbSet = this.GetDbSet();
+
+                    var teacherCourseList = await this.McDBContext.TeacherCourseInstances.Where(x => ids.Contains(x.TeacherId)).ToListAsync();
+                    if (teacherCourseList.Any())
+                        this.McDBContext.TeacherCourseInstances.RemoveRange(teacherCourseList);
+
+                    var deleteList = await dbSet.Where(x => ids.Contains(x.Id)).ToListAsync();
+                    if (deleteList.Any())
+                        dbSet.RemoveRange(deleteList);
+
+                    await this.McDBContext.SaveChangesAsync();
+
+                    await dbtes.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await dbtes.RollbackAsync();
+                }
+            }
+            return true;
+        }
+
+
+        public async Task<bool> BulkDelete2(List<long> ids)
+        {
+            using (var scope = new TransactionScope())
+            {
+
+                try
+                {
+                    var dbSet = this.GetDbSet();
+
+                    var teacherCourseList = await this.McDBContext.TeacherCourseInstances.Where(x => ids.Contains(x.TeacherId)).ToListAsync();
+                    if (teacherCourseList.Any())
+                        this.McDBContext.TeacherCourseInstances.RemoveRange(teacherCourseList);
+
+                    await this.McDBContext.SaveChangesAsync();
+
+                    var deleteList = await dbSet.Where(x => ids.Contains(x.Id)).ToListAsync();
+                    if (deleteList.Any())
+                        dbSet.RemoveRange(deleteList);
+
+                    await this.McDBContext.SaveChangesAsync();
+
+                    scope.Complete();
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+            return true;
+        }
     }
 }

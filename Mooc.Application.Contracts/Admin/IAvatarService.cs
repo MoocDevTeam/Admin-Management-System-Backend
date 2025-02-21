@@ -9,9 +9,9 @@ namespace Mooc.Application.Contracts.Admin
 {
     public interface IAvatarService
     {
-        public Task<string> UploadAvatarAsync(string userId, IFormFile file);
-        public Task DeleteAvatarAsync(string userId);
-        public Task<string> GetAvatarUrlAsync(string userId);
+        public Task<string> UploadAvatarAsync(string userName, IFormFile file);
+        public Task DeleteAvatarAsync(string userName);
+        public Task<string> GetAvatarUrlAsync(string userName);
     }
 
 }

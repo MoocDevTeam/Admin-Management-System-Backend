@@ -862,11 +862,11 @@ public static class MoocDbContextModelCreatingExtensions
         if (b.Metadata.ClrType.IsSubclassOf(typeof(BaseEntityWithAudit)))
         {
             b.Property(nameof(BaseEntityWithAudit.CreatedByUserId)).
-                IsRequired(true).
+                IsRequired(false).
                 HasColumnName(nameof(BaseEntityWithAudit.CreatedByUserId));
 
             b.Property(nameof(BaseEntityWithAudit.CreatedAt)).
-                IsRequired(true).
+                IsRequired(false).
                 HasColumnName(nameof(BaseEntityWithAudit.CreatedAt));
 
 

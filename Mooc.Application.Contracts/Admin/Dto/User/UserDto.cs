@@ -9,7 +9,7 @@ public class UserDto : BaseEntityDto
     public string? Email { get; set; }
 
     public int? Age { get; set; }
-
+    public string? Address { get; set; }
     public Access Access { get; set; }
 
     public Gender Gender { get; set; }

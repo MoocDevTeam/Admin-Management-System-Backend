@@ -18,8 +18,9 @@ namespace Mooc.Application.Contracts.Course
         [Required(ErrorMessage = "CourseCode is null")]
         [StringLength(100, ErrorMessage = "CourseCode must be less than 100 characters")]
         public string CourseCode { get; set; }
-
         public string? CoverImage { get; set; }
+        [Required(ErrorMessage = "Description is null")]
+        [StringLength(100, ErrorMessage = "Description must be less than 100 characters")]
         public string Description { get; set; } = "Description";
         [Required(ErrorMessage = "CategoryId is null")]
         public long CategoryId { get; set; } = 1;

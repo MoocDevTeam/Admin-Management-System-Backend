@@ -224,7 +224,10 @@ namespace Mooc.Application.Course
                 {
                     // Map properties from CourseInstance to CourseInstanceDto
                     Id = ci.Id,
-                    // ... other properties
+                    MoocCourseTitle = ci.MoocCourse.Title,
+                    StartDate = ci.StartDate,
+                    EndDate = ci.EndDate,
+                    Description = ci.Description
                 })
                 .ToListAsync();
             return courseInstances;

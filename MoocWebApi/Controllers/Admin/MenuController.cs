@@ -50,7 +50,7 @@ namespace MoocWebApi.Controllers.Admin
         {
             //try
             //{
-                await _menuService.UpdateAsync(input.Id, input);
+            await _menuService.UpdateAsync(input.Id, input);
             //}
             //catch (EntityNotFoundException)
             //{
@@ -71,7 +71,7 @@ namespace MoocWebApi.Controllers.Admin
         {
             //try
             //{
-                await _menuService.DeleteAsync(id);
+            await _menuService.DeleteAsync(id);
             //}
             //catch(EntityNotFoundException)
             //{
@@ -97,7 +97,7 @@ namespace MoocWebApi.Controllers.Admin
             var menu = new MenuDto();
             //try
             //{
-              menu =  await _menuService.GetAsync(id);
+            menu = await _menuService.GetAsync(id);
             //}
             //catch(EntityNotFoundException)
             //{
@@ -114,6 +114,16 @@ namespace MoocWebApi.Controllers.Admin
         public async Task<List<MenuDto>> GetMenuTree()
         {
             return await _menuService.GetMenuTreeAsync();
+        }
+
+        /// <summary>
+        /// Get the menu type
+        /// </summary>
+        /// <returns>A list of menus types</returns>
+        [HttpGet]
+        public ListResultDto<OptionsDto> GetMenuType()
+        {
+            return _menuService.GetMenuType();
         }
 
     }

@@ -21,24 +21,24 @@ namespace MoocWebApi.Controllers.Admin
             _avatarService = avatarService;
         }
 
-        [HttpPost("{userId}")]
-        public async Task<IActionResult> UploadAvatar(string userId, IFormFile file)
+        [HttpPost("{userName}")]
+        public async Task<IActionResult> UploadAvatar(string userName, IFormFile file)
         {
-            var avatarUrl = await _avatarService.UploadAvatarAsync(userId, file);
+            var avatarUrl = await _avatarService.UploadAvatarAsync(userName, file);
             return Ok (new { avatarUrl });
         }
 
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> DeleteAvatar(string userId)
+        [HttpDelete("{userName}")]
+        public async Task<IActionResult> DeleteAvatar(string userName)
         {
-            await _avatarService.DeleteAvatarAsync(userId);
+            await _avatarService.DeleteAvatarAsync(userName);
             return Ok("Avatar deleted successfully.");
         }
 
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> GetAvatar(string userId)
+        [HttpGet("{userName}")]
+        public async Task<IActionResult> GetAvatar(string userName)
         {
-            var avatarUrl = await _avatarService.GetAvatarUrlAsync(userId);
+            var avatarUrl = await _avatarService.GetAvatarUrlAsync(userName);
             return Ok(new { avatarUrl });
         }
     }

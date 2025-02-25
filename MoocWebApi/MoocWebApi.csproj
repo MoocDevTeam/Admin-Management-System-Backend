@@ -45,6 +45,7 @@
 
 	<ItemGroup>
 	  <Folder Include="AppData\" />
+	  <Folder Include="AppData\" />
 	</ItemGroup>
 
 

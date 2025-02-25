@@ -71,6 +71,11 @@ namespace Mooc.Application.Admin
 
         };
 
+        private List<RoleMenu> roleMenus = new List<RoleMenu>()
+        {
+
+        };
+
         public async Task<bool> InitAsync()
         {
             if (!this._dbContext.Users.Any())

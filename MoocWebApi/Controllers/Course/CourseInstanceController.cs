@@ -5,7 +5,7 @@ namespace MoocWebApi.Controllers.Course
     [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.CourseService))]
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class CourseInstanceController : ControllerBase
     {
         private readonly ICourseInstanceService _courseInstanceService;

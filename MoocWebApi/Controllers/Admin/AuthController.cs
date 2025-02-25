@@ -12,6 +12,8 @@ using Mooc.Model.Entity;
 using Mooc.Shared.SharedConfig;
 using Sprache;
 using Microsoft.Extensions.Options;
+using Mooc.Application.Contracts.Admin.Dto.Login;
+using Mooc.Core.ExceptionHandling;
 
 namespace MoocWebApi.Controllers.Admin
 {
@@ -23,16 +25,18 @@ namespace MoocWebApi.Controllers.Admin
         private readonly IAuthenticationService _authenticationService;
         private readonly IConfiguration _configuration;
         private readonly IOptions<JwtSettingConfig> _settingConfig;
-
+        private readonly IRoleService _roleService;
         public AuthController(
             IAuthenticationService authenticationService,
             IConfiguration configuration,
-            IOptions<JwtSettingConfig> settingConfig
+            IOptions<JwtSettingConfig> settingConfig,
+            IRoleService roleService
         )
         {
             _authenticationService = authenticationService;
             _configuration = configuration;
             _settingConfig = settingConfig;
+            _roleService = roleService;
         }
         /// <summary>
         /// User login 
@@ -42,8 +46,9 @@ namespace MoocWebApi.Controllers.Admin
 
         //POST: api/authcontroller/login
         [HttpPost]
-        public async Task<ApiResponseResult> Login([FromBody] LoginRequestDto loginRequest)
+        public async Task<LoginResponseDto> Login([FromBody] LoginRequestDto loginRequest)
         {
+            LoginResponseDto loginResponseDto = new LoginResponseDto();
             var user = await _authenticationService.ValidateUserAsync(
                 loginRequest.UserName,
                 loginRequest.Password
@@ -51,13 +56,14 @@ namespace MoocWebApi.Controllers.Admin
 
             if (user == null)
             {
-                return new ApiResponseResult() { IsSuccess = false, Status = 404, Message = "Username or password is not correct, please enter again !", Time = DateTime.Now };
-
-
+                ExThrow.Throw("user credentials incorrect", "user credentials incorrect");
             }
-            var token = GenerateJwtToken(user);
 
-            return new ApiResponseResult() { IsSuccess = true, Status = 200, Message = token, Time = DateTime.Now };
+            var token = GenerateJwtToken(user);
+            loginResponseDto.Token = token;
+            loginResponseDto.Permissions = await _roleService.GetPermissionsbyUserIdAsync(user.Id);
+
+            return loginResponseDto;
         }
 
         private string GenerateJwtToken(User user)

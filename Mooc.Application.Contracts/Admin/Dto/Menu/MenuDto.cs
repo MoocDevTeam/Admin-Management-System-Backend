@@ -18,4 +18,5 @@ namespace Mooc.Application.Contracts.Admin
         public Menu? Parent { get; set; }
         public virtual ICollection<RoleMenu> RoleMenus { get; set; } = new List<RoleMenu>();
     }
+
 }

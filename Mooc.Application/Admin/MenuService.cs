@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Mooc.Application.Contracts.Admin;
 using Mooc.Model.Entity;
+using Mooc.Shared.Enum;
+using System.ComponentModel;
+using System.Reflection;
 using static Amazon.S3.Util.S3EventNotification;
 
 namespace Mooc.Application.Admin
@@ -58,7 +61,7 @@ namespace Mooc.Application.Admin
         }
 
         // Delete a menu
-        public async Task DeleteAsync(long id)
+        public override async Task DeleteAsync(long id)
         {
             if (!IsMenuExist(id))
             {
@@ -67,7 +70,7 @@ namespace Mooc.Application.Admin
 
             if (IsAnyChildMenuExist(id))
             {
-                throw new MoocValidationException($"Menu with ID {id} has child menus");
+                throw new UserFriendlyException($"Menu with ID {id} has child menus", "Menu has child menus");
             }
             await base.DeleteAsync(id);
         }
@@ -95,10 +98,10 @@ namespace Mooc.Application.Admin
         // Get all menus
         private async Task<List<MenuDto>> GetAllMenusAsync()
         {
-           
+
             var input = new FilterPagedResultRequestDto
             {
-                PageSize = int.MaxValue, 
+                PageSize = int.MaxValue,
                 PageIndex = 1
             };
 
@@ -137,6 +140,29 @@ namespace Mooc.Application.Admin
             return entity;
         }
 
- 
+        public ListResultDto<OptionsDto> GetMenuType()
+        {
+            List<OptionsDto> optionsDtoList = new List<OptionsDto>();
+            var menuTypeList = Enum.GetValues(typeof(MenuType));
+            var menuObjType = typeof(MenuType);
+            foreach (var menuType in menuTypeList)
+            {
+                var field = menuObjType.GetField(menuType.ToString());
+                if (field != null)
+                {
+
+                    OptionsDto optionsDto = new OptionsDto();
+                    optionsDto.Value = Convert.ToInt32(menuType).ToString();
+                    var descriptionAttribute = field.GetCustomAttribute<DescriptionAttribute>();
+                    if (descriptionAttribute != null)
+                    {
+                        var description = descriptionAttribute.Description;
+                        optionsDto.Label = description;
+                    }
+                    optionsDtoList.Add(optionsDto);
+                }
+            }
+            return new ListResultDto<OptionsDto>(optionsDtoList);
+        }
     }
 }

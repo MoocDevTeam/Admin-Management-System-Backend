@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Mooc.Application.Contracts.Course.Dto;
+using System.Transactions;
 
 namespace Mooc.Application.Course
 {
@@ -72,5 +73,81 @@ namespace Mooc.Application.Course
             }
         }
 
+        public async Task<bool> BulkDelete(List<long> ids)
+        {
+            var dbSet = this.GetDbSet();
+
+            var teacherCourseList = await this.McDBContext.TeacherCourseInstances.Where(x => ids.Contains(x.TeacherId)).ToListAsync();
+            if (teacherCourseList.Any())
+                this.McDBContext.TeacherCourseInstances.RemoveRange(teacherCourseList);
+
+            var deleteList = await dbSet.Where(x => ids.Contains(x.Id)).ToListAsync();
+            if (deleteList.Any())
+                dbSet.RemoveRange(deleteList);
+
+            await this.McDBContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> BulkDelete1(List<long> ids)
+        {
+            using (var dbtes = await this.McDBContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var dbSet = this.GetDbSet();
+
+                    var teacherCourseList = await this.McDBContext.TeacherCourseInstances.Where(x => ids.Contains(x.TeacherId)).ToListAsync();
+                    if (teacherCourseList.Any())
+                        this.McDBContext.TeacherCourseInstances.RemoveRange(teacherCourseList);
+
+                    var deleteList = await dbSet.Where(x => ids.Contains(x.Id)).ToListAsync();
+                    if (deleteList.Any())
+                        dbSet.RemoveRange(deleteList);
+
+                    await this.McDBContext.SaveChangesAsync();
+
+                    await dbtes.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await dbtes.RollbackAsync();
+                }
+            }
+            return true;
+        }
+
+
+        public async Task<bool> BulkDelete2(List<long> ids)
+        {
+            using (var scope = new TransactionScope())
+            {
+
+                try
+                {
+                    var dbSet = this.GetDbSet();
+
+                    var teacherCourseList = await this.McDBContext.TeacherCourseInstances.Where(x => ids.Contains(x.TeacherId)).ToListAsync();
+                    if (teacherCourseList.Any())
+                        this.McDBContext.TeacherCourseInstances.RemoveRange(teacherCourseList);
+
+                    await this.McDBContext.SaveChangesAsync();
+
+                    var deleteList = await dbSet.Where(x => ids.Contains(x.Id)).ToListAsync();
+                    if (deleteList.Any())
+                        dbSet.RemoveRange(deleteList);
+
+                    await this.McDBContext.SaveChangesAsync();
+
+                    scope.Complete();
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+            return true;
+        }
     }
 }

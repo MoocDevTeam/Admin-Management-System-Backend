@@ -38,7 +38,7 @@ public class MoocCache : IMoocCache, ISingletonDependency
 
     public Task RemoveAsync(string key)
     {
-        return this.RemoveAsync(key);
+        return this._cache.RemoveAsync(key);
     }
 
     public void Set<T>(string key, T value, int second, bool isAbsoluteExpiration = false)

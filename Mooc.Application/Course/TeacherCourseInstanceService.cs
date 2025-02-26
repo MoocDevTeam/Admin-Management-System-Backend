@@ -69,6 +69,18 @@ namespace Mooc.Application.Course
 
         }
 
+        //get teacherCourseInstanceByTeacherId
+        public async Task<List<TeacherCourseInstanceReadDto>> GetTeacherCourseInstanceByTeacherId(long id)
+        {
+            var teacherCourseInstances = await McDBContext.TeacherCourseInstances
+                .Where(tc => tc.TeacherId == id)
+                .Include(tc => tc.CourseInstance)
+                .ThenInclude(ci => ci.MoocCourse)
+                .ToListAsync();
+            return Mapper.Map<List<TeacherCourseInstanceReadDto>>(teacherCourseInstances);
+            //return base.MapToGetListOutputDtos(teacherCourseInstances);
+        }
+
         /// <summary>
         /// Methods used for CRUD
         /// </summary>

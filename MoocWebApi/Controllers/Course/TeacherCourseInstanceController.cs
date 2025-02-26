@@ -31,6 +31,13 @@ namespace MoocWebApi.Controllers.Course
             return courseInstances;
         }
 
+        // Get all teacherCourseInstance by a teacher id
+        [HttpGet]
+        public async Task<List<TeacherCourseInstanceReadDto>> GetTeacherCourseInstancesByTeacherIdAsync(long id)
+        {
+            var teacherCourseInstances = await _teacherCourseInstanceservice.GetTeacherCourseInstanceByTeacherId(id);
+            return teacherCourseInstances;
+        }
         //Update TeacherCourseInstance. This is used to modify teacher's permission to edit sessions
         [HttpPost]
         public async Task<bool> Update([FromBody] TeacherCourseInstanceCreateOrUpdateDto input)
@@ -45,6 +52,14 @@ namespace MoocWebApi.Controllers.Course
         {
             var teacherCourseInstanceDto = await _teacherCourseInstanceservice.CreateAsync(input);
             return teacherCourseInstanceDto.Id > 0;
+        }
+
+        [HttpDelete]
+
+        public async Task<bool> Delete(long id)
+        {
+           await _teacherCourseInstanceservice.DeleteAsync(id);
+           return true;
         }
 
     }

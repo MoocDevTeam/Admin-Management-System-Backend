@@ -119,6 +119,12 @@ namespace Mooc.Application.Admin
             return permissList;
         }
 
+        /// <summary>
+        /// Save permissions for a sigle role
+        /// </summary>
+        /// <param name="id">Role id</param>
+        /// <param name="menuIdList">permission list</param>
+        /// <returns></returns>
         public async Task<bool> RolePermissionAsync(long id, List<long> menuIdList)
         {
             var oldRoleMenuList = await this.McDBContext.RoleMenus.Where(x => x.RoleId == id).ToListAsync();
@@ -133,8 +139,12 @@ namespace Mooc.Application.Admin
 
             if (isSuccesss)
             {
-                var cacheKey = string.Format(CacheConsts.PermissCacheKey, id);
-                await _moocCache.RemoveAsync(cacheKey);
+                var userIdList = this.McDBContext.UserRoles.Where(x => x.RoleId == id).Select(x => x.UserId).Distinct();
+                foreach (var userId in userIdList)
+                {
+                    var cacheKey = string.Format(CacheConsts.PermissCacheKey, userId);
+                    await _moocCache.RemoveAsync(cacheKey);
+                }
 
             }
             return isSuccesss;

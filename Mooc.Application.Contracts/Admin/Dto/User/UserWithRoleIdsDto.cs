@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Mooc.Application.Contracts.Admin.Dto.User;
 
-public class UserWithRoleIdsDto: UserDto
+public class UserWithRoleIdsDto : UserDto
 {
+    public new string Password
+    {
+        get { return ""; }
+    }
     public List<long> RoleIds { get; set; } = new List<long>();
 }

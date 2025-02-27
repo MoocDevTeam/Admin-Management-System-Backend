@@ -63,6 +63,7 @@ namespace Mooc.Application.Admin
             new Menu(){Id=7, Title="Add",Description="Add",ParentId=6, MenuType=MenuType.Btn, OrderNum=1, Permission=PermissionConsts.Role.Add, CreatedByUserId=1,CreatedAt= DateTime.Now},
             new Menu(){Id=8, Title="Update",Description="Update",ParentId=6, MenuType=MenuType.Btn, OrderNum=2, Permission=PermissionConsts.Role.Update, CreatedByUserId=1,CreatedAt= DateTime.Now},
             new Menu(){Id=9, Title="Delete",Description="Delete",ParentId=6, MenuType=MenuType.Btn, OrderNum=3, Permission=PermissionConsts.Role.Delete, CreatedByUserId=1,CreatedAt= DateTime.Now},
+            new Menu(){Id=10, Title = "Menu", Description="Menu",ParentId=1,MenuType=MenuType.Menu, OrderNum=1,Route="/menu",ComponentPath="./pages/menu/index.jsx", Permission=PermissionConsts.Menu.Default, CreatedByUserId=1,CreatedAt= DateTime.Now  },
         };
 
         private List<RoleMenu> roleMenus = new List<RoleMenu>()

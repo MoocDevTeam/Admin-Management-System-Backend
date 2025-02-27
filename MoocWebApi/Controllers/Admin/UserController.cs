@@ -21,9 +21,10 @@ namespace MoocWebApi.Controllers.Admin
         }
 
         /// <summary>
-        /// 
+        /// Retrive users
         /// </summary>
         /// <returns></returns>
+        [Authorize(PermissionConsts.User.Search)]
         [HttpGet]
         public async Task<PagedResultDto<UserDto>> GetByPageAsync([FromQuery] FilterPagedResultRequestDto input)
         {
@@ -44,7 +45,7 @@ namespace MoocWebApi.Controllers.Admin
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        //[Authorize(PermissionConsts.User.Add)]
+        [Authorize(PermissionConsts.User.Add)]
         [HttpPost]
         public async Task<bool> Add([FromBody] CreateUserDto input)
         {
@@ -57,7 +58,7 @@ namespace MoocWebApi.Controllers.Admin
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-       // [Authorize(PermissionConsts.User.Update)]
+        [Authorize(PermissionConsts.User.Update)]
         [HttpPost]
         public async Task<bool> Update([FromBody] UpdateUserDto input)
         {
@@ -70,7 +71,7 @@ namespace MoocWebApi.Controllers.Admin
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-       // [Authorize(PermissionConsts.User.Delete)]
+        [Authorize(PermissionConsts.User.Delete)]
         [HttpDelete("{id}")]
         public async Task<bool> Delete(long id)
         {
@@ -90,7 +91,11 @@ namespace MoocWebApi.Controllers.Admin
             return await _userService.GetByUserNameAsync(userName);
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<UserWithRoleIdsDto> GetUserById(long id)
         {

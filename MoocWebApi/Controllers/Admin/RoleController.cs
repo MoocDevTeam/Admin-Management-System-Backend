@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Mooc.Application.Contracts.Admin.Dto.Role;
 using StackExchange.Redis;
 
 namespace MoocWebApi.Controllers.Admin
@@ -103,6 +104,18 @@ namespace MoocWebApi.Controllers.Admin
         public async Task<RoleDto> GetById(long id)
         {
             return await _roleService.GetAsync(id);
+        }
+
+        /// <summary>
+        /// Save Role Permission
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<bool> RolePermissionAsync([FromBody]RolePermissionInput input)
+        {
+            var category = await this._roleService.RolePermissionAsync(input.Id, input.MenuIds);
+            return true;
         }
 
 

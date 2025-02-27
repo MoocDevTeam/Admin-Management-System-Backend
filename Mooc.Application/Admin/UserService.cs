@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Mooc.Application.Contracts.Admin.Dto.User;
 using Mooc.Core.Utils;
 
 namespace Mooc.Application.Admin;
@@ -9,9 +10,11 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
         IUserService, ITransientDependency
 {
     private readonly IWebHostEnvironment _webHostEnvironment;
-    public UserService(MoocDBContext dbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment) : base(dbContext, mapper)
+    private readonly IMoocCache _moocCache;
+    public UserService(MoocDBContext dbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IMoocCache moocCache) : base(dbContext, mapper)
     {
         this._webHostEnvironment = webHostEnvironment;
+        this._moocCache = moocCache; 
     }
 
     protected override IQueryable<User> CreateFilteredQuery(FilterPagedResultRequestDto input)
@@ -122,6 +125,9 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
 
         var userDto = this.Mapper.Map<UserDto>(user);
 
+        //clear permission from cache
+        var cacheKey = string.Format(CacheConsts.PermissCacheKey, id);
+        await _moocCache.RemoveAsync(cacheKey);
 
         return userDto;
 
@@ -164,5 +170,25 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
         this.McDBContext.Users.Remove(user);
         await this.McDBContext.SaveChangesAsync();
         return true;
+    }
+
+    /// <summary>
+    /// Get user by user id including user roles
+    /// </summary>
+    /// <param name="id">user id</param>
+    /// <returns></returns>
+    /// <exception cref="EntityNotFoundException"></exception>
+    public async Task<UserWithRoleIdsDto> GetUserByIdAsync(long id)
+    {
+        var user = await this.McDBContext.Users.Include(u=>u.UserRoles).FirstOrDefaultAsync(x => x.Id == id);
+        if (user == null)
+        {
+            throw new EntityNotFoundException($"User id {id} not found", "User  not found");
+        }
+
+        var userOutput = this.Mapper.Map<UserWithRoleIdsDto>(user);
+        userOutput.RoleIds.Clear();
+        userOutput.RoleIds.AddRange( user.UserRoles.Select(x => x.RoleId).Distinct());
+        return userOutput;
     }
 }

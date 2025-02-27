@@ -1,18 +1,21 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Mooc.Application.Admin;
 using Mooc.Application.Contracts.Admin;
 using Mooc.Application.Contracts.Dto;
+using Mooc.Core.Caching;
 using Mooc.Model.DBContext;
 using Mooc.Model.Entity;
 using Mooc.Shared.Enum;
+using Moq;
 
 namespace Mooc.UnitTest
 {
     public class RoleServiceTest
     {
         private readonly IMapper _mapper;
-
+        private readonly IMock<IMoocCache> _moocCache;
         public RoleServiceTest()
         {
             var config = new MapperConfiguration(cfg =>
@@ -21,10 +24,12 @@ namespace Mooc.UnitTest
                 cfg.CreateMap<CreateRoleDto, Role>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
-                cfg.CreateMap<UpdateRoleDto,Role>()
+                cfg.CreateMap<UpdateRoleDto, Role>()
                     .ForMember(dest => dest.Id, opt => opt.Ignore());
             });
             _mapper = config.CreateMapper();
+
+            _moocCache = new Mock<IMoocCache>();
         }
 
         private DbContextOptions<MoocDBContext> GetDbContextOptions(string dbName)
@@ -49,11 +54,11 @@ namespace Mooc.UnitTest
                 });
                 context.SaveChanges();
 
-                var service = new RoleService(context, _mapper);
+                var service = new RoleService(context, _mapper, _moocCache.Object);
                 var filterInput = new FilterPagedResultRequestDto
                 {
                     PageIndex = 1,
-                    PageSize = 10 
+                    PageSize = 10
                 };
 
                 // Act
@@ -64,7 +69,7 @@ namespace Mooc.UnitTest
                 Assert.That(result.Total, Is.EqualTo(3));
                 Assert.That(result.Items.Count, Is.EqualTo(3));
                 Assert.That(result.Items[0].RoleName, Is.EqualTo("Admin1"));
-                Assert.That(result.Items[1].RoleName, Is.EqualTo("Admin2")); 
+                Assert.That(result.Items[1].RoleName, Is.EqualTo("Admin2"));
             }
         }
 
@@ -77,20 +82,20 @@ namespace Mooc.UnitTest
             {
                 RoleName = "Admin",
                 Description = "full power",
-              
+
             };
 
             using (var context = new MoocDBContext(options))
             {
-                var service = new RoleService(context, _mapper);
+                var service = new RoleService(context, _mapper, _moocCache.Object);
 
                 // Act
                 var result = await service.CreateAsync(createRoleDto);
 
                 // Assert
                 Assert.NotNull(result);
-                Assert.That( result.RoleName, Is.EqualTo(createRoleDto.RoleName));
-                Assert.That( result.Description, Is.EqualTo(createRoleDto.Description));
+                Assert.That(result.RoleName, Is.EqualTo(createRoleDto.RoleName));
+                Assert.That(result.Description, Is.EqualTo(createRoleDto.Description));
             }
         }
 
@@ -106,12 +111,12 @@ namespace Mooc.UnitTest
                     Id = 1,
                     RoleName = "Admin",
                     Description = "full power",
-                  
+
                 };
                 context.Roles.Add(role);
                 context.SaveChanges();
 
-                var service = new RoleService(context, _mapper);
+                var service = new RoleService(context, _mapper, _moocCache.Object);
 
                 // Act
                 var result = await service.GetAsync(1);
@@ -135,17 +140,17 @@ namespace Mooc.UnitTest
                     Id = 1,
                     RoleName = "teacher",
                     Description = "limited power",
-                  
+
                 };
                 context.Roles.Add(role);
                 context.SaveChanges();
 
-                var service = new RoleService(context, _mapper);
+                var service = new RoleService(context, _mapper, _moocCache.Object);
                 var updateDto = new UpdateRoleDto
                 {
                     RoleName = "Admin",
                     Description = "full power",
-           
+
                 };
 
                 // Act
@@ -153,9 +158,9 @@ namespace Mooc.UnitTest
 
                 // Assert
                 Assert.NotNull(result);
-                Assert.That( result.RoleName, Is.EqualTo(updateDto.RoleName));
+                Assert.That(result.RoleName, Is.EqualTo(updateDto.RoleName));
                 Assert.That(result.Description, Is.EqualTo(updateDto.Description));
-            
+
             }
         }
 
@@ -168,15 +173,15 @@ namespace Mooc.UnitTest
             {
                 var role = new Role
                 {
-                    Id =1L ,
+                    Id = 1L,
                     RoleName = "admin",
                     Description = "Test Description",
-                    
+
                 };
                 context.Roles.Add(role);
                 context.SaveChanges();
 
-                var service = new RoleService(context, _mapper);
+                var service = new RoleService(context, _mapper, _moocCache.Object);
 
                 // Act
                 await service.DeleteAsync(1L);

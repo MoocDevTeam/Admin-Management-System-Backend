@@ -4,5 +4,6 @@
     {
         Task<TeacherCourseInstanceReadDto> GetTeacherCourseInstanceById(long id);
         Task<List<CourseInstanceDto>> GetCourseInstanceListAsync(long id);
+        Task<List<TeacherCourseInstanceReadDto>> GetTeacherCourseInstanceByTeacherId(long id);
     }
 }

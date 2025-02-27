@@ -377,3 +377,5 @@ Mooc.Model/Migrations/MoocDBContextModelSnapshot.cs
 
 # Ignore .env
 .env
+# Ignore submodule
+Admin-Management-System-Backend/

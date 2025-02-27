@@ -9,7 +9,7 @@ namespace MoocWebApi.Controllers.Course
     /// Provides endpoints for managing courses.
     /// </summary>
     [ApiExplorerSettings(GroupName = nameof(SwaggerGroup.CourseService))]
-    // [Authorize]
+    ///[Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [RequestFormLimits(MultipartBodyLengthLimit = 52428800)]

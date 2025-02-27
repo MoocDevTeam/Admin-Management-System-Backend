@@ -10,9 +10,11 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
         IUserService, ITransientDependency
 {
     private readonly IWebHostEnvironment _webHostEnvironment;
-    public UserService(MoocDBContext dbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment) : base(dbContext, mapper)
+    private readonly IMoocCache _moocCache;
+    public UserService(MoocDBContext dbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IMoocCache moocCache) : base(dbContext, mapper)
     {
         this._webHostEnvironment = webHostEnvironment;
+        this._moocCache = moocCache; 
     }
 
     protected override IQueryable<User> CreateFilteredQuery(FilterPagedResultRequestDto input)
@@ -123,6 +125,9 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
 
         var userDto = this.Mapper.Map<UserDto>(user);
 
+        //clear permission from cache
+        var cacheKey = string.Format(CacheConsts.PermissCacheKey, id);
+        await _moocCache.RemoveAsync(cacheKey);
 
         return userDto;
 

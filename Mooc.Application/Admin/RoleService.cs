@@ -113,7 +113,7 @@ namespace Mooc.Application.Admin
                             permissList.Add(roleMenu.Menu.Permission);
                     }
                 }
-                await this._moocCache.SetAsync(cacheKey, permissList, 120);
+                await this._moocCache.SetAsync(cacheKey, permissList, 60);
             }
 
             return permissList;

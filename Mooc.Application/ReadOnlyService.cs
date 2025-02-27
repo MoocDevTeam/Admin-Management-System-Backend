@@ -157,13 +157,7 @@ public abstract class ReadOnlyService<TEntity, TGetOutputDto, TGetListOutputDto,
     /// </summary>
     protected virtual List<TGetListOutputDto> MapToGetListOutputDtos(List<TEntity> entities)
     {
-        var dtos = new List<TGetListOutputDto>();
-
-        foreach (var entity in entities)
-        {
-            dtos.Add(MapToGetListOutputDto(entity));
-        }
-        return dtos;
+       return Mapper.Map<List<TGetListOutputDto>>(entities);
     }
 
     public async Task<PagedResultDto<TGetListOutputDto>> GetListAsync(TGetListInput input)

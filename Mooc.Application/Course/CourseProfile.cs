@@ -51,8 +51,9 @@ public class CourseProfile : Profile
         //Database ---> Frontend
         CreateMap<TeacherCourseInstance, TeacherCourseInstanceReadDto>()
             .ForMember(dest => dest.CreatedByUser, opt => opt.MapFrom(src => src.CreatedByUser != null ? src.CreatedByUser.UserName : null))
-            .ForMember(dest => dest.UpdatedByUser, opt => opt.MapFrom(src => src.UpdatedByUser != null ? src.UpdatedByUser.UserName : null));
-
+            .ForMember(dest => dest.UpdatedByUser, opt => opt.MapFrom(src => src.UpdatedByUser != null ? src.UpdatedByUser.UserName : null))
+            .ForMember(dest => dest.CourseInstance, opt => opt.MapFrom(src => src.CourseInstance))
+            .ForMember(dest => dest.MoocCourseTitle, opt => opt.MapFrom(src => src.CourseInstance.MoocCourse.Title));
         CreateMap<TeacherCourseInstance, TeacherCourseInstancePermissionDto>();
 
 

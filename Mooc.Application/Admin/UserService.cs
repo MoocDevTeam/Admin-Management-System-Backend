@@ -45,30 +45,8 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
         // Hash the plain-text password.
         input.Password = BCryptUtil.HashPassword(input.Password);
 
-        // this.Mapper.Map(input, user);
-        var user = MapToEntity(input);
-
-        await ValidateRoleIdsAsync(input.RoleIds);
-
-        if (input.RoleIds == null || !input.RoleIds.Any())
-        {
-            //If no roles are provided, clear all
-            user.UserRoles.Clear();
-        }
-        else { 
-            foreach (var roleId in input.RoleIds)
-            {
-                user.UserRoles.Add(new UserRole { RoleId = roleId, UserId = user.Id });
-            }
-        }
-        GetDbSet().Add(user);
-        await this.McDBContext.SaveChangesAsync();
-
-        var userDto = this.Mapper.Map<UserDto>(user);
-
-        // return await base.CreateAsync(input);
-
-        return userDto;
+        // Call the base.CreateAsync which maps the input to an entity, assigns the ID via Snowflake, and sets audit fields.
+        var userDto = await base.CreateAsync(input);
 
         // Retrieve the newly created user entity (including its navigation properties) by the generated ID.
         var user = await this.McDBContext.Users
@@ -100,7 +78,7 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
 
         return userDto;
     }
-    
+
 
     /// <summary>
     /// Validates that all provided Role IDs exist in the database.

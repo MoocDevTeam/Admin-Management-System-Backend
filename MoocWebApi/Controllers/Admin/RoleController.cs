@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Mooc.Application.Contracts.Admin.Dto.Role;
 using StackExchange.Redis;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace MoocWebApi.Controllers.Admin
 {
@@ -34,20 +36,20 @@ namespace MoocWebApi.Controllers.Admin
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [Authorize(PermissionConsts.Role.Search)]
         [HttpGet]
         public async Task<PagedResultDto<RoleDto>> GetByPageAsync([FromQuery] FilterPagedResultRequestDto input)
         {
            var pagedResult = await _roleService.GetListAsync(input);
-           // var pagedResult = await _roleService.GetAllRolesAsync(input);
-
+           //var pagedResult = await _roleService.GetAllRolesAsync(input);
             return pagedResult;
         }
-
         /// <summary>
         /// Add a new role
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [Authorize(PermissionConsts.Role.Add)]
         [HttpPost]
         public async Task<bool> Add([FromBody] CreateRoleDto input)
         {
@@ -60,8 +62,9 @@ namespace MoocWebApi.Controllers.Admin
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [Authorize(PermissionConsts.Role.Update)]
         [HttpPost]
-        public async Task<bool> Update( [FromBody] UpdateRoleDto input)
+        public async Task<bool> Update([FromBody] UpdateRoleDto input)
         {
             await _roleService.UpdateAsync(input.Id, input);
             return true;
@@ -72,6 +75,7 @@ namespace MoocWebApi.Controllers.Admin
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize(PermissionConsts.Role.Delete)]
         [HttpDelete("{id}")]
         public async Task<bool> Delete(long id)
         {
@@ -83,6 +87,7 @@ namespace MoocWebApi.Controllers.Admin
         /// Delete several roles
         /// </summary>
         /// <param name="ids"></param>
+        [Authorize(PermissionConsts.Role.Delete)]
         [HttpDelete]
         public async Task<bool> BatchDelete([FromBody] long[] ids)
         {

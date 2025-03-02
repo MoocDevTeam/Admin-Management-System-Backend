@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Mooc.Application.Contracts.Admin;
+using Mooc.Application.Contracts.Admin.Dto.Menu;
 using Mooc.Core.ExceptionHandling;
 using Mooc.Core.WrapperResult;
 
@@ -8,6 +10,8 @@ namespace MoocWebApi.Controllers.Admin
     [Route("api/[controller]/[action]")]
     [ApiController]
     [RequestFormLimits(MultipartBodyLengthLimit = 52428800)]
+
+   
     public class MenuController : ControllerBase
     {
         private readonly IMenuService _menuService;
@@ -124,6 +128,20 @@ namespace MoocWebApi.Controllers.Admin
         public ListResultDto<OptionsDto> GetMenuType()
         {
             return _menuService.GetMenuType();
+        }
+
+
+        /// <summary>
+        /// Get the menuIds by a role id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>A list of menu Ids</returns>
+        
+        [HttpGet("{id}")]
+        public async Task<List<MenuIdDTO>> GetMenuIdsByRoleId(long id)
+        {
+            var menuIds = await _menuService.GetMenuIdsByRoleIdAsync(id);
+            return menuIds;
         }
 
     }

@@ -3,6 +3,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Mooc.Application.Contracts.Admin.Dto.User;
 using Mooc.Core.Utils;
+using StackExchange.Redis;
+using static Amazon.S3.Util.S3EventNotification;
 
 namespace Mooc.Application.Admin;
 
@@ -39,7 +41,30 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
 
         input.Password = BCryptUtil.HashPassword(input.Password);
 
-        return await base.CreateAsync(input);
+        // this.Mapper.Map(input, user);
+        var user = MapToEntity(input);
+
+        await ValidateRoleIdsAsync(input.RoleIds);
+
+        if (input.RoleIds == null || !input.RoleIds.Any())
+        {
+            //If no roles are provided, clear all
+            user.UserRoles.Clear();
+        }
+        else { 
+            foreach (var roleId in input.RoleIds)
+            {
+                user.UserRoles.Add(new UserRole { RoleId = roleId, UserId = user.Id });
+            }
+        }
+        GetDbSet().Add(user);
+        await this.McDBContext.SaveChangesAsync();
+
+        var userDto = this.Mapper.Map<UserDto>(user);
+
+        // return await base.CreateAsync(input);
+
+        return userDto;
 
         // var user = this.Mapper.Map<User>(input);
 
@@ -58,6 +83,7 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
         // return userDto;
 
     }
+    
 
     /// <summary>
     /// Validates that all provided Role IDs exist in the database.
@@ -103,7 +129,7 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
 
         if (input.RoleIds == null || !input.RoleIds.Any())
         {
-            // If no roles are provided, clear all
+            //If no roles are provided, clear all
             user.UserRoles.Clear();
         }
         else
@@ -117,7 +143,6 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
             {
                 user.UserRoles.Add(new UserRole { RoleId = roleId, UserId = id });
             }
-
             user.UserRoles = user.UserRoles.Where(ur => !rolesToRemove.Contains(ur.RoleId)).ToList();
         }
 

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Mooc.Application.Contracts.Admin;
+using Mooc.Application.Contracts.Admin.Dto.Menu;
 using Mooc.Model.Entity;
 using Mooc.Shared.Enum;
 using System.ComponentModel;
@@ -12,9 +13,12 @@ namespace Mooc.Application.Admin
     public class MenuService : CrudService<Menu, MenuDto, MenuDto, long, FilterPagedResultRequestDto, CreateMenuDto, UpdateMenuDto>, IMenuService, ITransientDependency
     {
         private readonly MoocDBContext _dbContext;
+        private readonly IMapper _mapper;
+
         public MenuService(MoocDBContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         // Get menu by id
@@ -163,6 +167,17 @@ namespace Mooc.Application.Admin
                 }
             }
             return new ListResultDto<OptionsDto>(optionsDtoList);
+        }
+
+        public async Task<List<MenuIdDTO>> GetMenuIdsByRoleIdAsync(long roleId)
+        {
+            var roleMenusList = await McDBContext.RoleMenus.Where(rm => rm.RoleId == roleId).Include(rm => rm.Menu).ToListAsync();
+
+            var menuIds = roleMenusList.Select(rm => rm.Menu).ToList();
+
+            var menuDtos = _mapper.Map<List<MenuIdDTO>>(menuIds);
+            return menuDtos;
+
         }
     }
 }

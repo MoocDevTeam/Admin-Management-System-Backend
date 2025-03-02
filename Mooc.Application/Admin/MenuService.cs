@@ -61,7 +61,7 @@ namespace Mooc.Application.Admin
         }
 
         // Delete a menu
-        public async Task DeleteAsync(long id)
+        public override async Task DeleteAsync(long id)
         {
             if (!IsMenuExist(id))
             {
@@ -70,7 +70,7 @@ namespace Mooc.Application.Admin
 
             if (IsAnyChildMenuExist(id))
             {
-                throw new MoocValidationException($"Menu with ID {id} has child menus");
+                throw new UserFriendlyException($"Menu with ID {id} has child menus", "Menu has child menus");
             }
             await base.DeleteAsync(id);
         }
@@ -150,7 +150,7 @@ namespace Mooc.Application.Admin
                 var field = menuObjType.GetField(menuType.ToString());
                 if (field != null)
                 {
-                    
+
                     OptionsDto optionsDto = new OptionsDto();
                     optionsDto.Value = Convert.ToInt32(menuType).ToString();
                     var descriptionAttribute = field.GetCustomAttribute<DescriptionAttribute>();

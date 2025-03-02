@@ -8,5 +8,9 @@ namespace Mooc.Application.Contracts.Admin
         //   Task<PagedResultDto<RoleDto>> GetAllRolesAsync(FilterPagedResultRequestDto input);
         public Task<bool> BulkDelete(List<long> ids);
 
+        public Task<List<string>> GetPermissionsbyUserIdAsync(long id);
+
+        public Task<bool> RolePermissionAsync(long id, List<long> menuIdList);
+
     }
 }

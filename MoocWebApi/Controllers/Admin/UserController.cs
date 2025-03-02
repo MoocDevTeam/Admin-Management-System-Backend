@@ -1,5 +1,6 @@
 ﻿// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 using Microsoft.AspNetCore.Authorization;
+using Mooc.Application.Contracts.Admin.Dto.User;
 using Mooc.Model.Entity;
 
 namespace MoocWebApi.Controllers.Admin
@@ -20,9 +21,10 @@ namespace MoocWebApi.Controllers.Admin
         }
 
         /// <summary>
-        /// 
+        /// Retrive users
         /// </summary>
         /// <returns></returns>
+        [Authorize(PermissionConsts.User.Search)]
         [HttpGet]
         public async Task<PagedResultDto<UserDto>> GetByPageAsync([FromQuery] FilterPagedResultRequestDto input)
         {
@@ -43,7 +45,7 @@ namespace MoocWebApi.Controllers.Admin
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        //[Authorize(PermissionConsts.User.Add)]
+        [Authorize(PermissionConsts.User.Add)]
         [HttpPost]
         public async Task<bool> Add([FromBody] CreateUserDto input)
         {
@@ -56,7 +58,7 @@ namespace MoocWebApi.Controllers.Admin
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-       // [Authorize(PermissionConsts.User.Update)]
+        [Authorize(PermissionConsts.User.Update)]
         [HttpPost]
         public async Task<bool> Update([FromBody] UpdateUserDto input)
         {
@@ -69,7 +71,7 @@ namespace MoocWebApi.Controllers.Admin
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-       // [Authorize(PermissionConsts.User.Delete)]
+        [Authorize(PermissionConsts.User.Delete)]
         [HttpDelete("{id}")]
         public async Task<bool> Delete(long id)
         {
@@ -87,6 +89,17 @@ namespace MoocWebApi.Controllers.Admin
         public async Task<UserDto> Get(string userName)
         {
             return await _userService.GetByUserNameAsync(userName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<UserWithRoleIdsDto> GetUserById(long id)
+        {
+            return await _userService.GetUserByIdAsync(id);
         }
 
     }

@@ -72,7 +72,7 @@ namespace Mooc.Application.Admin
         /// bulk detele role ids
         /// </summary>
         /// <param name="ids"></param>
-        /// <returns></returns>
+        /// <returns>true or false</returns>
         public async Task<bool> BulkDelete(List<long> ids)
         {
             var dbSet = this.GetDbSet();
@@ -100,8 +100,6 @@ namespace Mooc.Application.Admin
                 //no roles
                 if (user.UserRoles == null || user.UserRoles.Count == 0)
                     return new List<string>();
-
-
                 var roleIds = user.UserRoles.Select(x => x.RoleId).ToList();
                 permissList = new List<string>();
                 var roleMenuList = await this._dbContext.RoleMenus.Include(r => r.Menu).Where(r => roleIds.Contains(r.RoleId)).ToListAsync();

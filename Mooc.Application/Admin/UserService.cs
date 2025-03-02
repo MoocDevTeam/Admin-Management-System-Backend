@@ -14,7 +14,7 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
     public UserService(MoocDBContext dbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IMoocCache moocCache) : base(dbContext, mapper)
     {
         this._webHostEnvironment = webHostEnvironment;
-        this._moocCache = moocCache; 
+        this._moocCache = moocCache;
     }
 
     protected override IQueryable<User> CreateFilteredQuery(FilterPagedResultRequestDto input)
@@ -34,29 +34,47 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
     /// <returns></returns>
     public override async Task<UserDto> CreateAsync(CreateUserDto input)
     {
-        //await ValidateNameAsync(input.UserName, 0);
+        // Validate that the username is unique.
         await ValidateNameAsync(input.UserName);
 
+        // Validate provided Role IDs.
+        await ValidateRoleIdsAsync(input.RoleIds);
+
+        // Hash the plain-text password.
         input.Password = BCryptUtil.HashPassword(input.Password);
 
-        return await base.CreateAsync(input);
+        // Call the base.CreateAsync which maps the input to an entity, assigns the ID via Snowflake, and sets audit fields.
+        var userDto = await base.CreateAsync(input);
 
-        // var user = this.Mapper.Map<User>(input);
+        // Retrieve the newly created user entity (including its navigation properties) by the generated ID.
+        var user = await this.McDBContext.Users
+            .Include(u => u.UserRoles)
+            .FirstOrDefaultAsync(u => u.Id == userDto.Id);
 
-        // await ValidateRoleIdsAsync(input.RoleIds);
+        if (user == null)
+        {
+            throw new Exception("User creation failed.");
+        }
 
-        // if (input.RoleIds != null && input.RoleIds.Count > 0)
-        // {
-        //     user.UserRoles = input.RoleIds.Select(roleId => new UserRole { RoleId = roleId, User = user }).ToList();
-        // }
+        // If roles are provided, create and add UserRole entries.
+        if (input.RoleIds != null && input.RoleIds.Any())
+        {
+            var userRoles = input.RoleIds
+                .Select(roleId => new UserRole { RoleId = roleId, UserId = user.Id })
+                .ToList();
 
-        // //await this.McDBContext.Users.AddAsync(user);
-        // //await this.McDBContext.SaveChangesAsync();
-        // var userDto = await base.CreateAsync(input);
+            // Update the navigation property.
+            user.UserRoles = userRoles;
 
-        // //var userDto = this.Mapper.Map<UserDto>(user);
-        // return userDto;
+            // Add the UserRole entries and save changes.
+            await this.McDBContext.UserRoles.AddRangeAsync(userRoles);
+            await this.McDBContext.SaveChangesAsync();
 
+            // Optionally, update the DTO if it includes role information.
+            userDto = this.Mapper.Map<UserDto>(user);
+        }
+
+        return userDto;
     }
 
     /// <summary>
@@ -180,7 +198,7 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
     /// <exception cref="EntityNotFoundException"></exception>
     public async Task<UserWithRoleIdsDto> GetUserByIdAsync(long id)
     {
-        var user = await this.McDBContext.Users.Include(u=>u.UserRoles).FirstOrDefaultAsync(x => x.Id == id);
+        var user = await this.McDBContext.Users.Include(u => u.UserRoles).FirstOrDefaultAsync(x => x.Id == id);
         if (user == null)
         {
             throw new EntityNotFoundException($"User id {id} not found", "User  not found");
@@ -188,7 +206,7 @@ public class UserService : CrudService<User, UserDto, UserDto, long, FilterPaged
 
         var userOutput = this.Mapper.Map<UserWithRoleIdsDto>(user);
         userOutput.RoleIds.Clear();
-        userOutput.RoleIds.AddRange( user.UserRoles.Select(x => x.RoleId).Distinct());
+        userOutput.RoleIds.AddRange(user.UserRoles.Select(x => x.RoleId).Distinct());
         return userOutput;
     }
 }

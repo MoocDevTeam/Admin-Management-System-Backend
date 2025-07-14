@@ -90,7 +90,7 @@ namespace MoocWebApi
                     Region = Environment.GetEnvironmentVariable("AWS_REGION")
                 };
                 builder.Services.AddSingleton(awsConfig);
-                builder.Services.AddScoped<IFileUploadService, FileUploadService>();//use autofac DI later when having a deeper understanding of other ID methods.
+                builder.Services.AddScoped<IFileUploadService, FileUploadService>();
                 // Config AWS S3 service to Avatar
                 // builder.Services.AddScoped<IAvatarService, AvatarService>();
 

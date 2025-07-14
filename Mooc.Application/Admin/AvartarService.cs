@@ -110,7 +110,7 @@ namespace Mooc.Application.Admin
                 return $"Error uploading avatar: {ex.Message}";
             }
         }
-        public async Task DeleteAvatarAsync(string userName)
+        public async Task DeleteAvatarAsync(string userName) //need to use transaction for delete from both db and aws
         {
             var key = $"avatars/{userName}/{userName}.jpg"; // Use fixed key format
 
@@ -140,7 +140,7 @@ namespace Mooc.Application.Admin
             }
         }
 
-        public async Task<string> GetAvatarUrlAsync(string userName)
+        public async Task<string> GetAvatarUrlAsync(string userName) // need to read from db
         {
             var key = $"avatars/{userName}/{userName}.jpg";
             var avatarUrl = $"https://{_avatarAwsConfig.BucketName}.s3.{_avatarAwsConfig.Region}.amazonaws.com/{key}";

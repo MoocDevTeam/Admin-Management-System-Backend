@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MoocWebApi.Controllers.Admin
 {
-   
+
     /// <summary>
     /// Admin controller
     /// </summary>
@@ -16,7 +16,7 @@ namespace MoocWebApi.Controllers.Admin
     [ApiController]
     [RequestFormLimits(MultipartBodyLengthLimit = 52428800)]
 
-    
+
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;
@@ -36,12 +36,12 @@ namespace MoocWebApi.Controllers.Admin
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [Authorize(PermissionConsts.Role.Search)]
+        // [Authorize(PermissionConsts.Role.Search)]
         [HttpGet]
         public async Task<PagedResultDto<RoleDto>> GetByPageAsync([FromQuery] FilterPagedResultRequestDto input)
         {
-           var pagedResult = await _roleService.GetListAsync(input);
-           //var pagedResult = await _roleService.GetAllRolesAsync(input);
+            var pagedResult = await _roleService.GetListAsync(input);
+            //var pagedResult = await _roleService.GetAllRolesAsync(input);
             return pagedResult;
         }
         /// <summary>
@@ -49,7 +49,7 @@ namespace MoocWebApi.Controllers.Admin
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [Authorize(PermissionConsts.Role.Add)]
+        // [Authorize(PermissionConsts.Role.Add)]
         [HttpPost]
         public async Task<bool> Add([FromBody] CreateRoleDto input)
         {
@@ -62,7 +62,7 @@ namespace MoocWebApi.Controllers.Admin
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [Authorize(PermissionConsts.Role.Update)]
+        // [Authorize(PermissionConsts.Role.Update)]
         [HttpPost]
         public async Task<bool> Update([FromBody] UpdateRoleDto input)
         {
@@ -75,7 +75,7 @@ namespace MoocWebApi.Controllers.Admin
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(PermissionConsts.Role.Delete)]
+        // [Authorize(PermissionConsts.Role.Delete)]
         [HttpDelete("{id}")]
         public async Task<bool> Delete(long id)
         {
@@ -87,7 +87,7 @@ namespace MoocWebApi.Controllers.Admin
         /// Delete several roles
         /// </summary>
         /// <param name="ids"></param>
-        [Authorize(PermissionConsts.Role.Delete)]
+        // [Authorize(PermissionConsts.Role.Delete)]
         [HttpDelete]
         public async Task<bool> BatchDelete([FromBody] long[] ids)
         {
@@ -95,7 +95,7 @@ namespace MoocWebApi.Controllers.Admin
             List<long> idList = new List<long>();
             foreach (var item in ids)
             {
-               idList.Add(item);
+                idList.Add(item);
             }
             return await _roleService.BulkDelete(idList);
         }
@@ -117,7 +117,7 @@ namespace MoocWebApi.Controllers.Admin
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<bool> RolePermissionAsync([FromBody]RolePermissionInput input)
+        public async Task<bool> RolePermissionAsync([FromBody] RolePermissionInput input)
         {
             var category = await this._roleService.RolePermissionAsync(input.Id, input.MenuIds);
             return true;
